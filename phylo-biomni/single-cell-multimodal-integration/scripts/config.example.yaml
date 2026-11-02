@@ -1,0 +1,94 @@
+# =============================================================================
+# config.example.yaml — single-cell-multimodal-integration
+# Copy to config.yaml and edit. Every dataset-specific value lives here; no
+# numbers are hard-coded in the scripts. Paths may be absolute or relative to
+# the package root (scripts/..).
+# =============================================================================
+
+project:
+  outdir: /workspace/s38_run # working dir: ingest/, figures/, tables/, checkpoints/
+  results_dir: /mnt/results # deliverables + branded report land here (the results root)
+
+input:
+  execution_mode: analysis
+  requested_dataset: "REQUIRED: identify the user-selected dataset"
+  selection_evidence: "REQUIRED: immutable user request selecting these exact inputs"
+  # A 10x CITE-seq bundle directory containing:
+  #   filtered_feature_bc_matrix.h5  (Gene Expression + Antibody Capture)
+  #   raw_feature_bc_matrix.h5       (unfiltered droplets; required for dsb, optional for CLR)
+  #   metadata.csv                   (barcode, condition, replicate[, cell_type, assay])
+  # Unpaired/diagonal or mosaic RNA+ATAC inputs are detected only to hard-stop as unsupported.
+  dir: /path/to/user_selected_bundle
+  files:
+    filtered_matrix: /path/to/user_selected_bundle/filtered_feature_bc_matrix.h5
+    raw_matrix: /path/to/user_selected_bundle/raw_feature_bc_matrix.h5
+    metadata: /path/to/user_selected_bundle/metadata.csv
+  provenance:
+    filtered_matrix:
+      { origin: uploaded, requested_source: "REQUIRED", acquisition: "-" }
+    raw_matrix:
+      { origin: uploaded, requested_source: "REQUIRED", acquisition: "-" }
+    metadata:
+      { origin: uploaded, requested_source: "REQUIRED", acquisition: "-" }
+
+# auto (recommended) | citeseq | handoff | stop; unpaired/mosaic explicitly hard-stop unsupported
+route: auto
+
+adt:
+  # Isotype-control antibody names as they appear in the ADT panel (feature names).
+  isotype_controls: [IgG1_isotype, IgG2a_isotype]
+  # dsb (needs a validated background; uses isotype controls when available) | clr
+  normalization: dsb
+  # DSB background droplets must be outside the complete filtered-cell/metadata barcode set,
+  # show ADT capture, and stay within these raw-library depth bounds. These defaults follow the
+  # low-depth background region used by the dsb end-to-end workflow; tune them for the assay.
+  dsb_background:
+    min_adt_counts: 10
+    max_adt_counts: 200
+    max_rna_counts: 200
+    min_droplets: 10
+
+qc:
+  rna:
+    min_genes: 30
+    max_genes: 100000
+    min_counts: 60
+    max_pct_mt: 25 # mito pattern below; 0 when no MT- genes are present
+    mt_pattern: "^MT-"
+  adt:
+    min_counts: 10
+    max_counts: 100000
+
+wnn:
+  rna_dims: 20 # RNA PCA dimensions
+  adt_dims: 10 # ADT PCA dimensions (<= n_adt_features - 1)
+  k_nn: 20
+  cluster_resolution: 0.8
+
+totalvi:
+  enabled: true
+  min_cells: 200 # documented skip below this joint-cell count
+  max_epochs: 40 # bounded for CPU micro-runs
+  n_latent: 15
+
+integration:
+  batch_key: replicate # batch label for batch-mixing metric
+  label_key: cell_type # independently curated label for label-purity (optional)
+
+diffabund:
+  condition_col: condition
+  replicate_col: replicate
+  min_rep: 2 # >=2 biological replicates per condition AND >1 condition
+  k: 20
+  prop: 0.2
+
+annotation:
+  panel: builtin_pbmc # built-in surface-protein + gene panel; CellMarker 2.0 withheld
+
+report:
+  title: "Single-Cell Multimodal Integration"
+  subtitle: "Paired CITE-seq (RNA + ADT): WNN joint embedding, totalVI, annotation & differential abundance"
+  sample_description: "a paired 10x CITE-seq PBMC bundle"
+  dataset_accession: ""
+  pdf_name: report_single_cell_multimodal_integration.pdf
+  infographic_name: report_single_cell_multimodal_integration_infographic.png

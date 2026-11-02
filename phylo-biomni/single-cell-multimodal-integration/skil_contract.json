@@ -1,0 +1,599 @@
+{
+  "capabilities": {
+    "catalog_claim_ids": [
+      "citeseq_wnn",
+      "routing_handoff"
+    ],
+    "entries": [
+      {
+        "claim": "Integrate paired CITE-seq (RNA + antibody-derived tags): per-modality QC, dsb ADT denoising, a Seurat WNN joint embedding with modality weights, a totalVI alternative, clustering, and annotation.",
+        "id": "citeseq_wnn",
+        "implementation_refs": [
+          "scripts/00_route.R",
+          "scripts/01_ingest.R",
+          "scripts/_io.py",
+          "scripts/02_rna_qc.R",
+          "scripts/03_adt_qc_dsb.R",
+          "scripts/04_wnn_joint.R",
+          "scripts/05_totalvi.py",
+          "scripts/06_integrate_metrics.py",
+          "scripts/label_purity.py",
+          "scripts/07_annotate_markers.R",
+          "scripts/adt_contract.py",
+          "scripts/adt_marker_contract.py",
+          "scripts/annotation_contract.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Reject unpaired/diagonal and mosaic RNA+ATAC as unsupported until genuine GLUE guidance-graph/model training and StabMap shared-bridge/model fitting are implemented.",
+        "id": "unpaired_mosaic",
+        "implementation_refs": [
+          "scripts/09_unpaired_glue.py",
+          "scripts/10_mosaic_stabmap.R"
+        ],
+        "status": "unsupported"
+      },
+      {
+        "claim": "Hand genuinely paired RNA+ATAC multiome off to the scATAC-multiome skill instead of duplicating it.",
+        "id": "routing_handoff",
+        "implementation_refs": [
+          "scripts/_route.R",
+          "scripts/00_route.R"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Test replicate-aware differential abundance with Milo on the joint embedding when at least two biological replicates per condition exist, and skip and flag otherwise.",
+        "id": "diffabund",
+        "implementation_refs": [
+          "scripts/08_diff_abundance.R"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "For paired CITE-seq single-cell integration; route paired RNA+ATAC multiome to the scATAC-multiome skill and hard-stop unsupported unpaired or mosaic RNA+ATAC."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "integrated.h5mu"
+      ],
+      "choice_id": "user_citeseq",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/00_route.R",
+        "scripts/01_ingest.R"
+      ],
+      "question_id": "input_mode"
+    },
+    {
+      "artifact_paths": [
+        "report_single_cell_multimodal_integration.pdf"
+      ],
+      "choice_id": "auto",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/_route.R",
+        "scripts/00_route.R"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "integrated.h5mu",
+        "joint_qc_scorecard.csv"
+      ],
+      "choice_id": "citeseq",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/04_wnn_joint.R",
+        "scripts/05_totalvi.py"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "route_decision.json"
+      ],
+      "choice_id": "unpaired",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/_route.R",
+        "scripts/00_route.R",
+        "scripts/09_unpaired_glue.py"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "route_decision.json"
+      ],
+      "choice_id": "mosaic",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/_route.R",
+        "scripts/00_route.R",
+        "scripts/10_mosaic_stabmap.R"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "joint_qc_scorecard.csv"
+      ],
+      "choice_id": "dsb",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/_io.py",
+        "scripts/03_adt_qc_dsb.R"
+      ],
+      "question_id": "adt_norm"
+    },
+    {
+      "artifact_paths": [
+        "joint_qc_scorecard.csv"
+      ],
+      "choice_id": "clr",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/03_adt_qc_dsb.R"
+      ],
+      "question_id": "adt_norm"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "user_citeseq",
+          "label": "Use a user-provided 10x CITE-seq bundle"
+        }
+      ],
+      "id": "input_mode",
+      "prompt": "How should the run obtain its input bundle?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "auto",
+          "label": "Detect the design regime automatically (recommended)"
+        },
+        {
+          "id": "citeseq",
+          "label": "Force the paired CITE-seq RNA+ADT route"
+        },
+        {
+          "id": "unpaired",
+          "label": "Hard-stop unsupported unpaired/diagonal RNA+ATAC"
+        },
+        {
+          "id": "mosaic",
+          "label": "Hard-stop unsupported mosaic RNA+ATAC"
+        }
+      ],
+      "id": "route_override",
+      "prompt": "Which integration route should run?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "dsb",
+          "label": "dsb background denoising (needs a validated background; uses isotype controls when available)"
+        },
+        {
+          "id": "clr",
+          "label": "CLR normalization (no empty droplets/isotypes required)"
+        }
+      ],
+      "id": "adt_norm",
+      "prompt": "How should antibody-derived tags be normalized?",
+      "selection_mode": "single"
+    }
+  ],
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "fixed_prompt_path": "assets/infographic_prompt.txt",
+      "fixed_prompt_sha256": "35d1f091276cc6fbbd23e3778d1a96c5b395c6385077cd0df898825b0f35395c",
+      "mechanism": "GenerateImage prompt/result/file lineage is accepted only from one same-ID native call/result pair in the literal /mnt/platform/execution_trace/transcript.jsonl source on a read-only mount, parsed from one captured byte buffer. Results-root/workspace/caller copies and chmod-only files on writable mounts are rejected. Missing or explicitly truncated native platform evidence is not_evaluable_platform_trace and requires independent post-run evidence review; exact image bytes/pixels and the first page-1 PDF embedding remain mandatory.",
+      "not_applicable_reason": "",
+      "presentation_constraints": {
+        "forbidden": [
+          "logo, wordmark, watermark, company or provider branding",
+          "table, spreadsheet grid, dashboard or report-page facsimile",
+          "chart, result panel, numeric result or run-specific value"
+        ],
+        "major_stages_max": 6,
+        "major_stages_min": 3,
+        "mode": "directional_workflow"
+      },
+      "qualitative_workflow_only": true,
+      "required": true,
+      "style_authority": "immutable_resolved_provider_selection"
+    },
+    "report": {
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "not_applicable_reason": "",
+      "required": true,
+      "selection_mechanism": "Explicit overrides derive only from user messages in the same literal origin-attested read-only platform trace captured once. If that trace is unavailable, no override is invented and pdf-report-generation remains the contract default."
+    }
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/run_all.sh",
+      "scripts/run_once.py"
+    ],
+    "command_output_paths": [
+      "integrated.h5mu",
+      "joint_qc_scorecard.csv",
+      "joint_cluster_celltype_assignment.csv"
+    ]
+  },
+  "external_dependencies": {
+    "applicable": false,
+    "not_applicable_reason": "The skill runs entirely on local inputs and installed packages and calls no network service at runtime; reference annotations and the optional marker database are installed or mounted, not fetched from a live API during a run.",
+    "services": []
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "field": "n_input_cells",
+        "operational_definition": "Cells in the filtered CITE-seq matrix before per-modality QC."
+      },
+      {
+        "field": "n_joint_cells",
+        "operational_definition": "Cells retained in the WNN joint embedding after RNA and ADT QC."
+      },
+      {
+        "field": "n_cells_dropped_qc",
+        "operational_definition": "Cells removed by RNA or ADT QC thresholds."
+      },
+      {
+        "field": "n_joint_clusters",
+        "operational_definition": "Number of joint WNN clusters at the configured resolution."
+      },
+      {
+        "field": "median_rna_modality_weight",
+        "operational_definition": "Median per-cell RNA modality weight from WNN; the ADT weight is 1 minus this value."
+      },
+      {
+        "field": "n_adt_features",
+        "operational_definition": "Number of antibody-derived-tag features (including isotype controls) in the ADT assay."
+      }
+    ],
+    "not_applicable_reason": "",
+    "partition_groups": [
+      {
+        "denominator_field": "n_input_cells",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "n_joint_cells",
+          "n_cells_dropped_qc",
+          "n_cells_unpaired"
+        ],
+        "name": "cell_accounting"
+      }
+    ],
+    "partition_not_applicable_reason": "",
+    "requirement": "required",
+    "runtime_payload_artifact": "facts_payload.json",
+    "schema": "report_facts.json"
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": true,
+    "design_identifiability_check": "scripts/_common.R replicates_sufficient() requires at least two biological replicates per condition and more than one condition before Milo differential abundance runs; otherwise it is skipped and flagged.",
+    "experimental_unit": "biological replicate (sample) within a condition",
+    "minimum_independent_units": 2,
+    "permutation_support_check": "Milo spatial-FDR uses the replicate-structured design; single-replicate or single-condition designs are refused rather than permuted into false significance.",
+    "replicate_type": "biological",
+    "runtime_preflight_ref": "scripts/run_once.py"
+  },
+  "installation": {
+    "offer_private_preview_after_generation": true,
+    "registration_managed_outside_package": true,
+    "registration_requires_explicit_user_confirmation": true
+  },
+  "maturity": "evidence_validated",
+  "pdf_review": {
+    "mechanism": "record_pdf_render machine-verifies text extraction, every current page render, and their hashes. The agent uses ordinary Read and directly inspects every page with an image-capable model. Loading media or rendering alone is not a visual review. The receipt does not attest visual quality; report unavailable inspection honestly.",
+    "page_complete_inspection_required": true,
+    "post_render_ordering_required": true,
+    "reject_self_asserted_attestation": true,
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_required": true
+  },
+  "resource_identity": {
+    "applicable": true,
+    "artifact": "provenance_manifest.json",
+    "authoritative_source_uri": "https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/outputs/cr-outputs-h5-matrices",
+    "expected_violations": 0,
+    "failure_policy": "exclude_or_not_computable",
+    "identifier_fields": [
+      "assay.declared_regime"
+    ],
+    "identity_fields": [
+      "assay.observed_feature_types",
+      "assay.isotype_controls_present"
+    ],
+    "verification_artifact": "provenance_manifest.json",
+    "violation_json_path": "assay.identity_violations"
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "provenance_manifest.json (assay.identity_violations)",
+        "statement": "Establishing the design regime before choosing a method is the field's most common error: a paired CITE-seq bundle is confirmed to carry Gene Expression and Antibody Capture (not Peaks) before integration, and paired RNA+ATAC is routed to `scatac-multiome-analysis` rather than force-integrated."
+      },
+      {
+        "evidence_ref": "adt_normalization_status.json (isotype_background_median)",
+        "statement": "Antibody-derived tags carry ambient background: requested dsb denoising excludes every filtered/cell-called and metadata-declared cell barcode, requires a sufficient population of captured low-depth raw droplets under declared RNA/ADT bounds, and fails loudly if no valid background exists. Named isotype controls support denoising but are excluded from biological marker outputs; their measured post-normalization median is a diagnostic without a universal near-zero acceptance threshold."
+      },
+      {
+        "evidence_ref": "modality_weights_summary.csv",
+        "statement": "Per-cell WNN modality weights lie in the closed unit interval and describe how much each modality drove the joint neighbor graph; a near-degenerate distribution means one modality dominated and the joint embedding is close to a single-modality result."
+      },
+      {
+        "evidence_ref": "totalvi_status.json",
+        "statement": "totalVI outputs are model predictions, not measurements, and run only when their assumptions are met; otherwise a documented skip is recorded rather than a fabricated latent space."
+      },
+      {
+        "evidence_ref": "joint_cluster_celltype_assignment.csv",
+        "statement": "Unpaired/diagonal GLUE and mosaic StabMap are unsupported in this package; routing hard-stops before preprocessing because genuine guidance-graph/shared-bridge construction, model fitting, and label transfer are not implemented."
+      },
+      {
+        "evidence_ref": "diffabund_status.json",
+        "statement": "Milo differential abundance requires at least two biological replicates per condition and more than one condition; with insufficient replication it is skipped and flagged, never reported with a fabricated FDR."
+      },
+      {
+        "evidence_ref": "report_facts.json",
+        "statement": "This skill is hypothesis-generating: joint clusters, integration metrics, and neighborhoods are exploratory and are not validated at any threshold."
+      }
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "MIT license (GitHub LICENSE); WNN joint embedding and RNA analysis.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Seurat",
+        "notes": "WNN joint embedding, RNA.",
+        "type": "software (R)",
+        "uri": "https://github.com/satijalab/seurat",
+        "verification_ref": "references/licenses.md",
+        "version": ">=5.0"
+      },
+      {
+        "commercial_evidence": "CRAN/GitHub dsb DESCRIPTION is CC0-1.0 (public domain dedication); commercial use permitted. Re-verify at authoritative source.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "CC0-1.0",
+        "name": "dsb",
+        "notes": "ADT ambient + isotype background denoising.",
+        "type": "software (R)",
+        "uri": "https://github.com/niaid/dsb",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.0"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE); totalVI probabilistic RNA+ADT latent space.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scvi-tools (totalVI)",
+        "notes": "totalVI alternative embedding; protein denoising.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/scvi-tools",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.1"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE); .h5mu container.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "mudata / muon",
+        "notes": "Integrated multimodal .h5mu object.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/mudata",
+        "verification_ref": "references/licenses.md",
+        "version": ">=0.2"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE).",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scanpy / anndata",
+        "notes": "Python-side single-cell utilities and integration bridge.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/scanpy",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.9"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub/PyPI scikit-learn LICENSE); provides adjusted_rand_score, normalized_mutual_info_score, silhouette_score, and NearestNeighbors for the deterministic integration metrics and the independent-label evidence model.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scikit-learn",
+        "notes": "Deterministic integration metrics (ARI/NMI/silhouette/kNN) and the label-purity evidence model (scripts/label_purity.py).",
+        "type": "software (Python)",
+        "uri": "https://github.com/scikit-learn/scikit-learn",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.3"
+      },
+      {
+        "commercial_evidence": "GPL-3 (Bioconductor DESCRIPTION); copyleft, commercial use allowed under GPL terms.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3",
+        "name": "miloR",
+        "notes": "Replicate-aware differential abundance.",
+        "type": "software (R/Bioconductor)",
+        "uri": "https://github.com/MarioniLab/miloR",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.10"
+      },
+      {
+        "commercial_evidence": "GPL-3.0-only (GitHub); copyleft, commercial use allowed under GPL terms. Optional accelerator; Seurat Wilcoxon runs without it.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3.0-only",
+        "name": "presto",
+        "notes": "Fast Wilcoxon marker detection (optional).",
+        "type": "software (R)",
+        "uri": "https://github.com/immunogenomics/presto",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.0"
+      },
+      {
+        "commercial_evidence": "MIT license (GitHub LICENSE); unpaired/diagonal RNA+ATAC integration. Re-verify at authoritative source.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "scglue (GLUE)",
+        "notes": "Inventoried for method context only; unavailable in this package and installing scglue does not enable the hard-stopped route.",
+        "type": "software (Python)",
+        "uri": "https://github.com/gao-lab/GLUE",
+        "verification_ref": "references/licenses.md",
+        "version": ">=0.3"
+      },
+      {
+        "commercial_evidence": "GPL-2 (Bioconductor/GitHub DESCRIPTION); copyleft, commercial use allowed under GPL terms. Re-verify at authoritative source.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-2",
+        "name": "StabMap",
+        "notes": "Inventoried for method context only; unavailable in this package and installing StabMap does not enable the hard-stopped route.",
+        "type": "software (R/Bioconductor)",
+        "uri": "https://github.com/MarioniLab/StabMap",
+        "verification_ref": "references/licenses.md",
+        "version": ">=0.1"
+      },
+      {
+        "commercial_evidence": "BSD (reportlab source LICENSE); PDF rendering via the delegated report skill.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "reportlab",
+        "notes": "PDF report rendering.",
+        "type": "software (Python)",
+        "uri": "https://pypi.org/project/reportlab/",
+        "verification_ref": "references/licenses.md",
+        "version": ">=4"
+      },
+      {
+        "commercial_evidence": "Conflicting signals; commercial reuse could not be unambiguously verified. Optional only; a built-in PBMC marker panel ships as fallback.",
+        "commercial_status": "not_checked",
+        "included": false,
+        "license": "Ambiguous (paper CC-BY-NC-4.0; mirrors CC0; site copyright, no explicit reuse grant)",
+        "name": "CellMarker 2.0",
+        "notes": "Optional tissue marker panel; withheld, built-in fallback used.",
+        "type": "reference database",
+        "uri": "http://bio-bigdata.hrbmu.edu.cn/CellMarker/",
+        "verification_ref": "references/licenses.md",
+        "version": "2.0"
+      }
+    ],
+    "inputs": [
+      "A 10x CITE-seq filtered_feature_bc_matrix.h5 with both Gene Expression and Antibody Capture feature types (paired CITE-seq route).",
+      "raw_feature_bc_matrix.h5 (unfiltered droplets) for requested dsb ambient background estimation; the run excludes all filtered/cell-called and metadata-declared cells, applies declared RNA/ADT capture-depth bounds, and fails if too few valid background droplets remain.",
+      "metadata.csv with per-cell or per-sample replicate and condition columns for replicate-aware differential abundance.",
+      "Unpaired/diagonal or mosaic RNA+ATAC inputs are detected only to emit an explicit unsupported hard-stop; they are not accepted for integration.",
+      "A config file (scripts/config.example.yaml) naming isotype-control antibodies and setting the route, QC, WNN, totalVI, integration, and differential-abundance parameters."
+    ],
+    "workflow": [
+      {
+        "instruction": "Run scripts/00_route.R to detect the 10x feature types (Gene Expression, Antibody Capture, Peaks), barcode structure, and isotype-control presence. Proceed only with paired CITE-seq, route paired RNA+ATAC to `scatac-multiome-analysis`, and hard-stop unpaired/diagonal or mosaic RNA+ATAC because genuine GLUE/StabMap integration is not implemented. Stop with a specific reason on trimodal or scRNA-only bundles rather than force-integrating.",
+        "title": "Validate modality identity and resolve the route"
+      },
+      {
+        "instruction": "Run scripts/02_rna_qc.R for RNA QC (counts, features, percent mitochondrial). For requested dsb, scripts/_io.py selects captured low-depth raw droplets only after excluding every filtered/cell-called and metadata-declared cell barcode, using the configured RNA/ADT depth bounds and minimum population; scripts/03_adt_qc_dsb.R fails rather than substituting CLR when that background is invalid. Export per-modality QC tables and figures.",
+        "title": "QC each modality"
+      },
+      {
+        "instruction": "For requested dsb, run scripts/_io.py to exclude every filtered/cell-called and metadata-declared cell barcode and retain only a sufficient captured low-depth raw-droplet population under the configured RNA/ADT bounds. Run scripts/03_adt_qc_dsb.R on that validated background, using named isotype controls when present; fail loudly when the background is unavailable or insufficient and never silently substitute CLR. CLR remains an explicit normalization choice.",
+        "title": "Denoise antibody-derived tags with dsb"
+      },
+      {
+        "instruction": "Run scripts/04_wnn_joint.R: compute RNA PCA and ADT PCA, run FindMultiModalNeighbors, and produce a joint UMAP, joint clusters, and per-cell modality weights asserted to lie in the closed unit interval.",
+        "title": "Build the WNN joint embedding"
+      },
+      {
+        "instruction": "Run scripts/05_totalvi.py and scripts/06_integrate_metrics.py: assemble an integrated .h5mu and compute batch-mixing, silhouette, and label-purity integration metrics into a joint QC scorecard. Label purity is scored (via scripts/label_purity.py) ONLY between the WNN clusters and an INDEPENDENT reference label preserved from user metadata before any annotation join, with verified alignment, coverage, and non-cluster-derived independence; otherwise it emits label_purity_status.json state=not_evaluable_independent_labels with null ARI/NMI and claims no label purity. The marker-derived annotation is scored separately as annotation_concordance (confusion surfacing novel/spurious labels and split/merge), never overwritten onto the reference. Run the totalVI probabilistic alternative only when its assumptions hold, otherwise record a documented skip.",
+        "title": "Compute the totalVI alternative and integration metrics"
+      },
+      {
+        "instruction": "Run scripts/07_annotate_markers.R for marker-based annotation on the joint clusters using the bundled PBMC panel. Exclude declared isotype controls from biological heatmaps and ADT marker outputs. Rank ADT markers by Wilcoxon evidence and arithmetic mean normalized-score difference (cluster minus other cells), never log2 fold change on DSB standardized scores; export per-cluster RNA and surface-protein marker tables with a confidence/margin flag for weak assignments.",
+        "title": "Annotate cells and rank RNA and protein markers"
+      },
+      {
+        "instruction": "Run scripts/08_diff_abundance.R: build Milo neighborhoods on the joint embedding and test differential abundance with spatial FDR when at least two biological replicates per condition exist, and skip and flag rather than fabricate when replication is insufficient.",
+        "title": "Test replicate-aware differential abundance"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "single-cell-multimodal-integration"
+  },
+  "source_assertions": [
+    {
+      "asserted_value": 0,
+      "field": "assay.identity_violations",
+      "id": "assay_identity_zero_violations",
+      "primary_source_uri": "https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/outputs/cr-outputs-h5-matrices",
+      "retrieved_at": "2026-08-18",
+      "runtime_witness": {
+        "artifact": "provenance_manifest.json",
+        "expected_value": 0,
+        "json_path": "assay.identity_violations"
+      },
+      "verification_method": "Resolve the declared assay/regime and the isotype controls named in the config against the actual 10x feature_type values and ADT feature names in the matrix, and count rows where a valid declaration disagrees with the observed feature types or panel."
+    },
+    {
+      "asserted_value": 0,
+      "field": "wnn.modality_weight_out_of_unit_interval",
+      "id": "modality_weight_unit_interval",
+      "primary_source_uri": "https://doi.org/10.1016/j.cell.2021.04.048",
+      "retrieved_at": "2026-08-18",
+      "runtime_witness": {
+        "artifact": "provenance_manifest.json",
+        "expected_value": 0,
+        "json_path": "wnn.modality_weight_out_of_unit_interval"
+      },
+      "verification_method": "Assert every per-cell RNA and ADT modality weight from Seurat WNN lies in the closed unit interval [0,1] and count out-of-interval weights."
+    },
+    {
+      "asserted_value": 0,
+      "field": "label_purity.circular_metric_emitted",
+      "id": "label_purity_not_circular",
+      "primary_source_uri": "https://scikit-learn.org/stable/modules/clustering.html#adjusted-rand-index",
+      "retrieved_at": "2026-08-19",
+      "runtime_witness": {
+        "artifact": "label_purity_status.json",
+        "expected_value": 0,
+        "json_path": "circular_metric_emitted"
+      },
+      "verification_method": "Adjusted Rand Index and NMI compare two independent labelings; a label-purity score is only meaningful between the WNN clusters and an INDEPENDENTLY provided reference-label vector. The independent-label evidence model (scripts/label_purity.py) preserves the user/metadata reference before any annotation join, verifies cell-level alignment, join-key uniqueness, non-missing coverage, and non-cluster-derived independence, and emits not_evaluable_independent_labels (null ARI/NMI) otherwise. circular_metric_emitted counts any numeric label-purity metric emitted without established independence; a correct run witnesses 0."
+    }
+  ],
+  "source_assertions_not_applicable_reason": "",
+  "starting_task": {
+    "decision_context": "Whether the bundle can be integrated as one paired RNA+ADT object and which joint cell states emerge, versus handing paired RNA+ATAC multiome off to the scATAC-multiome skill or hard-stopping unsupported unpaired/mosaic RNA+ATAC.",
+    "deliverables": "report_single_cell_multimodal_integration.pdf, integrated.h5mu, joint_qc_scorecard.csv, joint_cluster_celltype_assignment.csv, rna_markers.csv, protein_markers.csv, and modality_weights_summary.csv.",
+    "objective": "Confirm the modalities are paired RNA+ADT rather than RNA+ATAC, run per-modality RNA and ADT QC, denoise ADT with dsb using a validated captured low-depth non-cell background, build a Seurat WNN joint embedding with a totalVI alternative, cluster and annotate cells while excluding isotype controls from biological markers, and report modality weights and integration metrics with figure-local Claim–Evidence–Interpretation–Limitation narratives.",
+    "subject_input": "A paired 10x CITE-seq bundle: filtered_feature_bc_matrix.h5 with Gene Expression and Antibody Capture feature types, raw_feature_bc_matrix.h5 for empty-droplet background, and metadata.csv with per-cell or per-sample replicate and condition columns; isotype-control antibodies are named in the config.",
+    "user_prompt": "Integrate multimodal single-cell measurements, annotate supported cell populations, and compare joint representations and condition-associated changes."
+  }
+}
