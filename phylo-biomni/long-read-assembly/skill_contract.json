@@ -1,0 +1,861 @@
+{
+  "authoring": {
+    "derived_files": [
+      "SKILL.md",
+      "DATA_SOURCES.md"
+    ],
+    "generator": "phylo-create-skill",
+    "repair_policy": "regenerate derived files from skill_contract.json and rerun the full gate",
+    "revision": "v4"
+  },
+  "capabilities": {
+    "catalog_claim_ids": [
+      "assemble"
+    ],
+    "entries": [
+      {
+        "claim": "De novo assemble long reads into contigs and an assembly graph, routing real data to Flye/hifiasm/Verkko and never fabricating contigs; polish (Racon, permissive MIT) and report QUAST contiguity, BUSCO completeness, Merqury QV, and contig contamination.",
+        "id": "assemble",
+        "implementation_refs": [
+          "scripts/run_assembly.py",
+          "scripts/lra.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Polish the draft in an accuracy-improving order using the permissively-licensed Racon route (research-use-only polishers such as Medaka are not offered and are hard-refused) and report reference-free Merqury-style QV before and after, disclosing a Q60 result as a saturated ceiling rather than an exact estimate.",
+        "id": "polish",
+        "implementation_refs": [
+          "scripts/lra.py",
+          "scripts/run_assembly.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Report QUAST-style contiguity (n_contigs, largest, contig N50, total length), reference genome fraction, BUSCO-style single-copy completeness, and Merqury-style consensus QV.",
+        "id": "assembly_qc",
+        "implementation_refs": [
+          "scripts/lra.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Screen assembly contigs with k-mer containment triage against a supplied reference, reporting requested/effective methods, flagged and retained counts, or an explicit not-run status.",
+        "id": "contamination",
+        "implementation_refs": [
+          "scripts/lra.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Consume the upstream QC identity artifact, derive read type from it, and reject an incompatible assembler without reimplementing the anchor chemistry gate.",
+        "id": "readtype_guard",
+        "implementation_refs": [
+          "scripts/lra.py",
+          "scripts/run_assembly.py"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "Use for long-read (ONT or PacBio) de novo assembly, polishing, and assembly QC with contamination screening, for a microbial isolate or bounded metagenome. Not read QC/basecalling, variant/SV, isoform, or methylation calling."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly.fasta",
+        "long_read_assembly/provenance.json",
+        "long_read_assembly/identity_check.json",
+        "long_read_assembly/assembly_readtype_check.json"
+      ],
+      "choice_id": "own_data",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "input_source"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly.fasta",
+        "long_read_assembly/assembly_graph.gfa"
+      ],
+      "choice_id": "auto",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "assembler"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_status.json"
+      ],
+      "choice_id": "flye",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "assembler"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_status.json"
+      ],
+      "choice_id": "hifiasm",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "assembler"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_status.json"
+      ],
+      "choice_id": "verkko",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "assembler"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly.fasta"
+      ],
+      "choice_id": "provided_draft",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "assembler"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_qc.tsv",
+        "long_read_assembly/qv_kmer_spectrum.tsv",
+        "long_read_assembly/polish_status.json"
+      ],
+      "choice_id": "racon",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/lra.py"
+      ],
+      "question_id": "polish"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_qc.tsv",
+        "long_read_assembly/qv_kmer_spectrum.tsv"
+      ],
+      "choice_id": "none",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/lra.py"
+      ],
+      "question_id": "polish"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/contamination.tsv"
+      ],
+      "choice_id": "kmer",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/lra.py"
+      ],
+      "question_id": "contamination_method"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/contamination.tsv"
+      ],
+      "choice_id": "reference_align",
+      "fallback_status": "partial",
+      "implementation_refs": [
+        "scripts/lra.py"
+      ],
+      "question_id": "contamination_method"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/contamination.tsv"
+      ],
+      "choice_id": "taxonomic_db",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/lra.py"
+      ],
+      "question_id": "contamination_method"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_qc.tsv"
+      ],
+      "choice_id": "isolate",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_assembly.py"
+      ],
+      "question_id": "mode"
+    },
+    {
+      "artifact_paths": [
+        "long_read_assembly/assembly_qc.tsv"
+      ],
+      "choice_id": "metagenome",
+      "fallback_status": "partial",
+      "implementation_refs": [
+        "scripts/run_assembly.py",
+        "references/metagenome_mode.md"
+      ],
+      "question_id": "mode"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "own_data",
+          "label": "My own reads.fastq.gz + run.json (+ reference/markers/contaminant refs)"
+        }
+      ],
+      "id": "input_source",
+      "prompt": "Which reads should I assemble?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "auto",
+          "label": "Auto by read type (Flye for noisy ONT/CLR, hifiasm for HiFi)"
+        },
+        {
+          "id": "flye",
+          "label": "Flye/metaFlye (ONT/CLR/HiFi) via HPC/user binary"
+        },
+        {
+          "id": "hifiasm",
+          "label": "hifiasm (PacBio HiFi) via HPC/user binary"
+        },
+        {
+          "id": "verkko",
+          "label": "Verkko (HiFi + ONT-UL) via HPC/user binary"
+        },
+        {
+          "id": "provided_draft",
+          "label": "QC/polish a draft assembly I already have"
+        }
+      ],
+      "id": "assembler",
+      "prompt": "Which assembler (must match the declared read type)?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "racon",
+          "label": "Racon (MIT) — default long-read polish"
+        },
+        {
+          "id": "none",
+          "label": "No polishing (QC the draft as-is)"
+        }
+      ],
+      "id": "polish",
+      "prompt": "How should the draft be polished (accuracy-improving order)?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "kmer",
+          "label": "k-mer containment vs a contaminant reference (default; no external tool)"
+        },
+        {
+          "id": "reference_align",
+          "label": "Request reference alignment (bundled adapter records effective k-mer triage)"
+        },
+        {
+          "id": "taxonomic_db",
+          "label": "Kraken2/FCS-GX DB (requires DB; else stop)"
+        }
+      ],
+      "id": "contamination_method",
+      "prompt": "How should contamination be screened?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "isolate",
+          "label": "Single isolate/genome (BUSCO completeness)"
+        },
+        {
+          "id": "metagenome",
+          "label": "Metagenome/MAGs (CheckM2/MIMAG; binning is a gated HPC step)"
+        }
+      ],
+      "id": "mode",
+      "prompt": "Assemble as a single isolate or a metagenome?",
+      "selection_mode": "single"
+    }
+  ],
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "artifact": "infographic_assembly_qc_overview.png",
+      "content_requirements": "Preserve the accepted five-stage pipeline overview in this order: Assemble, Contiguity, Polish, Completeness, Contamination. Summarize contig count and total length; contig N50 and largest contig; draft versus polished QV; BUSCO-style marker completeness and reference genome fraction; and contamination flagged versus retained. Every value and run label must be read from the current run artifacts; do not hardcode example values or identifiers.",
+      "not_applicable_reason": "",
+      "placement": "first substantive visual in the report; introductory text-only pages are allowed",
+      "platform_trace_fallback": "not_evaluable_platform_trace",
+      "required": true
+    },
+    "report": {
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "not_applicable_reason": "",
+      "report_grounding": {
+        "evidence_tier": "The evidence tier stated in the PDF Limitations section must be read from report_facts.json:evidence_tier and used verbatim. It must not be copied from static package metadata or hardcoded; only current-run artifacts establish result evidence.",
+        "polish_attribution": "The report must read the actual polish method from provenance.json (tool_versions.racon) and polish_status.json. When provenance.json records racon as not_installed, the report must attribute the polish as 'Racon-style in-package consensus' (or equivalent precise language that does not claim the Racon binary ran), never as 'polished with Racon'.",
+        "run_specific_values": "Every run-specific value in the PDF report — contiguity metrics (n_contigs, contig N50, largest contig, total length, circular count, GC%), contamination table fields (method, status, flagged/retained counts), completeness counts, gate-detail strings, and QV values — must be read from the machine-readable artifacts (assembly_qc.tsv, contamination.tsv, report_facts.json, provenance.json, identity_check.json, assembly_readtype_check.json, polish_status.json) and never hardcoded as string literals."
+      },
+      "required": true
+    }
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/run_assembly.py"
+    ],
+    "command_output_paths": [
+      "long_read_assembly/assembly.fasta",
+      "long_read_assembly/assembly_graph.gfa",
+      "long_read_assembly/assembly_qc.tsv",
+      "long_read_assembly/qv_kmer_spectrum.tsv",
+      "long_read_assembly/contamination.tsv"
+    ]
+  },
+  "execution_contract": {
+    "allowed_input_origins": [
+      "uploaded",
+      "downloaded"
+    ],
+    "downloaded_acquisition_receipt_required": true,
+    "execution_mode": "analysis",
+    "fresh_result_root_required": true,
+    "input_selection_manifest": "input_selection.json",
+    "manifest_hash": "sha256(canonical UTF-8 JSON with manifest_sha256 omitted)",
+    "package_data_used": false,
+    "schema_version": "2.0"
+  },
+  "external_dependencies": {
+    "applicable": false,
+    "not_applicable_reason": "The analysis command runs locally (numpy/matplotlib). Production assemblers/QC (Flye/hifiasm/Verkko/QUAST/BUSCO/Merqury/CheckM2) and taxonomic DBs are user-supplied or Biomni-HPC and are not contacted as live network services by the command; when a selected assembler is unavailable the run stops cleanly.",
+    "services": []
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "field": "n_contigs",
+        "operational_definition": "Number of contigs in the polished assembly."
+      },
+      {
+        "field": "assembly_length_bp",
+        "operational_definition": "Sum of contig lengths in base pairs."
+      },
+      {
+        "field": "largest_contig_bp",
+        "operational_definition": "Length of the longest contig in base pairs."
+      },
+      {
+        "field": "contig_n50",
+        "operational_definition": "Length L such that contigs >= L account for >=50% of total assembly length (bp-weighted), not the mean contig length."
+      },
+      {
+        "field": "genome_fraction_pct",
+        "operational_definition": "Best per-contig identity (%) of the assembly to the supplied reference, QUAST-style; 0 when no reference supplied."
+      },
+      {
+        "field": "busco_complete_pct",
+        "operational_definition": "Percent of supplied single-copy marker sequences found complete in the assembly (BUSCO-style proxy)."
+      },
+      {
+        "field": "merqury_qv",
+        "operational_definition": "Reference-free polished consensus QV (Phred) from the fraction of assembly k-mers supported by the read k-mer set; not reference accuracy."
+      },
+      {
+        "field": "qv_draft",
+        "operational_definition": "Merqury-style QV of the unpolished draft assembly."
+      },
+      {
+        "field": "qv_polished",
+        "operational_definition": "Merqury-style QV of the polished assembly; expected >= qv_draft."
+      },
+      {
+        "field": "contaminant_flagged_contigs",
+        "operational_definition": "Number of contigs flagged as contaminant by the screen, or 0 with a not-run status when unscreened."
+      },
+      {
+        "field": "retained_after_triage_contigs",
+        "operational_definition": "Number of contigs not flagged by the effective k-mer triage; a disposition count, not evidence that these contigs are contaminant-free."
+      },
+      {
+        "field": "model_chemistry_compatible",
+        "operational_definition": "The upstream anchor verdict; true only when its applicable ONT chemistry check passed."
+      },
+      {
+        "field": "model_chemistry_applicable",
+        "operational_definition": "The upstream anchor applicability state; false never means a positive compatibility pass."
+      },
+      {
+        "field": "upstream_identity_sha256",
+        "operational_definition": "SHA-256 of the explicitly selected long-read QC identity artifact validated and consumed by this run."
+      },
+      {
+        "field": "assembler_executed",
+        "operational_definition": "True only when this run actually invoked the named production assembler; false for a user-supplied draft."
+      },
+      {
+        "field": "assembly_source",
+        "operational_definition": "production_assembler or user_supplied_draft, describing the actual source without inferred tool attribution."
+      },
+      {
+        "field": "assembler_readtype_compatible",
+        "operational_definition": "True when the chosen assembler is designed for the declared read type."
+      },
+      {
+        "field": "qv_polished_saturated",
+        "operational_definition": "True when the polished Merqury-style QV hit the Q60 display ceiling (>=100% of assembly k-mers supported by the read set); Q60 is then a saturated lower bound, not an exact Phred estimate."
+      },
+      {
+        "field": "qv_draft_saturated",
+        "operational_definition": "True when the draft Merqury-style QV hit the Q60 display ceiling; the same saturation semantics as qv_polished_saturated."
+      },
+      {
+        "field": "contamination_screen_applied",
+        "operational_definition": "True when the selected contamination method ran; status records its evidence tier, including ok_kmer_triage rather than implying reference alignment."
+      },
+      {
+        "field": "triage_completed",
+        "operational_definition": "True only when k-mer containment triage actually ran. When false, all contigs are not evaluated and compatibility post-screen metrics mirror all-contig metrics."
+      },
+      {
+        "field": "n_contigs_post_screen",
+        "operational_definition": "Number of contigs in a separate retained-after-triage summary; assembly.fasta remains the all-contig assembly."
+      },
+      {
+        "field": "assembly_length_bp_post_screen",
+        "operational_definition": "Sum of contig lengths retained in the triage summary; this is not proof of non-contamination and does not describe a filtered assembly.fasta."
+      },
+      {
+        "field": "contig_n50_post_screen",
+        "operational_definition": "Contig N50 (bp-weighted) computed over contigs retained after k-mer triage; this does not certify non-contamination."
+      },
+      {
+        "field": "largest_contig_bp_post_screen",
+        "operational_definition": "Length of the largest contig retained after k-mer triage in bp."
+      }
+    ],
+    "not_applicable_reason": "",
+    "partition_groups": [
+      {
+        "denominator_field": "screened_contig_count",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "contaminant_flagged_contigs",
+          "retained_after_triage_contigs"
+        ],
+        "name": "contamination_disposition"
+      }
+    ],
+    "partition_not_applicable_reason": "",
+    "requirement": "required",
+    "runtime_payload_artifact": "long_read_assembly/facts_payload.json",
+    "schema": "report_facts.json"
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": false,
+    "not_applicable_reason": "Descriptive de novo assembly + QC of a single sample; no population-level or comparative statistical inference is performed, so no experimental-unit or replication design applies. Assembly correctness is not benchmarked against a truth genome here."
+  },
+  "installation": {
+    "offer_private_preview_after_generation": true,
+    "registration_managed_outside_package": true,
+    "registration_requires_explicit_user_confirmation": true
+  },
+  "maturity": "structurally_valid",
+  "pdf_review": {
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_required": true,
+    "mechanism": "The agent loads the PDF or every rendered page with ordinary Read and directly inspects it. Report unavailable visual input honestly. The receipt validates text, rendering, hashes, and provenance, but does not attest visual quality."
+  },
+  "resource_identity": {
+    "applicable": true,
+    "artifact": "long_read_assembly/provenance.json",
+    "authoritative_source_uri": "https://github.com/chhylp123/hifiasm",
+    "expected_violations": 0,
+    "failure_policy": "exclude_or_not_computable",
+    "identifier_fields": [
+      "assembler"
+    ],
+    "identity_fields": [
+      "read_type"
+    ],
+    "not_applicable_reason": "",
+    "verification_artifact": "long_read_assembly/assembly_readtype_check.json",
+    "violation_json_path": "incompatible_violations"
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "report_facts.json:assembler_readtype_compatible",
+        "statement": "The obvious move is to run one assembler with default settings regardless of the declared read type — hifiasm on noisy ONT, or Flye's HiFi mode on ONT — which silently produces a wrong or fragmented assembly. This skill derives the read type and rejects an incompatible assembler before assembling."
+      },
+      {
+        "evidence_ref": "report_facts.json:contig_n50",
+        "statement": "Contiguity is not correctness: one long contig can be a misassembly or a collapsed repeat, and an N50 inflated by a few concatemeric contigs overstates quality. Contig N50 is reported next to genome fraction and QV, never as accuracy."
+      },
+      {
+        "evidence_ref": "report_facts.json:merqury_qv",
+        "statement": "Merqury-style QV is reference-free consensus quality from read k-mers; it is not reference-based accuracy or genome fraction, and low coverage can inflate it. QV and genome fraction are reported separately."
+      },
+      {
+        "evidence_ref": "figures/manifest.json:step=6",
+        "statement": "A draft-versus-polished QV figure is generated only when a polisher produced a distinct assembly. When no polishing occurred, the manifest records file:null with a reason and the single assembly QV remains in text and tables; an unchanged QV after real polishing remains a valid comparison result."
+      },
+      {
+        "evidence_ref": "report_facts.json:contamination_screen_status",
+        "statement": "Contamination screening is only as good as the supplied reference/DB; with none, the screen reports not-run, never clean. A 0-flagged result with a not_run status means unscreened, not contaminant-free."
+      },
+      {
+        "evidence_ref": "report_facts.json:polish_status",
+        "statement": "Polishing uses only the permissively-licensed (MIT) Racon route and never fabricates a result: a less-accurate-after-more-accurate order finalizes not_computable and QV is reported before and after. Racon is a rough long-read consensus polisher (no neural-network consensus step), so residual consensus errors can remain and accuracy on real data is not validated here. Research-use-only polishers (e.g. Medaka, ONT Public License) are not offered and are hard-refused, never run. Evidence: report_facts.json:polish_status."
+      },
+      {
+        "evidence_ref": "report_facts.json:assembly_backend",
+        "statement": "No assembler is bundled. Real ONT/HiFi assembly uses the gated Flye/hifiasm/Verkko path or an explicitly selected provided draft; unavailable production execution stops with a planned command and no fabricated contigs."
+      },
+      {
+        "evidence_ref": "report_facts.json:model_chemistry_compatible",
+        "statement": "This skill does not perform read-level QC or basecalling. It requires and validates the exact upstream long-read-qc-basecalling identity artifact; a failed, missing, malformed, or run-hash-mismatched artifact stops before assembly."
+      }
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "BSD-3-Clause permissive (standard scientific stack).",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "numpy",
+        "notes": "Array math for QC metrics and figures.",
+        "type": "software",
+        "uri": "https://github.com/numpy/numpy",
+        "verification_ref": "scripts/lra.py",
+        "version": "2.x"
+      },
+      {
+        "commercial_evidence": "PSF-based license permits commercial use (standard scientific stack).",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "Matplotlib (PSF-based, BSD-compatible)",
+        "name": "matplotlib",
+        "notes": "QC figures.",
+        "type": "software",
+        "uri": "https://github.com/matplotlib/matplotlib",
+        "verification_ref": "scripts/lra.py",
+        "version": "3.x"
+      },
+      {
+        "commercial_evidence": "BSD permissive; underlies the pdf-report-generation report.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD",
+        "name": "reportlab",
+        "notes": "PDF report rendering via the pdf-report-generation skill.",
+        "type": "software",
+        "uri": "https://github.com/MrBitBucket/reportlab-mirror",
+        "verification_ref": "scripts/run_assembly.py",
+        "version": "4.x+"
+      },
+      {
+        "commercial_evidence": "MIT; read from repo LICENSE.txt. Not invoked by the bundled contamination adapter.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "mappy (minimap2)",
+        "notes": "Production reference-alignment option documented for external execution; the bundled adapter records k-mer containment as its effective method.",
+        "type": "software",
+        "uri": "https://github.com/lh3/minimap2",
+        "verification_ref": "scripts/lra.py",
+        "version": "2.x"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use; invoked as an external HPC/user binary, not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "Flye / metaFlye",
+        "notes": "Assembler for noisy ONT/CLR (and HiFi); Biomni-HPC-native. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/mikolmogorov/Flye",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "MIT permits commercial use; invoked as an external HPC/user binary, not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "hifiasm",
+        "notes": "HiFi diploid assembler; Biomni-HPC-native. Read-type guard rejects it on non-HiFi reads.",
+        "type": "software",
+        "uri": "https://github.com/chhylp123/hifiasm",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "US-Gov public domain; external HPC/user tool, not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "Public Domain (US Gov)",
+        "name": "Verkko",
+        "notes": "HiFi+ONT-UL T2T assembler. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/marbl/verkko",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-2.0",
+        "name": "Canu",
+        "notes": "CLR/HiFi assembler. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/marbl/canu",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "MIT permits commercial use; external tool, not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Raven",
+        "notes": "Fast noisy-read assembler. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/lbcb-sci/raven",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3.0",
+        "name": "wtdbg2",
+        "notes": "Fast fuzzy de Bruijn assembler (legacy). Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/ruanjue/wtdbg2",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3.0",
+        "name": "Unicycler",
+        "notes": "Bacterial hybrid assembler for small genomes. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/rrwick/Unicycler",
+        "verification_ref": "references/assembly_tool_selection.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-2.0",
+        "name": "QUAST / MetaQUAST",
+        "notes": "Contiguity/misassembly metrics; the bundled command computes QUAST-STYLE metrics natively and reports QUAST as the production tool. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/ablab/quast",
+        "verification_ref": "references/assembly_qc_interpretation.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "US-Gov public domain; external tool. The bundled command computes a Merqury-STYLE reference-free QV natively.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "Public Domain (US Gov)",
+        "name": "Merqury",
+        "notes": "Reference-free QV/completeness. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/marbl/merqury",
+        "verification_ref": "references/assembly_qc_interpretation.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "MIT permits commercial use; external tool with lineage DBs. The bundled command computes a BUSCO-STYLE marker proxy natively.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "BUSCO / compleasm",
+        "notes": "Gene-content completeness. Not bundled.",
+        "type": "software",
+        "uri": "https://gitlab.com/ezlab/busco",
+        "verification_ref": "references/assembly_qc_interpretation.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3.0",
+        "name": "CheckM2",
+        "notes": "MAG completeness/contamination for the metagenome mode (MIMAG). Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/chklovski/CheckM2",
+        "verification_ref": "references/metagenome_mode.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "MIT permits commercial use; Racon is the sole supported production polishing route after removal of research-use-only ONT polishers.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Racon",
+        "notes": "Default and ONLY long-read polisher offered (permissive MIT). Racon is a rough alignment/partial-order consensus polisher: it corrects many indel/mismatch errors but is weaker than a neural-network consensus step, so residual consensus errors (especially homopolymers) can remain. Accuracy on real ONT/PacBio data is not validated in this skill. Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/lbcb-sci/racon",
+        "verification_ref": "references/polishing_order.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "GPL permits commercial USE of the unmodified binary; not bundled or linked, invoked as an external tool. Source vs binary/use licensing recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL/BSD",
+        "name": "NextPolish",
+        "notes": "Short-read polisher (applied after long-read). Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/Nextomics/NextPolish",
+        "verification_ref": "references/polishing_order.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "MIT permits commercial use; requires a user-provided DB. Not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Kraken2",
+        "notes": "Taxonomic screen (optional). Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/DerrickWood/kraken2",
+        "verification_ref": "references/contamination_screening.md",
+        "version": "external"
+      },
+      {
+        "commercial_evidence": "NCBI public domain; ~470 GB RAM for the GX database. Not bundled.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "Public Domain (US Gov)",
+        "name": "FCS-GX",
+        "notes": "NCBI contamination screen (optional). Not bundled.",
+        "type": "software",
+        "uri": "https://github.com/ncbi/fcs",
+        "verification_ref": "references/contamination_screening.md",
+        "version": "external"
+      }
+    ],
+    "existing_materials": [
+      "The upstream long-read QC identity artifact is consumed as shared data. This package validates and hash-binds that artifact but does not copy or re-run its chemistry gate."
+    ],
+    "inputs": [
+      "`reads.fastq.gz` — ONT or PacBio long reads (gzipped FASTQ). Required; the assembly source.",
+      "`run.json` plus the exact completed upstream `identity_check.json` — both explicit selected inputs. The run.json SHA-256 must match the upstream artifact, and assembler read type is derived from the validated artifact.",
+      "`reference.fasta` — reference genome for QUAST-style genome fraction (optional; genome fraction is 0 without it).",
+      "`markers.fasta` — single-copy ortholog marker sequences for the BUSCO-style completeness proxy (optional).",
+      "`contaminant_ref.fasta` — contaminant reference for the contig-level screen (optional; without it the screen reports not-run, never clean).",
+      "`--draft F.fasta` — a pre-computed draft assembly, required only for `--assembler provided_draft`.",
+      "If an input is missing or run.json lacks a required key, stop and report the missing field rather than guessing; never fabricate an assembly."
+    ],
+    "workflow": [
+      {
+        "instruction": "Run scripts/run_assembly.py in analysis mode with the explicitly selected dataset, selection evidence, per-input origins/acquisition receipts, and a mandatory production backend or provided draft. Zero reads and incomplete metadata stop before facts.",
+        "title": "Load reads and run metadata"
+      },
+      {
+        "instruction": "Resolve the requested assembler (auto -> Flye for noisy ONT/CLR, hifiasm for HiFi) and check it against the derived read_type; write assembly_readtype_check.json. Success: incompatible_violations = 0. An incompatible assembler (e.g. hifiasm on ONT) finalizes not_computable before assembling.",
+        "title": "Guard the assembler against the declared read type"
+      },
+      {
+        "instruction": "Use hpc/local with a production assembler or an explicitly selected provided draft. If a production assembler or polisher is unavailable or not wired, assembly_status.json records the planned command and the run stops without substitution.",
+        "title": "Assemble the genome"
+      },
+      {
+        "instruction": "Compute QUAST-style contiguity from the contigs: n_contigs, largest contig, contig N50 (bp-weighted, not the mean contig length), total length, circular count, GC. Write to assembly_qc.tsv. Success: contig N50 is reported and is not the mean contig length.",
+        "title": "Assess assembly contiguity"
+      },
+      {
+        "instruction": "Polish the draft in an accuracy-improving order using the permissively-licensed Racon route (or none) and compute reference-free Merqury-style QV of the draft and the polished assembly. Write polish_status.json. A less-accurate-after-more-accurate order finalizes not_computable; a research-use-only polisher is hard-refused (never run, falls back to Racon/none). Success: qv_polished >= qv_draft.",
+        "title": "Polish and track consensus QV"
+      },
+      {
+        "instruction": "Compute BUSCO-style completeness: the fraction of supplied single-copy markers found complete in the assembly, and QUAST-style genome fraction vs the supplied reference. Write to assembly_qc.tsv. Success: busco_complete_pct and genome_fraction_pct are reported (0 when the reference/markers are absent).",
+        "title": "Assess genome completeness"
+      },
+      {
+        "instruction": "Record requested and effective methods separately, run k-mer containment triage against the supplied reference, and write flagged plus retained-after-triage counts. assembly.fasta remains all-contig; the retained summary is not called clean or non-contaminant evidence.",
+        "title": "Screen contigs for contamination"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "long-read-assembly"
+  },
+  "source_assertions": [
+    {
+      "asserted_value": 0,
+      "field": "assembler_readtype_incompatible_violations",
+      "id": "assembler_readtype_compatibility",
+      "primary_source_uri": "https://github.com/chhylp123/hifiasm",
+      "retrieved_at": "2026-08-19",
+      "runtime_witness": {
+        "artifact": "long_read_assembly/assembly_readtype_check.json",
+        "expected_value": 0,
+        "json_path": "incompatible_violations"
+      },
+      "verification_method": "Look up each assembler's designed read types (hifiasm=HiFi-only; Verkko=HiFi(+ONT-UL); Flye/Canu span ONT/CLR/HiFi with the matching mode; Raven/wtdbg2=noisy long reads) and reject a requested assembler whose supported set excludes the declared read type. Zero violations for a compatible run."
+    },
+    {
+      "asserted_value": 0,
+      "field": "model_chemistry_mismatch_violations",
+      "id": "ont_model_chemistry_convention",
+      "primary_source_uri": "https://doi.org/10.1038/s41592-022-01539-7",
+      "retrieved_at": "2026-08-19",
+      "runtime_witness": {
+        "artifact": "long_read_assembly/identity_check.json",
+        "expected_value": 0,
+        "json_path": "model_chemistry_mismatch_violations"
+      },
+      "verification_method": "Open the explicitly selected upstream identity_check.json, validate its schema/tool/status/applicability semantics and SHA-256 fields, require its run_json_sha256 to equal the selected run.json bytes, then hash-bind its exact path and SHA-256 in assembly provenance and facts. Do not recompute the upstream chemistry verdict."
+    }
+  ],
+  "source_assertions_not_applicable_reason": "",
+  "starting_task": {
+    "decision_context": "A microbial-genomics or bioinformatics scientist decides whether a long-read assembly is contiguous, complete, correct and uncontaminated enough to annotate, deposit or carry forward, and which assembler/polisher suits the declared read type.",
+    "deliverables": "report_long_read_assembly.pdf and infographic_assembly_qc_overview.png at the results root, plus long_read_assembly/assembly.fasta, long_read_assembly/assembly_graph.gfa, long_read_assembly/assembly_qc.tsv, long_read_assembly/qv_kmer_spectrum.tsv, long_read_assembly/contamination.tsv, long_read_assembly/provenance.json, long_read_assembly/identity_check.json, long_read_assembly/assembly_readtype_check.json, and QC figures under figures/.",
+    "objective": "De novo assemble long reads into a polished genome, screen contigs for contamination, and report contiguity (QUAST-style), completeness (BUSCO-style) and reference-free consensus quality (Merqury-style QV) with full platform/chemistry/read-type provenance; reject an assembler incompatible with the declared read type; never fabricate an assembly, polish, or screen result.",
+    "subject_input": "Explicitly selected reads.fastq.gz, run.json, and completed upstream long-read-qc-basecalling identity_check.json; optional reference FASTA, single-copy marker FASTA, contaminant reference FASTA, and provided draft, each with complete lineage.",
+    "user_prompt": "Assemble or assess long-read sequencing data for a microbial isolate or bounded metagenome, reporting contiguity, completeness, consensus quality, and contamination with explicit tool limitations."
+  }
+}
