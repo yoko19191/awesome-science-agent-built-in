@@ -1,0 +1,319 @@
+{
+  "capabilities": {
+    "catalog_claim_ids": [
+      "call",
+      "normalize",
+      "summarize",
+      "concordance"
+    ],
+    "entries": [
+      {
+        "claim": "Call structural variants with Sniffles2 and cuteSV from a validated aligned long-read BAM, or compare an explicitly selected second VCF.",
+        "id": "call",
+        "implementation_refs": [
+          "scripts/run_sv.py",
+          "scripts/run_sv_science.py",
+          "scripts/svlib.py"
+        ],
+        "status": "implemented"
+      },
+      {
+        "claim": "Normalize, sort, bgzip, index, and validate the called VCF.",
+        "id": "normalize",
+        "implementation_refs": [
+          "scripts/run_sv.py",
+          "scripts/run_sv_science.py",
+          "scripts/svlib.py"
+        ],
+        "status": "implemented"
+      },
+      {
+        "claim": "Report descriptive call counts and non-breakend size distributions by SV class.",
+        "id": "summarize",
+        "implementation_refs": [
+          "scripts/run_sv.py",
+          "scripts/run_sv_science.py"
+        ],
+        "status": "implemented"
+      },
+      {
+        "claim": "Report class-aware breakpoint concordance and caller-unique counts without truth or accuracy claims.",
+        "id": "concordance",
+        "implementation_refs": [
+          "scripts/run_sv.py",
+          "scripts/run_sv_science.py",
+          "scripts/svlib.py"
+        ],
+        "status": "implemented"
+      }
+    ],
+    "trigger": "Call and normalize structural variants from a user-selected aligned ONT or PacBio long-read BAM with Sniffles2 plus a selected second-caller route and report descriptive callset QC and concordance."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "input_selection.json",
+        "sv/calls_sniffles2.norm.vcf.gz",
+        "sv/calls_second.norm.vcf.gz",
+        "sv/sv_counts.tsv",
+        "sv/sv_calls.tsv",
+        "sv/concordance.tsv",
+        "sv/facts_payload.json",
+        "sv/infographic_claims.json",
+        "sv/infographic_prompt.txt",
+        "sv/science_stage_receipt.json",
+        "report_facts.json",
+        "report_content.json",
+        "report_structure.json",
+        "report_long-read-structural-variants.pdf",
+        "workflow_infographic_long_read_sv.png",
+        "run_receipt.json"
+      ],
+      "choice_id": "analysis",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/input_selection.py",
+        "scripts/run_sv.py"
+      ],
+      "question_id": "execution_mode"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "analysis",
+          "label": "Analysis with uploaded/downloaded user-selected inputs"
+        }
+      ],
+      "id": "execution_mode",
+      "prompt": "Confirm the immutable execution mode.",
+      "selection_mode": "single"
+    }
+  ],
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "lineage_evidence": "platform-provided read-only current-task trace; agent-writable results transcripts are rejected",
+      "missing_native_trace_status": "not_evaluable_platform_trace",
+      "required": true
+    },
+    "report": {
+      "content_artifact": "report_content.json",
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "provider_scope": "presentation_only",
+      "required": true,
+      "selection_mechanism": "Affirmative immutable end-user message only; customer, tenant, project, account, folder, dataset, assistant, and caller context are excluded. Invalid or unavailable explicit requests fail closed."
+    }
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/run_sv_science.py",
+      "scripts/report_content.py"
+    ],
+    "support_file_refs": [
+      "scripts/input_selection.py",
+      "scripts/license_audit.py",
+      "scripts/report_qc.py",
+      "scripts/report_style.py",
+      "scripts/science_contract.py",
+      "scripts/svlib.py"
+    ],
+    "command_output_paths": [
+      "sv/calls_sniffles2.norm.vcf.gz",
+      "sv/calls_second.norm.vcf.gz",
+      "sv/sv_counts.tsv",
+      "sv/sv_calls.tsv",
+      "sv/concordance.tsv",
+      "sv/facts_payload.json",
+      "sv/infographic_claims.json",
+      "sv/infographic_prompt.txt",
+      "sv/science_stage_receipt.json",
+      "figures/manifest.json",
+      "report_facts.json",
+      "report_content.json",
+      "report_structure.json"
+    ]
+  },
+  "facts": {
+    "applicability": "required",
+    "headline_definitions": [
+      {
+        "field": "sniffles2_sv_count",
+        "operational_definition": "Number of PASS Sniffles2 records at least 50 bp after production normalization; breakends are retained regardless of length."
+      },
+      {
+        "field": "second_caller_sv_count",
+        "operational_definition": "Number of PASS records at least 50 bp in the normalized cuteSV or explicitly selected second VCF; breakends are retained regardless of length."
+      },
+      {
+        "field": "shared_sv_count",
+        "operational_definition": "Number of class-matched, one-to-one caller pairs within 500 bp and at least 0.7 length similarity, with the length criterion omitted for breakends."
+      },
+      {
+        "field": "coverage_estimate_x",
+        "operational_definition": "Validated upstream yield/genome-size coverage used to scale caller support thresholds."
+      },
+      {
+        "field": "sniffles2_min_support",
+        "operational_definition": "Effective Sniffles2 minimum supporting-read threshold: ceiling of 10% of upstream coverage, with minimum 2."
+      },
+      {
+        "field": "upstream_identity_sha256",
+        "operational_definition": "SHA-256 of the explicitly selected upstream long-read QC identity artifact."
+      }
+    ],
+    "requirement": "required",
+    "required_fields": [
+      "execution_mode",
+      "requested_dataset",
+      "package_data_used",
+      "input_selection_sha256",
+      "sniffles2_sv_count",
+      "second_caller",
+      "second_caller_sv_count",
+      "shared_sv_count",
+      "sniffles2_unique_count",
+      "second_caller_unique_count",
+      "sv_counts_by_class",
+      "vcf_valid_indexed",
+      "reference_build_mismatch_violations",
+      "platform_normalized",
+      "upstream_identity_sha256",
+      "coverage_estimate_x",
+      "sniffles2_min_support",
+      "second_caller_min_support",
+      "bam_reference_identity_passed",
+      "normalization_indexing_passed",
+      "genotype_quality_table",
+      "evidence_tier",
+      "headline_sentence"
+    ],
+    "runtime_payload_artifact": "sv/facts_payload.json",
+    "schema": "report_facts.json"
+  },
+  "runtime_instructions": {
+    "caveats": [
+      "Calls are hypothesis-generating.",
+      "Low depth, repetitive sequence, alignment artifacts, and low allele fraction can reduce detection or breakpoint precision."
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "MIT license and installed distribution metadata.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "MIT",
+        "name": "Sniffles2",
+        "notes": "Long-read structural-variant caller.",
+        "type": "software",
+        "uri": "https://github.com/fritzsedlazeck/Sniffles",
+        "verification_ref": "references/sv_calling.md",
+        "version": "2.8.0"
+      },
+      {
+        "commercial_evidence": "GPL-3.0 permits commercial use when the installed executable is invoked without bundling or redistribution.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "GPL-3.0",
+        "name": "cuteSV",
+        "notes": "Optional explicit production second-caller route; installed version is recorded at runtime.",
+        "type": "software",
+        "uri": "https://github.com/tjiangHIT/cuteSV",
+        "verification_ref": "references/sv_calling.md",
+        "version": "installed"
+      },
+      {
+        "commercial_evidence": "Installed distribution metadata and license file are checked at runtime.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "MIT",
+        "name": "pysam (htslib/bcftools/samtools)",
+        "notes": "BAM/VCF I/O, normalization, compression and indexing.",
+        "type": "software",
+        "uri": "https://github.com/pysam-developers/pysam",
+        "verification_ref": "scripts/license_audit.py",
+        "version": "0.24.0"
+      },
+      {
+        "commercial_evidence": "Installed distribution metadata and license file are checked at runtime.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "numpy",
+        "notes": "Array math.",
+        "type": "software",
+        "uri": "https://github.com/numpy/numpy",
+        "verification_ref": "scripts/license_audit.py",
+        "version": "2.4.6"
+      },
+      {
+        "commercial_evidence": "Installed distribution metadata and license file are checked at runtime.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "Matplotlib (PSF-based, BSD-compatible)",
+        "name": "matplotlib",
+        "notes": "Descriptive figures.",
+        "type": "software",
+        "uri": "https://github.com/matplotlib/matplotlib",
+        "verification_ref": "scripts/license_audit.py",
+        "version": "3.10.5"
+      },
+      {
+        "commercial_evidence": "Installed distribution metadata and license file are checked at runtime.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD",
+        "name": "reportlab",
+        "notes": "Declared report dependency retained for commercial-use compatibility.",
+        "type": "software",
+        "uri": "https://www.reportlab.com/",
+        "verification_ref": "scripts/license_audit.py",
+        "version": "4.4.3"
+      }
+    ],
+    "existing_materials": [],
+    "inputs": [
+      "Explicit aligned BAM with adjacent index",
+      "Exact reference FASTA with adjacent index",
+      "Upstream run.json with reference_build",
+      "Exact completed long-read-qc-basecalling identity_check.json with computed coverage",
+      "Explicit second-caller selection and, for user_vcf, a separately sealed second VCF",
+      "Schema-v2 input_selection.json",
+      "A workflow infographic restricted to claims in sv/infographic_claims.json"
+    ],
+    "workflow": [
+      {
+        "instruction": "Require analysis mode, explicit uploaded/downloaded origins, complete acquisition evidence, and a fresh external results root.",
+        "title": "Seal inputs"
+      },
+      {
+        "instruction": "Validate and hash-bind the upstream QC identity artifact, cross-check the operator platform against its normalized platform/read type, then require the BAM sequence dictionary and any assembly tag to agree with the selected reference and run metadata.",
+        "title": "Validate identity"
+      },
+      {
+        "instruction": "Scale each executed caller's minimum read support from validated upstream coverage, execute Sniffles2 plus the selected cuteSV/user-VCF route, normalize/index both VCFs, and retain per-call FILTER, QUAL, genotype, genotype quality, and read support in sv_calls.tsv.",
+        "title": "Call, normalize, and compare"
+      },
+      {
+        "instruction": "The public entrypoint freezes all science outputs and imported support-source hashes in science_stage_receipt.json and exits successfully with awaiting_infographic plus exact facts-derived claims/prompt. GenerateImage uses that prompt; resume verifies every frozen output and support-source hash plus the exact helper-derived claim/prompt before report finalization. Optional benchmark evidence is deterministically archived so the complete published inventory remains within the deterministic QA limit. Native platform lineage remains mandatory.",
+        "title": "Finalize report and receipt"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "long-read-structural-variants"
+  },
+  "source_assertions": [],
+  "source_assertions_not_applicable_reason": "No packaged or automatically selected scientific data source is used.",
+  "starting_task": {
+    "decision_context": "A genomics scientist reviews a hypothesis-generating long-read SV callset before read-level and orthogonal confirmation.",
+    "deliverables": "Two normalized indexed VCFs, class counts, per-call genotype/quality/support table, caller-concordance table, descriptive figures, provenance, identity evidence, dependency receipt, facts-derived infographic claims, facts payload, workflow infographic, canonical PDF report, report content and structure, full PDF review artifacts, and strict run receipt.",
+    "objective": "Produce normalized, indexed Sniffles2 and selected second-caller VCFs with descriptive callset QC and concordance, then finalize a canonical PDF and strict receipt from the same run artifacts.",
+    "subject_input": "User-selected aligned long-read BAM, exact reference FASTA, adjacent indexes, upstream run metadata, completed upstream QC identity artifact with coverage, and explicit cuteSV or sealed user-VCF second-caller selection.",
+    "user_prompt": "Call and normalize structural variants from aligned long reads with two independent caller routes, then summarize callset quality, size distributions, and descriptive concordance."
+  }
+}

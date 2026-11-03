@@ -1,0 +1,21 @@
+{
+  "schema": "phylo-report-references/1",
+  "references": [
+    {
+      "authors": "Smolka M, Paulin LF, Grochowski CM, et al.",
+      "id": "sniffles2-2024",
+      "locator": "https://doi.org/10.1038/s41587-023-02024-y",
+      "title": "Detection of mosaic and population-level structural variants with Sniffles2",
+      "venue": "Nature Biotechnology 42:1571-1580",
+      "year": 2024
+    },
+    {
+      "authors": "Jiang T, Liu Y, Jiang Y, et al.",
+      "id": "cutesv-2020",
+      "locator": "https://doi.org/10.1186/s13059-020-02107-y",
+      "title": "Long-read-based human genomic structural variation detection with cuteSV",
+      "venue": "Genome Biology 21:189",
+      "year": 2020
+    }
+  ]
+}
