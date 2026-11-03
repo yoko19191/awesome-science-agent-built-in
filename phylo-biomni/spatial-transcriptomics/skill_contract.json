@@ -1,0 +1,782 @@
+{
+  "authoring": {
+    "derived_files": [
+      "SKILL.md",
+      "DATA_SOURCES.md"
+    ],
+    "generator": "phylo-create-skill",
+    "repair_policy": "regenerate derived files from skill_contract.json and rerun the full gate"
+  },
+  "capabilities": {
+    "catalog_claim_ids": [
+      "cap_route",
+      "cap_visium",
+      "cap_xenium",
+      "cap_shared"
+    ],
+    "entries": [
+      {
+        "claim": "Detects Visium vs Xenium from an explicit manifest and file signature and stops on ambiguous input.",
+        "id": "cap_route",
+        "implementation_refs": [
+          "scripts/platform_router.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Runs the preserved Visium spot-QC, clustering, and spatially-variable-gene workflow.",
+        "id": "cap_visium",
+        "implementation_refs": [
+          "scripts/spatial_input.py",
+          "scripts/spatial_workflow.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Adds Xenium transcript and negative-control QC with segmentation assessment.",
+        "id": "cap_xenium",
+        "implementation_refs": [
+          "scripts/xenium_workflow.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Shares niches, SVGs, replicate-aware DE, and hypothesis-level CCI across platforms.",
+        "id": "cap_shared",
+        "implementation_refs": [
+          "scripts/shared_downstream.py"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "Use to analyze 10x Visium or Xenium spatial transcriptomics end to end."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "platform_decision.json",
+        "adata_processed.h5ad",
+        "spatially_variable_genes.csv",
+        "provenance.json",
+        "cci.csv",
+        "facts_payload.json",
+        "qc.csv",
+        "figures/figure_3_run_the_platform.png",
+        "figures/figure_4_standardize_to_the.png",
+        "figures/figure_5_detect_spatially_variable.png",
+        "figures/figure_7_infer_hypothesis_level.png",
+        "figures/manifest.json",
+        "scientific_visual_manifest.json",
+        "report_content.json",
+        "report_structure.json",
+        "report_render_plan.json",
+        "report_spatial_transcriptomics.pdf",
+        "report_render_provenance.json",
+        "visual_manifest.json"
+      ],
+      "choice_id": "auto",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/platform_router.py"
+      ],
+      "question_id": "platform"
+    },
+    {
+      "artifact_paths": [
+        "adata_processed.h5ad",
+        "spatially_variable_genes.csv",
+        "provenance.json",
+        "cci.csv",
+        "facts_payload.json",
+        "qc.csv",
+        "figures/figure_3_run_the_platform.png",
+        "figures/figure_4_standardize_to_the.png",
+        "figures/figure_5_detect_spatially_variable.png",
+        "figures/figure_7_infer_hypothesis_level.png",
+        "figures/manifest.json",
+        "scientific_visual_manifest.json",
+        "report_content.json",
+        "report_structure.json",
+        "report_render_plan.json",
+        "report_spatial_transcriptomics.pdf",
+        "report_render_provenance.json",
+        "visual_manifest.json"
+      ],
+      "choice_id": "visium",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/spatial_input.py",
+        "scripts/spatial_workflow.py"
+      ],
+      "question_id": "platform"
+    },
+    {
+      "artifact_paths": [
+        "qc.csv",
+        "adata_processed.h5ad",
+        "spatially_variable_genes.csv",
+        "provenance.json",
+        "cci.csv",
+        "facts_payload.json",
+        "figures/figure_3_run_the_platform.png",
+        "figures/figure_4_standardize_to_the.png",
+        "figures/figure_5_detect_spatially_variable.png",
+        "figures/figure_7_infer_hypothesis_level.png",
+        "figures/manifest.json",
+        "scientific_visual_manifest.json",
+        "report_content.json",
+        "report_structure.json",
+        "report_render_plan.json",
+        "report_spatial_transcriptomics.pdf",
+        "report_render_provenance.json",
+        "visual_manifest.json"
+      ],
+      "choice_id": "xenium",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/xenium_workflow.py"
+      ],
+      "question_id": "platform"
+    },
+    {
+      "artifact_paths": [
+        "differential_expression.csv",
+        "niches.csv"
+      ],
+      "choice_id": "yes",
+      "fallback_status": "partial",
+      "implementation_refs": [
+        "scripts/shared_downstream.py"
+      ],
+      "question_id": "de"
+    },
+    {
+      "artifact_paths": [
+        "niches.csv"
+      ],
+      "choice_id": "no",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/shared_downstream.py"
+      ],
+      "question_id": "de"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "auto",
+          "label": "Auto-detect from manifest + input signature (recommended); stop if ambiguous"
+        },
+        {
+          "id": "visium",
+          "label": "Force the Visium (Space Ranger / spot) branch"
+        },
+        {
+          "id": "xenium",
+          "label": "Force the Xenium (imaging in situ) branch"
+        }
+      ],
+      "id": "platform",
+      "prompt": "Which platform is the input, or should the router auto-detect it from the manifest and file signature?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "yes",
+          "label": "Yes, if samples.csv has >=2 biological replicates per condition"
+        },
+        {
+          "id": "no",
+          "label": "No, stop after niches and spatially variable genes"
+        }
+      ],
+      "id": "de",
+      "prompt": "Run replicate-aware differential expression between conditions?",
+      "selection_mode": "single"
+    }
+  ],
+  "code_provenance": {
+    "artifact": "provenance.json",
+    "json_path": "code_provenance",
+    "note": "The packaged entrypoint records the SHA-256 of every packaged module present at run time; report_qc.assert_code_provenance verifies them against the shipped files, so a run that replaced packaged logic with unrecorded code fails.",
+    "required": true,
+    "scripts": [
+      "scripts/run_spatial.py",
+      "scripts/platform_router.py",
+      "scripts/spatial_input.py",
+      "scripts/spatial_common.py",
+      "scripts/spatial_workflow.py",
+      "scripts/xenium_workflow.py",
+      "scripts/shared_downstream.py",
+      "scripts/spatial_provenance.py",
+      "scripts/outputs_manifest.py",
+      "scripts/export_results.py",
+      "scripts/spatial_figures.py"
+    ]
+  },
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "fixed_prompt_path": "assets/infographic_prompt.txt",
+      "fixed_prompt_sha256": "0ba7b5abd09489d4517242a16b3ad55fa5704e35da3581fd148903fdd6970a78",
+      "not_applicable_reason": "",
+      "presentation_constraints": {
+        "forbidden": [
+          "logo, wordmark, watermark, company or provider branding",
+          "table, spreadsheet grid, dashboard or report-page facsimile",
+          "chart, result panel, numeric result or run-specific value"
+        ],
+        "major_stages_max": 6,
+        "major_stages_min": 3,
+        "mode": "directional_workflow"
+      },
+      "qualitative_workflow_only": true,
+      "required": true
+    },
+    "report": {
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "not_applicable_reason": "",
+      "required": true
+    }
+  },
+  "dependency_audit": {
+    "executed_json_path": "executed_dependencies",
+    "material_modules": [
+      "numpy",
+      "pandas",
+      "scipy",
+      "sklearn",
+      "anndata",
+      "scanpy",
+      "squidpy",
+      "matplotlib",
+      "tifffile"
+    ],
+    "note": "Scientific preparation records the data stack, the executed tissue-image decoder, and matplotlib. The same gate reads conditional render provenance: the default branch binds the authoritative ReportLab inventory entry, while an explicit branch binds the selected installed provider source and hash.",
+    "provenance_artifact": "provenance.json",
+    "receipt": "dependency_receipt.json",
+    "required": true
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/run_spatial.py",
+      "scripts/report_content.py",
+      "scripts/finalize_report.py"
+    ],
+    "command_output_paths": [
+      "platform_decision.json",
+      "qc.csv",
+      "niches.csv",
+      "spatially_variable_genes.csv",
+      "differential_expression.csv",
+      "cci.csv",
+      "provenance.json",
+      "adata_processed.h5ad",
+      "facts_payload.json",
+      "figures/figure_3_run_the_platform.png",
+      "figures/figure_4_standardize_to_the.png",
+      "figures/figure_5_detect_spatially_variable.png",
+      "figures/figure_7_infer_hypothesis_level.png",
+      "figures/manifest.json",
+      "scientific_visual_manifest.json",
+      "report_content.json",
+      "report_structure.json",
+      "report_render_plan.json",
+      "report_spatial_transcriptomics.pdf",
+      "report_render_provenance.json",
+      "visual_manifest.json"
+    ],
+    "complete_route_command": "prepare + report-content + provider-plan + finalize",
+    "entrypoint": "scripts/run_spatial.py",
+    "not_applicable_reason": ""
+  },
+  "report_contract": {
+    "schema": "biomni-report-contract/1",
+    "canonical_pdf": "report_spatial_transcriptomics.pdf",
+    "content_artifact": "report_content.json",
+    "structure_artifact": "report_structure.json",
+    "package_default_provider": "pdf-report-generation",
+    "provider_override": "explicit_compatible_user_selection_only",
+    "selection_evidence": "immutable_user_messages",
+    "receipt_schema": "phylo-run-receipt/3",
+    "style_outcome": "report_style_verified",
+    "bundled_renderer_provider": "pdf-report-generation",
+    "companion_report_does_not_satisfy_contract": true
+  },
+  "presentation_provenance": {
+    "artifact": "report_render_provenance.json",
+    "controller_scripts": [
+      "scripts/report_content.py",
+      "scripts/report_style.py",
+      "scripts/finalize_report.py"
+    ],
+    "default_provider": "pdf-report-generation",
+    "default_renderer": "scripts/spatial_report.py",
+    "explicit_provider_binding": "installed_provider_source_path_bytes_sha256_marker_set_sha256",
+    "required": true
+  },
+  "external_dependencies": {
+    "applicable": false,
+    "not_applicable_reason": "The skill runs fully offline on local files and makes no live network service calls; public reference datasets are cited, not fetched.",
+    "services": []
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "field": "platform",
+        "operational_definition": "Assay platform detected from the manifest and input-file signature (Visium or Xenium)."
+      },
+      {
+        "field": "n_cells_or_spots",
+        "operational_definition": "Cells (Xenium) or spots (Visium) passing QC in the analyzed standardized object."
+      },
+      {
+        "field": "n_svg_sig",
+        "operational_definition": "Genes significant at the authoritative Moran's I column pval_norm_fdr_bh < 0.05 (asymptotic-normal; permutation pval_sim_fdr_bh is reported in the table but is not the headline; control features excluded)."
+      },
+      {
+        "field": "n_niches",
+        "operational_definition": "Spatial niches detected from neighbor cell-type composition clustering."
+      },
+      {
+        "field": "de_n_sig",
+        "operational_definition": "Genes at BH-FDR < 0.05 in replicate-aware pseudobulk DE; 0 when DE is blocked for insufficient replicates."
+      }
+    ],
+    "not_applicable_reason": "",
+    "partition_groups": [
+      {
+        "denominator_field": "qc.n_cells_total",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "qc.n_cells_pass",
+          "qc.n_cells_filtered"
+        ],
+        "name": "cell_qc"
+      },
+      {
+        "denominator_field": "features.n_total",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "features.n_genes",
+          "features.n_control"
+        ],
+        "name": "feature_split"
+      }
+    ],
+    "partition_not_applicable_reason": "",
+    "requirement": "required",
+    "runtime_payload_artifact": "facts_payload.json",
+    "schema": "report_facts.json",
+    "visium_mitochondrial_qc": {
+      "accepted_prefixes": [
+        "MT-",
+        "mt-"
+      ],
+      "allowed_gene_name_sources": [
+        "var.gene_symbols",
+        "var.gene_symbol",
+        "var.feature_name",
+        "var.gene_name",
+        "var.symbol",
+        "var_names"
+      ],
+      "matching_rule": "case_sensitive_species_prefix",
+      "required_status": "evaluated"
+    },
+    "svg_significance": {
+      "fdr_column": "pval_norm_fdr_bh",
+      "method": "moran_normal_asymptotic",
+      "note": "squidpy Moran's I also emits permutation columns pval_sim/pval_sim_fdr_bh which give a different count; the headline significance uses the asymptotic-normal fdr_column named here, carried identically into facts_payload.json and the report.",
+      "pvalue_column": "pval_norm",
+      "threshold": 0.05
+    }
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": true,
+    "design_identifiability_check": "condition must not be perfectly confounded with sample batch; checked from samples.csv before DE",
+    "experimental_unit": "biological sample (patient/section), not individual cells or spots",
+    "minimum_independent_units": 2,
+    "permutation_support_check": "pseudobulk Welch t-test with Benjamini-Hochberg FDR; ranking-based SVG selection recommended for weak signals",
+    "replicate_type": "independent biological replicates",
+    "runtime_preflight_ref": "scripts/shared_downstream.py"
+  },
+  "installation": {
+    "offer_private_preview_after_generation": true,
+    "registration_managed_outside_package": true,
+    "registration_requires_explicit_user_confirmation": true
+  },
+  "maturity": "structurally_valid",
+  "pdf_review": {
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_note": "Finding 1 (v5): visual_review_attested is true only when native trace evidence binds one Read image-inspection call/result pair to every rendered page and each page still matches its recorded SHA-256; otherwise it is recorded as the non-passing not_evaluable_agent_attestation state (attestation advisory only, downstream_review_required) and requires downstream native/human review. Rendering, text extraction, branding, sections, embedded-figure checks, and visual_provenance remain independent.",
+    "visual_review_required": true,
+    "visual_review_trace_binding": "required_when_evaluable"
+  },
+  "resource_identity": {
+    "applicable": false,
+    "not_applicable_reason": "The skill emits spatial-analysis result tables and provenance, not external citations, accessions, or versioned resource identifiers resolved against an authority; panel/chemistry/platform identifiers are recorded as provenance only."
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "platform_decision.json:filename_inference (always false); reason records the signature used",
+        "statement": "A competent practitioner often infers the platform from filenames or applies one QC recipe to both assays; this router refuses filename inference and keeps Visium spot-QC and Xenium control/segmentation-QC strictly separate."
+      },
+      {
+        "evidence_ref": "report_facts.json:mitochondrial_qc; qc.csv:mitochondrial_gene_name_source,mitochondrial_matched_prefixes,n_mito_features,n_spots_with_mito_counts; provenance.json:mitochondrial_qc",
+        "statement": "Visium mitochondrial QC resolves human MT- and mouse mt- prefixes from semantic gene names and stops as not_computable when no mitochondrial feature matches or all matched features have zero counts."
+      },
+      {
+        "evidence_ref": "report_facts.json:features.n_control and qc.csv:control_fraction",
+        "statement": "Negative-control features (probes, codewords, blanks) must never enter biology; they are split at load and only summarized as a specificity metric."
+      },
+      {
+        "evidence_ref": "report_facts.json:de_n_sig and differential_expression.csv:status",
+        "statement": "Differential expression requires biological replicates; with fewer than 2 samples per condition it is BLOCKED to avoid pseudoreplication."
+      },
+      {
+        "evidence_ref": "cci.csv:evidence_level (every row is 'hypothesis')",
+        "statement": "Cell-cell interactions are spatial-adjacency hypotheses with no reference values; no causal or ligand-receptor direction is claimed."
+      },
+      {
+        "evidence_ref": "provenance.json:xenium.normalization",
+        "statement": "For imaging-based spatial data, library-size normalization can encode tissue structure and degrade spatial-domain detection; the default library-size(100)+log is overridable."
+      },
+      {
+        "evidence_ref": "provenance.json:xenium.resegmentation_recommended",
+        "statement": "Segmentation choice is consequential; the default consumes vendor segmentation and only recommends re-segmentation, never applying silent cell-mask expansion."
+      }
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "BSD-3-Clause is a permissive license that allows commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "squidpy"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "squidpy",
+        "notes": "Spatial graph, neighborhood enrichment, Moran's I, co-occurrence.",
+        "type": "software",
+        "uri": "https://github.com/scverse/squidpy",
+        "verification_ref": "https://github.com/scverse/squidpy/blob/main/LICENSE",
+        "version": ">=1.4"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "scanpy"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "scanpy",
+        "notes": "Normalization, PCA, neighbors, Leiden, ranking.",
+        "type": "software",
+        "uri": "https://github.com/scverse/scanpy",
+        "verification_ref": "https://github.com/scverse/scanpy/blob/main/LICENSE",
+        "version": ">=1.9"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "anndata"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "anndata",
+        "notes": "Common spatial object container.",
+        "type": "software",
+        "uri": "https://github.com/scverse/anndata",
+        "verification_ref": "https://github.com/scverse/anndata/blob/main/LICENSE",
+        "version": ">=0.8"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "sklearn"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "scikit-learn",
+        "notes": "KMeans niche clustering.",
+        "type": "software",
+        "uri": "https://github.com/scikit-learn/scikit-learn",
+        "verification_ref": "https://github.com/scikit-learn/scikit-learn/blob/main/COPYING",
+        "version": ">=1.0"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "scipy"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "scipy",
+        "notes": "MTX IO, statistics for DE.",
+        "type": "software",
+        "uri": "https://github.com/scipy/scipy",
+        "verification_ref": "https://github.com/scipy/scipy/blob/main/LICENSE.txt",
+        "version": ">=1.7"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "numpy"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "numpy",
+        "notes": "Arrays.",
+        "type": "software",
+        "uri": "https://github.com/numpy/numpy",
+        "verification_ref": "https://github.com/numpy/numpy/blob/main/LICENSE.txt",
+        "version": ">=1.21"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "pandas"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "pandas",
+        "notes": "Tables and IO.",
+        "type": "software",
+        "uri": "https://github.com/pandas-dev/pandas",
+        "verification_ref": "https://github.com/pandas-dev/pandas/blob/main/LICENSE",
+        "version": ">=1.3"
+      },
+      {
+        "commercial_evidence": "Apache-2.0 permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "pyarrow"
+        ],
+        "included": true,
+        "license": "Apache-2.0",
+        "name": "pyarrow",
+        "notes": "Parquet IO for Xenium tables.",
+        "type": "software",
+        "uri": "https://github.com/apache/arrow",
+        "verification_ref": "https://github.com/apache/arrow/blob/main/LICENSE.txt",
+        "version": ">=10"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "tifffile"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "tifffile",
+        "notes": "Morphology image handling.",
+        "type": "software",
+        "uri": "https://github.com/cgohlke/tifffile",
+        "verification_ref": "https://github.com/cgohlke/tifffile/blob/master/LICENSE",
+        "version": ">=2023"
+      },
+      {
+        "commercial_evidence": "The matplotlib license is BSD-compatible and permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "matplotlib"
+        ],
+        "included": true,
+        "license": "PSF-based (matplotlib license)",
+        "name": "matplotlib",
+        "notes": "Figures (scripts/spatial_figures.py).",
+        "type": "software",
+        "uri": "https://github.com/matplotlib/matplotlib",
+        "verification_ref": "https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE",
+        "version": ">=3.5"
+      },
+      {
+        "commercial_evidence": "The open-source ReportLab Toolkit is distributed under a BSD license (OSI-approved 'BSD License' classifier), which permits commercial use.",
+        "commercial_status": "allowed",
+        "import_names": [
+          "reportlab"
+        ],
+        "included": true,
+        "license": "BSD-3-Clause (ReportLab BSD license)",
+        "name": "reportlab",
+        "notes": "Conditional default-provider PDF rendering only (scripts/spatial_report.py); not a scientific-preparation dependency and not required for an explicit provider branch.",
+        "type": "software",
+        "uri": "https://www.reportlab.com/",
+        "verification_ref": "https://pypi.org/project/reportlab/",
+        "version": ">=4.0"
+      },
+      {
+        "commercial_evidence": "Reported MIT in the lane tool matrix; verify the upstream LICENSE before integration.",
+        "commercial_status": "no_prohibition_found",
+        "included": false,
+        "license": "MIT (verify at integration)",
+        "name": "Baysor (optional re-segmentation)",
+        "notes": "Optional transcript-aware re-segmentation; NOT bundled or required; gated behind fallback-or-stop.",
+        "type": "software",
+        "uri": "https://github.com/kharchenkolab/Baysor",
+        "verification_ref": "https://github.com/kharchenkolab/Baysor/blob/master/LICENSE",
+        "version": "unpinned"
+      },
+      {
+        "commercial_evidence": "GPL-3.0 permits commercial use under copyleft obligations; not linked or bundled.",
+        "commercial_status": "no_prohibition_found",
+        "included": false,
+        "license": "GPL-3.0 (copyleft)",
+        "name": "SPARK-X (optional SVG)",
+        "notes": "Optional rigorous SVG method; NOT bundled; default uses squidpy Moran's I.",
+        "type": "software",
+        "uri": "https://github.com/xzhoulab/SPARK",
+        "verification_ref": "https://github.com/xzhoulab/SPARK/blob/master/LICENSE",
+        "version": "unpinned"
+      },
+      {
+        "commercial_evidence": "GPL-3.0 permits commercial use under copyleft; not bundled.",
+        "commercial_status": "no_prohibition_found",
+        "included": false,
+        "license": "GPL-3.0 (copyleft)",
+        "name": "CellChat v2 (optional CCI)",
+        "notes": "Optional ligand-receptor CCI; NOT bundled; default uses neighborhood co-localization hypotheses.",
+        "type": "software",
+        "uri": "https://github.com/jinworks/CellChat",
+        "verification_ref": "https://github.com/jinworks/CellChat/blob/main/LICENSE",
+        "version": "unpinned"
+      },
+      {
+        "commercial_evidence": "Cited only; not downloaded, bundled, or used in this package.",
+        "commercial_status": "not_checked",
+        "included": false,
+        "license": "verify (Zenodo record terms)",
+        "name": "Xenium 5K UC reference dataset",
+        "notes": "Public real-data validation target cited for reference; out of scope for this authoring task.",
+        "type": "dataset",
+        "uri": "https://doi.org/10.5281/zenodo.17781898",
+        "verification_ref": "https://doi.org/10.5281/zenodo.17781898",
+        "version": "Zenodo record"
+      }
+    ],
+    "existing_materials": [],
+    "inputs": [
+      "A dataset/ directory containing spatial_manifest.json and samples.csv.",
+      "For Visium: a Space Ranger matrix (filtered_feature_bc_matrix.h5 or matrix directory) plus a spatial/ folder with tissue positions and scalefactors_json.json.",
+      "For Xenium: transcripts.parquet, a cell_feature_matrix, cells.parquet, a morphology image, and negative-control features.",
+      "samples.csv with sample_id and condition columns for replicate-aware differential expression."
+    ],
+    "workflow": [
+      {
+        "instruction": "Run scripts/platform_router.py route_platform() to decide Visium vs Xenium from spatial_manifest.json and the input-file signature, and write platform_decision.json. Never infer platform from a filename. Stop with not_computable on ambiguous, mixed, incomplete, or filename-only bundles.",
+        "title": "Validate and route the platform from the manifest and input signature"
+      },
+      {
+        "instruction": "Visium: run scripts/spatial_workflow.py run_spatial_analysis() (spot/mitochondrial QC, filtering). Resolve human MT- or mouse mt- features from semantic gene-name columns before var_names; record the resolved source, matched prefixes, and feature/count evidence in qc.csv, facts_payload.json, and provenance.json; stop as not_computable if no mitochondrial feature matches or all matched features have zero counts. Xenium: run scripts/xenium_workflow.py run_xenium_analysis(), which separates negative-control features at load, applies the Q>=20 transcript convention and the negative-control-probe rate, and assesses segmentation quality (recommending, not performing, re-segmentation). Control probes never enter biology. Write qc.csv.",
+        "title": "Run the platform-specific QC branch"
+      },
+      {
+        "instruction": "Standardize the QC'd branch object with scripts/spatial_common.py (recording the platform on every observation), build the spatial graph, and detect spatial neighborhoods/niches with scripts/shared_downstream.py. Write niches.csv.",
+        "title": "Standardize to the common spatial object and detect niches"
+      },
+      {
+        "instruction": "Run Moran's I spatial autocorrelation on genes only (control features excluded) with scripts/shared_downstream.py and write spatially_variable_genes.csv.",
+        "title": "Detect spatially variable genes"
+      },
+      {
+        "instruction": "Aggregate to per-sample pseudobulk and test conditions with BH-FDR; require >=2 biological replicates per condition or BLOCK to avoid pseudoreplication. Write differential_expression.csv.",
+        "title": "Run replicate-aware differential expression"
+      },
+      {
+        "instruction": "Compute neighborhood co-localization between cell types as spatial-adjacency hypotheses (no causal or ligand-receptor direction) with scripts/shared_downstream.py and write cci.csv, plus provenance.json capturing platform, parameters, thresholds, and versions.",
+        "title": "Infer hypothesis-level cell-cell interactions"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "spatial-transcriptomics"
+  },
+  "source_assertions": [
+    {
+      "applicability_note": "Q>=20 is a Xenium-only transcript-quality convention; it is evaluated only when provenance.platform == Xenium and must be ABSENT from a non-Xenium (e.g. Visium) provenance.",
+      "applies_when": {
+        "artifact": "provenance.json",
+        "equals": "Xenium",
+        "json_path": "platform"
+      },
+      "asserted_value": 20,
+      "field": "min_transcript_qv",
+      "id": "xenium_q20_threshold",
+      "not_applicable_forbids_paths": [
+        "xenium.min_transcript_qv",
+        "xenium"
+      ],
+      "primary_source_uri": "https://www.10xgenomics.com/support/software/xenium-onboard-analysis/latest/analysis/xoa-output-at-a-glance",
+      "retrieved_at": "2026-08-18",
+      "runtime_witness": {
+        "artifact": "provenance.json",
+        "expected_value": 20,
+        "json_path": "xenium.min_transcript_qv"
+      },
+      "verification_method": "Recorded from the 10x Xenium Onboard Analysis output specification: the cell-feature matrix contains transcripts at Phred quality Q>=20 by default; controls are separate feature classes."
+    }
+  ],
+  "source_assertions_not_applicable_reason": "",
+  "starting_task": {
+    "decision_context": "A spatial biologist decides which niches, spatially variable genes, and inflamed-vs-uninflamed differences are worth following up, and whether QC, segmentation, and biological replication support those calls.",
+    "deliverables": "platform_decision.json, qc.csv, niches.csv, spatially_variable_genes.csv, differential_expression.csv, cci.csv, provenance.json, report_facts.json, and report_spatial_transcriptomics.pdf.",
+    "objective": "Route the bundle to the correct platform, run the Visium or Xenium ingestion and QC branch, standardize to a common spatial object, then detect niches and spatially variable genes and run replicate-aware differential expression and hypothesis-level cell-cell interaction, recording the platform in every output.",
+    "subject_input": "A directory dataset/ with spatial_manifest.json and samples.csv, plus either a Space Ranger Visium bundle (feature-barcode matrix, tissue image, spot coordinates) or a 10x Xenium output bundle (transcripts.parquet, cell_feature_matrix, cells.parquet, morphology image, negative-control features).",
+    "user_prompt": "Characterize spatial transcriptomic quality, cell populations, tissue neighborhoods, spatial expression patterns, and candidate cell-cell interactions."
+  },
+  "visual_provenance": {
+    "artifacts": [
+      "figures/figure_3_run_the_platform.png",
+      "figures/figure_4_standardize_to_the.png",
+      "figures/figure_5_detect_spatially_variable.png",
+      "figures/figure_7_infer_hypothesis_level.png",
+      "report_spatial_transcriptomics.pdf"
+    ],
+    "optional_artifacts": [
+      "figures/figure_6_run_replicate_aware.png"
+    ],
+    "entrypoints": [
+      "scripts/finalize_report.py"
+    ],
+    "preparation_entrypoints": [
+      "scripts/run_spatial.py"
+    ],
+    "manifest": "visual_manifest.json",
+    "preparation_manifest": "scientific_visual_manifest.json",
+    "note": "run_spatial.py prepare pins the four required scientific figures plus the DE volcano when the contrast is estimable; blocked DE is recorded as a reason instead of an image. finalize_report.py verifies that manifest and the frozen report content, then pins the applicable figures plus the one canonical PDF. The receipt binds both manifests to their latest successful packaged commands and verifies the conditional default-renderer or installed-provider source hashes.",
+    "required": true
+  },
+  "analysis_input_selection": {
+    "schema_version": "2.0",
+    "execution_mode": "analysis",
+    "accepted_origins": [
+      "uploaded",
+      "downloaded"
+    ],
+    "package_data_used": false,
+    "manifest": "input_selection.json",
+    "manifest_hash": "SHA-256 of canonical UTF-8 JSON with sorted keys, comma/colon separators, and manifest_sha256 omitted",
+    "downloaded_acquisition": "complete provenance required; partial or failed acquisition cannot enter analysis",
+    "stale_output_policy": "result_root must be nonexistent or empty before sealing"
+  }
+}
