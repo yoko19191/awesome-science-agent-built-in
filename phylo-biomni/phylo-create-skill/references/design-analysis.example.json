@@ -1,0 +1,61 @@
+{
+  "analysis": {
+    "entrypoint": "scripts/normalize_assays.py",
+    "language": "python",
+    "outputs": [
+      {
+        "kind": "csv",
+        "min_bytes": 20,
+        "path": "normalized_assays.csv"
+      },
+      {
+        "kind": "json",
+        "min_bytes": 20,
+        "path": "normalization_summary.json"
+      }
+    ],
+    "parameters": [],
+    "purpose": "Validate and normalize assay tables into a stable tidy schema.",
+    "workflow": [
+      "Validate required identifiers, values, and units before writing any output.",
+      "Map supported column aliases into the canonical assay schema without guessing ambiguous fields.",
+      "Normalize values and units deterministically while preserving assay and sample identity.",
+      "Write the normalized table and a machine-readable transformation summary."
+    ]
+  },
+  "category": "data_analysis",
+  "caveats": [
+    {
+      "kind": "assumption",
+      "text": "Declared units describe comparable assay measurements and are not inferred from the numeric values."
+    },
+    {
+      "kind": "limitation",
+      "text": "The skill normalizes supported schemas and units; it does not interpret assay quality or biological significance."
+    },
+    {
+      "kind": "watch-out",
+      "text": "Ambiguous aliases must be resolved by the user rather than guessed from column position or example fixtures."
+    }
+  ],
+  "description": "Use to validate and normalize assay tables into a stable tidy schema.",
+  "id": "skill_11111111111111111111111111111111",
+  "input": {
+    "reject_if": [
+      "A required assay or sample identifier is absent or ambiguous.",
+      "A measurement is non-finite or its unit is missing or unsupported."
+    ],
+    "requirements": [
+      "Provide one CSV assay table with assay ID, sample ID, numeric value, and unit columns or declared aliases.",
+      "Use supported explicit measurement units; do not rely on value-based unit inference."
+    ],
+    "summary": "One delimited assay table containing stable assay and sample identifiers, numeric measurements, and explicit units."
+  },
+  "objective": "Normalize supported assay-table aliases and units without silently guessing ambiguous columns.",
+  "presentation_profile": "artifacts-only",
+  "schema": "phylo-analysis-spec/1",
+  "slug": "assay-table-normalizer",
+  "sources": [],
+  "starting_prompt": "Normalize this assay table into the canonical tidy schema.",
+  "visibility": "public"
+}

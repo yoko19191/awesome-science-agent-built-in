@@ -1,0 +1,1 @@
+Generate the PDF with `pdf-report-generation` by default. Use a compatible styling skill only when the user explicitly selects it. Styling changes presentation only: follow the contract's reader-facing sections and include only applicable tables, figures, sources, and infographic without changing facts, evidence, artifacts, or review requirements.

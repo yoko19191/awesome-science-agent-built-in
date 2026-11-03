@@ -1,0 +1,94 @@
+{
+  "analysis": {
+    "entrypoint": "scripts/fit_dose_response.py",
+    "language": "python",
+    "outputs": [
+      {
+        "kind": "json",
+        "min_bytes": 20,
+        "path": "analysis_payload.json"
+      },
+      {
+        "kind": "csv",
+        "min_bytes": 20,
+        "path": "series_summary.csv"
+      },
+      {
+        "kind": "image",
+        "min_bytes": 100,
+        "path": "figures/curves.png"
+      }
+    ],
+    "parameters": [
+      {
+        "default": 5,
+        "description": "Minimum observations required before a concentration-response series is eligible for fitting.",
+        "flag": "--min-points",
+        "name": "min-points",
+        "required": false,
+        "type": "integer"
+      }
+    ],
+    "purpose": "Validate, fit, and summarize concentration-response series.",
+    "workflow": [
+      "Validate concentration, response, series identity, and minimum support before fitting.",
+      "Group observations into deterministic concentration-response series.",
+      "Fit supported series and withhold potency when the data are not identifiable.",
+      "Write canonical fit facts, the series summary, and diagnostic curve figures."
+    ]
+  },
+  "category": "data_analysis",
+  "caveats": [
+    {
+      "kind": "assumption",
+      "text": "Concentrations and responses are comparable within each declared series and use explicit units."
+    },
+    {
+      "kind": "limitation",
+      "text": "Potency is withheld for unsupported or non-identifiable series; the skill does not substitute a visual estimate."
+    },
+    {
+      "kind": "watch-out",
+      "text": "A fitted curve is not evidence of mechanism, selectivity, efficacy, or experimental validity."
+    }
+  ],
+  "description": "Use to fit concentration-response series with support checks and a scientific report.",
+  "id": "skill_22222222222222222222222222222222",
+  "input": {
+    "reject_if": [
+      "A series lacks identifiers, finite concentration values, finite response values, or explicit units.",
+      "Duplicate observations cannot be assigned unambiguously to a concentration-response series."
+    ],
+    "requirements": [
+      "Provide one table with series identifiers, concentrations, responses, and their explicit units.",
+      "Each eligible series must contain enough distinct concentration observations for the declared minimum-points setting."
+    ],
+    "summary": "One tabular collection of identified concentration-response series with explicit concentration and response values."
+  },
+  "objective": "Fit supported concentration-response series and withhold potency when the data are not identifiable.",
+  "presentation": {
+    "default_provider": "pdf-report-generation",
+    "explicit_provider_allowed": true,
+    "partition_groups": [
+      {
+        "denominator_field": "n_series_total",
+        "member_fields": [
+          "n_series_fitted",
+          "n_series_not_estimable"
+        ],
+        "name": "series-accounting",
+        "value_type": "integer"
+      }
+    ],
+    "source_outputs": [
+      "analysis_payload.json",
+      "series_summary.csv"
+    ]
+  },
+  "presentation_profile": "scientific-report",
+  "schema": "phylo-analysis-spec/1",
+  "slug": "dose-response-report",
+  "sources": [],
+  "starting_prompt": "How do these concentration-response series compare?",
+  "visibility": "public"
+}
