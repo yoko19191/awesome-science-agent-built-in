@@ -1,0 +1,574 @@
+{
+  "authoring": {
+    "derived_files": [
+      "SKILL.md",
+      "DATA_SOURCES.md"
+    ],
+    "generator": "phylo-create-skill",
+    "repair_policy": "regenerate derived files from skill_contract.json and rerun the full gate"
+  },
+  "capabilities": {
+    "catalog_claim_ids": [
+      "atac_core",
+      "joint_multiome"
+    ],
+    "entries": [
+      {
+        "claim": "Use for scATAC-seq, snATAC-seq, or 10x Multiome chromatin accessibility from fragments or Cell Ranger ATAC/ARC output: fragments-first QC, LSI clustering, MACS3 peak recalling, gene activity, and differential accessibility.",
+        "id": "atac_core",
+        "implementation_refs": [
+          "scripts/01_ingest_qc.R",
+          "scripts/02_lsi_cluster.R",
+          "scripts/03_recall_peaks.R",
+          "scripts/04_annotate.R",
+          "scripts/05_diff_access.R"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "For paired RNA+ATAC Multiome it adds a pairing and genome-identity gate, a WNN joint embedding with modality weights, integration metrics, and replicate-aware differential abundance.",
+        "id": "joint_multiome",
+        "implementation_refs": [
+          "scripts/00_route.R",
+          "scripts/07_rna_qc.R",
+          "scripts/08_wnn_joint.R",
+          "scripts/09_integrate_bridge.py",
+          "scripts/10_diff_abundance.R"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Route unpaired/diagonal RNA+ATAC and CITE-seq inputs to a multimodal-integration skill instead of fabricating a joint result.",
+        "id": "routing_handoff",
+        "implementation_refs": [
+          "scripts/_route.R",
+          "scripts/00_route.R"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "Unpaired/diagonal RNA+ATAC or CITE-seq is routed to a multimodal-integration skill."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "report_scatac-multiome-analysis.pdf"
+      ],
+      "choice_id": "user_paired",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/00_route.R",
+        "scripts/08_wnn_joint.R"
+      ],
+      "question_id": "input_mode"
+    },
+    {
+      "artifact_paths": [
+        "report_scatac-multiome-analysis.pdf"
+      ],
+      "choice_id": "auto",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/_route.R",
+        "scripts/00_route.R"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "joint_cluster_celltype_assignment.csv",
+        "integrated.h5mu",
+        "joint_qc_scorecard.csv",
+        "modality_weights_summary.csv",
+        "atac_initial_cluster_summary.json",
+        "atac_recalled_cluster_summary.json",
+        "top_DA_peaks_per_celltype.csv"
+      ],
+      "choice_id": "joint",
+      "fallback_status": "not_computable",
+      "implementation_refs": [
+        "scripts/08_wnn_joint.R",
+        "scripts/09_integrate_bridge.py"
+      ],
+      "question_id": "route_override"
+    },
+    {
+      "artifact_paths": [
+        "top_DA_peaks_per_celltype.csv"
+      ],
+      "choice_id": "atac_only",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/02_lsi_cluster.R",
+        "scripts/05_diff_access.R"
+      ],
+      "question_id": "route_override"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "user_paired",
+          "label": "Use a user-provided paired 10x Multiome bundle"
+        }
+      ],
+      "id": "input_mode",
+      "prompt": "How should the run obtain its input bundle?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "auto",
+          "label": "Detect the regime automatically (recommended)"
+        },
+        {
+          "id": "joint",
+          "label": "Force the paired RNA+ATAC joint route"
+        },
+        {
+          "id": "atac_only",
+          "label": "Force the scATAC-only route"
+        }
+      ],
+      "id": "route_override",
+      "prompt": "Which analysis route should run?",
+      "selection_mode": "single"
+    }
+  ],
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "fixed_prompt_path": "assets/infographic_prompt.txt",
+      "fixed_prompt_sha256": "35226ab14b4f4b33fa941b3dc659e162826949e4842ca25d527a133e6bed58a1",
+      "qualitative_workflow_only": true,
+      "not_applicable_reason": "",
+      "presentation_constraints": {
+        "forbidden": [
+          "logo, wordmark, watermark, company or provider branding",
+          "table, spreadsheet grid, dashboard or report-page facsimile",
+          "chart, result panel, numeric result or run-specific value"
+        ],
+        "major_stages_max": 6,
+        "major_stages_min": 3,
+        "mode": "directional_workflow"
+      },
+      "required": true
+    },
+    "report": {
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "not_applicable_reason": "",
+      "required": true
+    }
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/run_all.sh"
+    ],
+    "command_output_paths": [
+      "joint_cluster_celltype_assignment.csv",
+      "joint_qc_scorecard.csv",
+      "integrated.h5mu",
+      "modality_weights_summary.csv",
+      "atac_initial_cluster_summary.json",
+      "atac_recalled_cluster_summary.json",
+      "top_DA_peaks_per_celltype.csv"
+    ]
+  },
+  "external_dependencies": {
+    "applicable": false,
+    "not_applicable_reason": "The skill runs entirely on local inputs and installed packages and calls no network service at runtime; reference genomes and the optional marker database are installed or mounted, not fetched from a live API during a run.",
+    "services": []
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "field": "n_joint_cells",
+        "operational_definition": "Cells retained in the WNN joint embedding after pairing and per-modality QC."
+      },
+      {
+        "field": "n_joint_clusters",
+        "operational_definition": "Number of joint WNN clusters at the configured Leiden/Louvain resolution."
+      },
+      {
+        "field": "pairing_barcode_overlap",
+        "operational_definition": "Fraction of ATAC cell barcodes also present in the RNA matrix; must be >= pairing.min_barcode_overlap for the joint route."
+      },
+      {
+        "field": "median_rna_modality_weight",
+        "operational_definition": "Median per-cell RNA modality weight from WNN; the ATAC weight is 1 minus this value."
+      },
+      {
+        "field": "mean_rna_modality_weight",
+        "operational_definition": "Mean per-cell RNA modality weight from WNN; reported distinctly from the median."
+      },
+      {
+        "field": "n_initial_atac_clusters",
+        "operational_definition": "Number of ATAC-only clusters before peak recall, from atac_initial_cluster_summary.json."
+      },
+      {
+        "field": "n_recalled_atac_clusters",
+        "operational_definition": "Number of ATAC-only clusters after recalled-peak requantification, distinct from the WNN joint-cluster count."
+      }
+    ],
+    "not_applicable_reason": "",
+    "partition_groups": [
+      {
+        "denominator_field": "n_input_paired_cells",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "n_joint_cells",
+          "n_cells_dropped_qc",
+          "n_cells_unpaired"
+        ],
+        "name": "cell_accounting"
+      }
+    ],
+    "partition_not_applicable_reason": "",
+    "requirement": "required",
+    "runtime_payload_artifact": "facts_payload.json",
+    "schema": "report_facts.json"
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": true,
+    "design_identifiability_check": "scripts/_common.R replicates_sufficient() requires at least two replicates per condition and more than one condition before Milo or pseudobulk differential analysis runs; otherwise it is skipped and flagged.",
+    "experimental_unit": "biological replicate (sample) within a condition",
+    "minimum_independent_units": 2,
+    "permutation_support_check": "Milo spatial-FDR uses the replicate-structured design; single-replicate designs are refused rather than permuted into false significance.",
+    "replicate_type": "biological",
+    "runtime_preflight_ref": "scripts/preflight_dependencies.R"
+  },
+  "installation": {
+    "offer_private_preview_after_generation": true,
+    "registration_managed_outside_package": true,
+    "registration_requires_explicit_user_confirmation": true
+  },
+  "maturity": "evidence_validated",
+  "pdf_review": {
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_required": true,
+    "mechanism": "Use ordinary `Read` with an image-capable model to inspect the actual image or every rendered PDF page. Loading media or extracting text alone is not a passing visual review. Fix visible defects before delivery; if visual input is unavailable, state that limitation. The programmatic receipt validates artifacts and provenance, and does not attest visual quality."
+  },
+  "resource_identity": {
+    "applicable": true,
+    "artifact": "provenance_manifest.json",
+    "authoritative_source_uri": "https://bioconductor.org/packages/BSgenome.Hsapiens.UCSC.hg38/",
+    "expected_violations": 0,
+    "failure_policy": "exclude_or_not_computable",
+    "identifier_fields": [
+      "genome.build",
+      "genome.canonical_input_build"
+    ],
+    "identity_fields": [
+      "genome.input_build_evidence",
+      "genome.ensdb",
+      "genome.bsgenome",
+      "genome.blacklist",
+      "genome.seqlevel_style_status"
+    ],
+    "verification_artifact": "provenance_manifest.json",
+    "violation_json_path": "genome.identity_violations"
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "report_facts.json (pairing_barcode_overlap)",
+        "statement": "Treating a paired Multiome as scATAC-with-RNA-annotation, or integrating both modalities before confirming they came from the same cells and genome build, invents structure: the pairing and genome-identity gate must pass first, or the run stops and hands off rather than fabricating a joint embedding."
+      },
+      {
+        "evidence_ref": "modality_weights_summary.csv",
+        "statement": "Per-cell modality weights are asserted to lie in the closed unit interval and describe how much each modality drove the joint neighbor graph; a near-degenerate weight distribution means one modality dominated and the joint embedding is close to a single-modality result. They do not establish that WNN is preferred, superior, or more informative than either modality without an explicit unimodal comparison."
+      },
+      {
+        "evidence_ref": "atac_initial_cluster_summary.json and atac_recalled_cluster_summary.json",
+        "statement": "Initial and recalled-peak cluster counts describe two analysis stages but do not establish peak-recall structural stability without a cellwise correspondence or stability statistic."
+      },
+      {
+        "evidence_ref": "multivi_status.json",
+        "statement": "MultiVI outputs are model predictions, not measurements, and run only when assumptions are met; otherwise a documented skip is recorded rather than a fabricated latent space."
+      },
+      {
+        "evidence_ref": "diffabund_status.json",
+        "statement": "Milo differential abundance and pseudobulk differential expression require at least two biological replicates per condition; with insufficient replication they are skipped and flagged, never reported with a fabricated FDR."
+      },
+      {
+        "evidence_ref": "provenance_manifest.json (genome.identity_violations)",
+        "statement": "The genome gate compares an independent matrix/metadata/explicit input build with the configured annotation build and checks seqlevel style separately. Missing, ambiguous, or mismatched identity hard-stops; chr* style alone is never treated as hg19/hg38 identity."
+      },
+      {
+        "evidence_ref": "joint_qc_scorecard.json (integration_metrics.*_status, *_reason)",
+        "statement": "Label-purity and label-silhouette require labels independent of WNN clustering; marker annotations derived from WNN clusters are not reused to validate those clusters, and single-level labels or batches emit explicit non-evaluable or structurally-degenerate states."
+      },
+      {
+        "evidence_ref": "joint_qc_scorecard.json (integration_metrics) and figures/manifest.json (step 7)",
+        "statement": "The integration-metrics figure is rendered only when at least one metric has a finite numeric score. If every metric is non-evaluable or structurally degenerate, step 7 is recorded as file null with a reason and the statuses remain visible in report prose or a compact table rather than an annotation-only plotting frame."
+      },
+      {
+        "evidence_ref": "report_facts.json",
+        "statement": "This skill is hypothesis-generating: joint clusters, integration metrics, and neighborhoods are exploratory and are not validated at any threshold."
+      },
+      {
+        "evidence_ref": "run_receipt.json (infographic_lineage_verified)",
+        "statement": "Infographic embedding/identity statements are derived from the receipt: \"pixel-identical\" is used only for a completed decoded-pixel comparison that bound the generated image to one page-1 embedding with both hashes recorded; otherwise the honest not-evaluable/not-applicable status and its reason are stated, and the count-only figures_embedded result is never treated as image identity."
+      },
+      {
+        "evidence_ref": "Agent inspection of infographic.png",
+        "statement": "Inspect the actual infographic pixels with ordinary Read. It must be qualitative workflow-only, contain no result-like plots/values or outcome/completion claims, and visibly carry the disclaimer. If visual input is unavailable, report that limitation. The receipt does not attest visual semantics."
+      },
+      {
+        "evidence_ref": "run_receipt.json (execution_contract_satisfied)",
+        "statement": "Delivery requires exactly one raw successful scripts/run_all.sh event after the non-installing dependency preflight; a failed execution followed by a successful retry remains non-deliverable, and every required true receipt outcome carries non-empty package-derived evidence."
+      }
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "Artistic-2.0 is an OSI-approved permissive license permitting commercial use; Bioconductor package DESCRIPTION.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "Artistic-2.0",
+        "name": "EnsDb.Hsapiens.v86",
+        "notes": "Ensembl v86 gene models for hg38; used for gene-activity scoring and TSS. Installed at runtime.",
+        "type": "genome annotation (Bioconductor)",
+        "uri": "https://bioconductor.org/packages/EnsDb.Hsapiens.v86/",
+        "verification_ref": "references/licenses.md",
+        "version": "2.99.0"
+      },
+      {
+        "commercial_evidence": "Package code is Artistic-2.0; the underlying UCSC hg38/GRCh38 assembly is freely available including for commercial use per UCSC data-use policy. Source vs assembly-data terms recorded separately.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "Artistic-2.0 (package); UCSC hg38 data terms (sequence)",
+        "name": "BSgenome.Hsapiens.UCSC.hg38",
+        "notes": "Genome sequence for peak recalling and motif/GC context. Installed at runtime.",
+        "type": "reference genome (Bioconductor)",
+        "uri": "https://bioconductor.org/packages/BSgenome.Hsapiens.UCSC.hg38/",
+        "verification_ref": "references/licenses.md",
+        "version": "1.4.5"
+      },
+      {
+        "commercial_evidence": "Conflicting signals: the CellMarker 2.0 NAR paper is CC-BY-NC-4.0 (non-commercial), aggregators list CC0, and the CellMarker2 website shows a Harbin Medical University copyright with no explicit data-reuse license; commercial reuse could not be unambiguously verified.",
+        "commercial_status": "not_checked",
+        "included": false,
+        "license": "Ambiguous: source paper CC-BY-NC-4.0; some mirrors CC0; site shows university copyright with no explicit reuse grant",
+        "name": "CellMarker 2.0",
+        "notes": "Optional and not bundled. The skill ships a built-in PBMC marker panel fallback, so annotation runs without CellMarker2.",
+        "type": "marker database (optional)",
+        "uri": "http://bio-bigdata.hrbmu.edu.cn/CellMarker/",
+        "verification_ref": "references/licenses.md",
+        "version": "2.0"
+      },
+      {
+        "commercial_evidence": "10x Genomics public datasets are provided for research use under 10x dataset terms with no redistribution prohibition found for internal analysis; used once for the primary execution and never shipped.",
+        "commercial_status": "no_prohibition_found",
+        "included": false,
+        "license": "10x Genomics dataset terms",
+        "name": "10x Genomics PBMC 10k Multiome public reference dataset",
+        "notes": "Real data downloaded and downsampled at authoring time for the one primary run; NOT included in the package.",
+        "type": "public reference dataset",
+        "uri": "https://www.10xgenomics.com/datasets",
+        "verification_ref": "references/licenses.md",
+        "version": "2.0.0"
+      },
+      {
+        "commercial_evidence": "MIT license (GitHub LICENSE); commercial use permitted.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Signac",
+        "notes": "Core single-cell ATAC and multiome analysis.",
+        "type": "software (R)",
+        "uri": "https://github.com/stuart-lab/signac",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.12"
+      },
+      {
+        "commercial_evidence": "MIT license (GitHub LICENSE); WNN implementation.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "MIT",
+        "name": "Seurat",
+        "notes": "WNN joint embedding and RNA analysis.",
+        "type": "software (R)",
+        "uri": "https://github.com/satijalab/seurat",
+        "verification_ref": "references/licenses.md",
+        "version": ">=5.0"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE); commercial use permitted.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "MACS3",
+        "notes": "Per-cluster peak recalling.",
+        "type": "software (Python)",
+        "uri": "https://github.com/macs3-project/MACS",
+        "verification_ref": "references/licenses.md",
+        "version": ">=3.0"
+      },
+      {
+        "commercial_evidence": "GPL-3.0-only (bioconda r-presto; GitHub); copyleft, commercial use allowed under GPL terms.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3.0-only",
+        "name": "presto",
+        "notes": "Fast Wilcoxon marker detection.",
+        "type": "software (R)",
+        "uri": "https://github.com/immunogenomics/presto",
+        "verification_ref": "references/licenses.md",
+        "version": "1.0.0"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE); MultiVI sensitivity route.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scvi-tools (MultiVI)",
+        "notes": "Optional MultiVI joint latent space.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/scvi-tools",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.1"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE); .h5mu container.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "mudata / muon",
+        "notes": "Integrated multimodal object.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/mudata",
+        "verification_ref": "references/licenses.md",
+        "version": ">=0.2"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE).",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scanpy",
+        "notes": "Python-side single-cell utilities for the bridge.",
+        "type": "software (Python)",
+        "uri": "https://github.com/scverse/scanpy",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.9"
+      },
+      {
+        "commercial_evidence": "BSD 3-Clause (GitHub LICENSE / pyproject); scIB-style integration metrics.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "BSD-3-Clause",
+        "name": "scib-metrics",
+        "notes": "Optional integration-metric backend; deterministic in-house metrics are the default.",
+        "type": "software (Python)",
+        "uri": "https://github.com/YosefLab/scib-metrics",
+        "verification_ref": "references/licenses.md",
+        "version": ">=0.5"
+      },
+      {
+        "commercial_evidence": "GPL-3 (Bioconductor DESCRIPTION); copyleft, commercial use allowed under GPL terms.",
+        "commercial_status": "allowed",
+        "included": false,
+        "license": "GPL-3",
+        "name": "miloR",
+        "notes": "Replicate-aware differential abundance.",
+        "type": "software (R/Bioconductor)",
+        "uri": "https://github.com/MarioniLab/miloR",
+        "verification_ref": "references/licenses.md",
+        "version": ">=1.10"
+      }
+    ],
+    "existing_materials": [
+      "scripts/00_route.R and scripts/_route.R establish modality, pairing, genome, and supported-route identity before integration.",
+      "scripts/01_ingest_qc.R through scripts/10_diff_abundance.R implement QC, ATAC analysis, paired WNN integration, metrics, and replicate-aware inference.",
+      "scripts/stage_status_grounding.py binds report prose to actual stage outcomes; scripts/table_layout.py protects wide diagnostic tables from page clipping.",
+      "scripts/report_qc.py owns terminal scientific, lineage, source, style, and review gates."
+    ],
+    "inputs": [
+      "A 10x Multiome filtered_feature_bc_matrix.h5 with both Gene Expression and Peaks feature types (joint/annotate route), or ATAC peaks/fragments only (scATAC route).",
+      "atac_fragments.tsv.gz with a matching .tbi tabix index.",
+      "For a Cell Ranger ARC combined matrix, its per-barcode metrics CSV with atac_peak_region_fragments and atac_fragments; combined-matrix Peaks values are cut-site counts and are not valid fragment-unit FRiP inputs.",
+      "metadata.csv with per-cell or per-sample replicate and condition columns for replicate-aware differential abundance.",
+      "An independent input genome identity from /matrix/features/genome, one unique metadata genome, or genome.input_build for fragments-only input; chr* style alone is insufficient.",
+      "A config file (scripts/config.example.yaml) setting the annotation genome build and the route, pairing, QC, WNN, integration, MultiVI, and differential-abundance parameters."
+    ],
+    "workflow": [
+      {
+        "instruction": "Run scripts/00_route.R to detect feature types and barcode overlap, compare an independent matrix/metadata/explicit input genome identity with the configured annotation build, check seqlevel style separately, and evaluate sample identity. An absent or ambiguous input build is a machine not_evaluable hard stop; never infer hg19 versus hg38 from shared chr* style.",
+        "title": "Validate pairing and resolve the analysis route"
+      },
+      {
+        "instruction": "Run scripts/01_ingest_qc.R for fragments-first ATAC QC and scripts/07_rna_qc.R for RNA QC. FRiP uses atac_peak_region_fragments over atac_fragments for Cell Ranger ARC or peak_region_fragments over passed_filters for Cell Ranger ATAC. Only non-ARC matrices may use compatible peak-matrix fragment counts over independently counted fragments; missing, partial, or incompatible metrics fail closed.",
+        "title": "QC and normalize each modality"
+      },
+      {
+        "instruction": "Run scripts/02_lsi_cluster.R: TF-IDF normalization, singular value decomposition (LSI), drop the depth-correlated first component, and build the ATAC neighbor graph, UMAP, and clusters.",
+        "title": "Cluster open chromatin with TF-IDF and LSI"
+      },
+      {
+        "instruction": "Run scripts/03_recall_peaks.R for per-cluster MACS3 peak recalling on the fragments and scripts/04_annotate.R for gene-activity scoring and marker-based annotation using the genome triad and the bundled PBMC panel.",
+        "title": "Recall peaks and score gene activity"
+      },
+      {
+        "instruction": "Run scripts/08_wnn_joint.R: intersect paired barcodes, recompute RNA PCA and ATAC LSI, run FindMultiModalNeighbors, and produce a joint UMAP, joint clusters, and per-cell modality weights asserted to lie in the closed unit interval.",
+        "title": "Build the WNN joint embedding"
+      },
+      {
+        "instruction": "Run scripts/09_integrate_bridge.py to assemble an integrated .h5mu, compute kNN metrics on the exported WNN weighted-neighbor graph and coordinate silhouettes on the WNN UMAP, and bind both inputs to barcode order, shape, and SHA-256 evidence. Label metrics require independent labels; single-level or missing label/batch inputs emit explicit states instead of numeric scores.",
+        "title": "Assemble the integrated object and integration metrics"
+      },
+      {
+        "instruction": "Run scripts/10_diff_abundance.R: build Milo neighborhoods on the joint embedding and test differential abundance with spatial FDR when at least two biological replicates per condition exist, add pseudobulk RNA differential expression and preserved per-cell-type ATAC differential accessibility, and skip and flag rather than fabricate when replication is insufficient.",
+        "title": "Test replicate-aware differential abundance"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "scatac-multiome-analysis"
+  },
+  "source_assertions": [
+    {
+      "asserted_value": 0,
+      "field": "genome.identity_violations",
+      "id": "genome_identity_zero_violations",
+      "primary_source_uri": "https://bioconductor.org/packages/BSgenome.Hsapiens.UCSC.hg38/",
+      "retrieved_at": "2026-08-18",
+      "runtime_witness": {
+        "artifact": "provenance_manifest.json",
+        "expected_value": 0,
+        "json_path": "genome.identity_violations"
+      },
+      "verification_method": "Resolve the configured annotation build to its resource triad, canonicalize an independent input build from the 10x matrix, metadata, or explicit input declaration, compare build identities, check fragment seqlevel style separately, and count the emitted violation rows. Missing or ambiguous input identity is not_evaluable and cannot satisfy the zero-violation witness."
+    }
+  ],
+  "source_assertions_not_applicable_reason": "",
+  "starting_task": {
+    "decision_context": "Whether the bundle can be analyzed as one joint object and which joint cell states and conditions differ, versus routing an unpaired or CITE-seq bundle to a dedicated multimodal-integration skill.",
+    "deliverables": "report_scatac-multiome-analysis.pdf, joint_cluster_celltype_assignment.csv, joint_qc_scorecard.csv, and integrated.h5mu.",
+    "objective": "Confirm RNA and ATAC come from the same cells and genome build, run per-modality QC, build a Seurat WNN joint embedding with modality weights, compute integration metrics, and test replicate-aware differential abundance.",
+    "subject_input": "A paired 10x Multiome bundle: a filtered_feature_bc_matrix.h5 carrying both Gene Expression and Peaks feature types, atac_fragments.tsv.gz with its .tbi tabix index, and metadata.csv holding replicate and condition columns.",
+    "user_prompt": "Characterize chromatin accessibility from scATAC or paired multiome data, including quality control, cell annotation, regulatory features, and supported differential patterns."
+  },
+  "analysis_input_selection": {
+    "schema_version": "2.0",
+    "execution_mode": "analysis",
+    "accepted_origins": [
+      "uploaded",
+      "downloaded"
+    ],
+    "package_data_used": false,
+    "manifest": "input_selection.json",
+    "manifest_hash": "SHA-256 of canonical UTF-8 JSON with sorted keys, comma/colon separators, and manifest_sha256 omitted",
+    "downloaded_acquisition": "complete provenance required; partial or failed acquisition cannot enter analysis",
+    "stale_output_policy": "result_root must be nonexistent or empty before sealing"
+  }
+}

@@ -1,0 +1,183 @@
+# ============================================================================
+# scATAC-seq end-to-end pipeline configuration
+# Copy to config.yaml and edit. Each script reads this file, resolved in order:
+#   1) positional arg:   Rscript scripts/01_ingest_qc.R /path/to/config.yaml
+#   2) env var:          CONFIG=/path/to/config.yaml Rscript scripts/01_ingest_qc.R
+# The one-shot driver scripts/run_all.sh handles this for you.
+# ============================================================================
+
+project:
+  name: "scatac_run"              # used in filenames + report title
+  outdir: "/workspace/scatac/out" # WORKING dir (local disk; random-access OK for .rds/.h5)
+  results_dir: "/mnt/results/scatac_run"  # user-facing copy target (figures/tables/report/manifest)
+  seed: 1234                      # fixed for UMAP/clustering/DA subsampling (see manifest)
+
+# ----------------------------------------------------------------------------
+# INPUT — fragments file is the PRIMITIVE (source of truth). Everything else
+# is optional. Peaks are re-called with MACS3 regardless.
+# ----------------------------------------------------------------------------
+input:
+  fragments: "/workspace/scatac/data/fragments.tsv.gz"   # REQUIRED (+ .tbi alongside)
+  # Optional 10x accelerator / QC-comparison peak-barcode matrix. If null, an
+  # initial peak set is called with MACS3 on all fragments to seed clustering.
+  peak_matrix_h5: null            # e.g. ".../filtered_peak_bc_matrix.h5"
+  # Required for Cell Ranger ARC combined matrices: the per-barcode metrics CSV
+  # containing atac_peak_region_fragments and atac_fragments. Canonical Cell
+  # Ranger ATAC singlecell.csv fields remain supported for ATAC-only inputs.
+  singlecell_csv: null            # e.g. ".../per_barcode_metrics.csv" or ".../singlecell.csv"
+  # Optional explicit cell barcode list (one per line). If null and no matrix/
+  # singlecell, cells are derived by a fragment-count knee (see references).
+  cell_barcodes: null
+  # MULTIOME: point at a combined 10x matrix with Gene Expression + Peaks and set
+  # multiome=true; RNA is split out and used to annotate, then transferred to ATAC.
+  multiome: false
+  multiome_matrix_h5: null        # e.g. ".../filtered_feature_bc_matrix.h5" (Gene Expression + Peaks)
+  multiome_atac_fragments: null   # e.g. ".../atac_fragments.tsv.gz" (+ .tbi)
+  metadata_csv: null              # per-barcode CSV: barcode,condition,replicate,sample[,genome]
+                                  #   -> enables replicate-aware DA and sample/genome identity checks
+  rna_matrix_h5: null             # SEPARATE RNA-only matrix (diagnostic). Separate RNA+ATAC = UNPAIRED
+                                  #   -> use single-cell-multimodal-integration; not run here
+
+# ----------------------------------------------------------------------------
+# GENOME — selects a validated triad (EnsDb + BSgenome + ENCODE blacklist).
+# Supported keys: hg38 (default), hg19, mm10. See references/genome_registry.md.
+# ----------------------------------------------------------------------------
+genome:
+  build: "hg38"
+  # Independent input build declaration for fragments-only runs. Combined 10x
+  # matrices normally expose /matrix/features/genome and do not need this field.
+  # If neither matrix nor metadata supplies a unique build, null hard-stops as
+  # not_evaluable rather than treating UCSC chr* style as hg38/hg19 identity.
+  input_build: null               # e.g. "GRCh38", "GRCh37", or "GRCm38"
+
+# Initial peak-by-cell assay construction. These are feature-retention filters,
+# not the downstream biological QC thresholds below. Defaults preserve the
+# original behavior; lower them only for unusually sparse inputs or fixtures.
+atac:
+  min_cells: 10
+  min_features: 200
+
+# ----------------------------------------------------------------------------
+# MULTIOME / JOINT (paired 10x RNA-ATAC) — NEW routes. Defaults preserve the
+# existing behavior: with a combined matrix but joint=false the pipeline runs the
+# existing RNA-assisted ATAC annotation; scATAC-only runs are unaffected.
+# The router (00_route.R) establishes the regime BEFORE any integration.
+# ----------------------------------------------------------------------------
+multiome:
+  joint: false                    # true => paired RNA-ATAC joint analysis (WNN + metrics + replicate-aware DA)
+  route: "auto"                   # auto | atac_only | multiome_annotate | joint | stop  (visible override)
+
+pairing:
+  min_barcode_overlap: 0.95       # matrix<->fragments shared-barcode fraction; below this the bundle is NOT paired -> STOP
+  require_same_sample: true       # metadata sample identities must agree across modalities
+
+rna_qc:                           # modality-specific RNA QC (joint). RNA-native metrics, NOT ATAC metrics.
+  min_genes: 200
+  max_genes: null                 # e.g. 8000 to drop likely multiplets; null = no upper bound
+  max_pct_mito: 20
+  min_counts: 0
+  mito_pattern: "^MT-"            # "^mt-" for mouse
+  normalization: "lognorm"        # lognorm | sct
+  n_hvg: 2000
+
+wnn:                              # Seurat weighted-nearest-neighbor joint embedding
+  rna_dims_n: 30                  # RNA PCA dims 1:N
+  atac_first_dim: 2               # drop LSI comp 1 (depth); ATAC dims first:atac_dims_n
+  atac_dims_n: 30
+  resolution: 1.0                 # joint (wsnn) clustering resolution
+
+integration_metrics:              # scIB-style diagnostics on the joint representation
+  batch_key: "replicate"          # metadata column treated as batch for mixing metrics
+  label_key: "cell_type"          # biology-conservation label
+
+multivi:                          # OPTIONAL probabilistic sensitivity route (scvi-tools). WNN stays the headline.
+  enable: "auto"                  # auto (run only if assumptions met) | true | false
+  min_cells: 1000                 # assumption floor; below this -> documented skip, NOT a fabricated latent
+  max_epochs: 50
+
+diffabund:                        # replicate-aware differential abundance / expression (joint route)
+  method: "milo"                  # milo | dcats
+  replicate_col: "replicate"
+  condition_col: "condition"
+  min_replicates_per_group: 2     # below this -> DA is SKIPPED with a reason (no fabricated FDR)
+  k: 30
+  prop: 0.1
+  fdr: 0.1
+
+# ----------------------------------------------------------------------------
+# QC thresholds — sensible defaults; REVISIT per tissue/assay (blood vs solid,
+# shallow vs deep). Derivations documented in references/parameters.md.
+# ----------------------------------------------------------------------------
+qc:
+  min_count: 3000                 # nCount_peaks lower bound
+  max_count: 100000               # nCount_peaks upper bound (doublet-ish/huge)
+  min_frip: 25                    # % reads in peaks
+  max_nucleosome: 4               # nucleosome signal upper bound
+  min_tss: 3                      # TSS enrichment lower bound
+  max_blacklist: 0.05             # blacklist-region fragment ratio upper bound
+
+# ----------------------------------------------------------------------------
+# Dimensionality reduction & clustering
+# ----------------------------------------------------------------------------
+dimreduc:
+  lsi_dims: "2:30"                # drop comp 1 (depth-correlated; verified by DepthCor)
+  min_cutoff: "q0"               # FindTopFeatures for LSI (q0 = all peaks)
+  cluster_algorithm: 3            # 3 = SLM
+  resolution_initial: 1.2         # clusters used as groups for peak recalling
+  resolution_final: 1.0           # clusters on the recalled peak matrix
+
+# ----------------------------------------------------------------------------
+# Peak recalling (MACS3)
+# ----------------------------------------------------------------------------
+peaks:
+  macs_path: "auto"               # "auto" = Sys.which('macs3'); or absolute path
+  effective_genome_size: "auto"   # "auto" -> hs (2.7e9) for human, mm (1.87e9) for mouse
+  group_by: "seurat_clusters"     # cell grouping for per-cluster CallPeaks
+
+# ----------------------------------------------------------------------------
+# Annotation — tiered. marker (default) -> optional CellMarker2 tissue panel ->
+# optional label transfer from an annotated scRNA-seq reference.
+# ----------------------------------------------------------------------------
+annotation:
+  method: "marker"                # "marker" | "label_transfer" (marker always runs as baseline)
+  tissue: null                    # e.g. "Peripheral blood"; drives CellMarker2 panel pull
+  use_cellmarker2: true           # pull tissue markers from Biomni CellMarker2 datalake
+  marker_panel: null              # optional YAML/JSON path to override with custom marker sets
+  # confidence gating — flag weak/ambiguous cluster assignments
+  min_top_zscore: 1.0             # top marker-set z-score must exceed this, else "low-confidence"
+  min_margin: 0.25                # (top - 2nd) marker-set z-score margin, else "ambiguous"
+  reference_rds: null             # annotated scRNA-seq Seurat .rds for label transfer
+  reference_label_col: null       # metadata column in reference holding cell-type labels
+
+# ----------------------------------------------------------------------------
+# Differential accessibility (per cell type)
+# ----------------------------------------------------------------------------
+diffaccess:
+  test: "wilcox"                  # DO NOT use "LR"+latent.vars: hangs on ~180k peaks
+  only_pos: true
+  min_pct: 0.15
+  max_cells_per_ident: 200        # subsample for tractability (stochastic -> seed logged)
+  var_features_cutoff: "q25"      # FindTopFeatures for DA feature restriction
+  top_n_per_type: 5               # peaks per cell type in the heatmap
+  coverage_genes: ["CD3D", "MS4A1"]  # loci for CoveragePlot panels (edit per tissue)
+
+# ----------------------------------------------------------------------------
+# Deliverables
+# ----------------------------------------------------------------------------
+output:
+  save_rds: false                 # slimmed final Seurat object (multi-GB); default OFF
+  slim_rds: true                  # if save_rds: drop fragment cache, keep meta+reductions+peaks
+  make_report: true               # Phylo PDF with infographic
+  literature_refs: true           # pull a few method/marker references via LiteratureSearch
+
+# ----------------------------------------------------------------------------
+# Report — consumed by make_report.py to fill PDF text & the infographic.
+# All fields optional (sensible defaults), but set them for a polished report.
+# ----------------------------------------------------------------------------
+report:
+  title: "Single-Cell ATAC-seq Analysis"                 # cover + infographic title
+  subtitle: "Chromatin Accessibility: QC, Peak Calling, Clustering & Annotation"
+  sample_description: "the profiled single-cell ATAC-seq sample"  # used throughout the prose
+  dataset_accession: ""            # GEO/10x/ArrayExpress accession -> cited as the data source
+  running_header: "scATAC-seq Analysis"                  # per-page top header
+  pdf_path: ""                     # output PDF path; default <results_dir>/report_scatac.pdf
