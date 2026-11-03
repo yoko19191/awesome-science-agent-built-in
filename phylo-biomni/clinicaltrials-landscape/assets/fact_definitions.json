@@ -1,0 +1,109 @@
+{
+  "headline_definitions": [
+    {
+      "field": "records_retrieved",
+      "operational_definition": "Count of unique registered records returned by the declared ClinicalTrials.gov query, equal to the API totalCount for that query; may include expanded-access records when availability statuses are requested."
+    },
+    {
+      "field": "record_asset_boundary_statement",
+      "operational_definition": "Canonical report sentence stating that registered-record counts do not measure unique agents, assets, or development programs."
+    },
+    {
+      "field": "n_interventional",
+      "operational_definition": "Records with study_type INTERVENTIONAL."
+    },
+    {
+      "field": "n_observational",
+      "operational_definition": "Records with study_type OBSERVATIONAL."
+    },
+    {
+      "field": "n_expanded_access",
+      "operational_definition": "Records with study_type EXPANDED_ACCESS, returned when expanded-access availability statuses are included in the declared query."
+    },
+    {
+      "field": "n_phase_applicable",
+      "operational_definition": "Records assigned a trial phase (Phase 1 through Phase 4, including combined phases)."
+    },
+    {
+      "field": "n_phase_not_applicable",
+      "operational_definition": "Records with no applicable phase (Not Applicable), which includes observational and many device/diagnostic studies."
+    },
+    {
+      "field": "descriptions_available_count",
+      "operational_definition": "Top-level report alias of match_evidence.descriptions_available_count: retrieved records with at least one ClinicalTrials.gov intervention description present."
+    },
+    {
+      "field": "brief_summary_available_count",
+      "operational_definition": "Top-level report alias of match_evidence.brief_summary_available_count: retrieved records with a ClinicalTrials.gov brief summary present."
+    },
+    {
+      "field": "detailed_description_available_count",
+      "operational_definition": "Top-level report alias of match_evidence.detailed_description_available_count: retrieved records with a ClinicalTrials.gov detailed description present."
+    },
+    {
+      "field": "n_sponsors",
+      "operational_definition": "Count of unique normalized lead-sponsor names across retrieved records."
+    },
+    {
+      "field": "n_industry",
+      "operational_definition": "Retrieved records whose ClinicalTrials.gov lead-sponsor class is INDUSTRY; this is a record count, not a unique-sponsor count."
+    },
+    {
+      "field": "n_academic",
+      "operational_definition": "Retrieved records whose lead-sponsor class is not INDUSTRY; this is a record count, not a unique-sponsor count."
+    },
+    {
+      "field": "n_purpose_unresolved",
+      "operational_definition": "Interventional records whose study purpose could not be resolved from the available record fields; labeled, never assigned an invented modality."
+    }
+  ],
+  "partition_groups": [
+    {
+      "denominator_field": "records_retrieved",
+      "identity": "sum_members_equals_denominator",
+      "member_fields": [
+        "n_interventional",
+        "n_observational",
+        "n_expanded_access"
+      ],
+      "name": "study_type"
+    },
+    {
+      "denominator_field": "records_retrieved",
+      "identity": "sum_members_equals_denominator",
+      "member_fields": [
+        "n_phase_applicable",
+        "n_phase_not_applicable"
+      ],
+      "name": "phase_applicability"
+    },
+    {
+      "denominator_field": "records_retrieved",
+      "identity": "sum_members_equals_denominator",
+      "member_fields": [
+        "n_purpose_observational",
+        "n_purpose_diagnostic_imaging",
+        "n_purpose_therapeutic",
+        "n_purpose_other_supportive",
+        "n_purpose_unresolved"
+      ],
+      "name": "study_purpose"
+    },
+    {
+      "denominator_field": "records_retrieved",
+      "identity": "sum_members_equals_denominator",
+      "member_fields": [
+        "n_cat_diagnostic_radiotracer",
+        "n_cat_radioligand_therapy",
+        "n_cat_small_molecule",
+        "n_cat_biologic",
+        "n_cat_cell_gene_therapy",
+        "n_cat_radiation_therapy",
+        "n_cat_device_procedure",
+        "n_cat_behavioral_supportive_other",
+        "n_cat_unclassified"
+      ],
+      "name": "intervention_category"
+    }
+  ]
+}
