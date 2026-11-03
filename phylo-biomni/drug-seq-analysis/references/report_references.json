@@ -1,0 +1,21 @@
+{
+  "schema": "phylo-report-references/1",
+  "references": [
+    {
+      "authors": "Ye C, Ho DJ, Neri M, et al.",
+      "id": "drug-seq-2018",
+      "locator": "https://doi.org/10.1038/s41467-018-06500-x",
+      "title": "DRUG-seq for miniaturized high-throughput transcriptome profiling in drug discovery",
+      "venue": "Nature Communications 9:4307",
+      "year": 2018
+    },
+    {
+      "authors": "Love MI, Huber W, Anders S",
+      "id": "deseq2-2014",
+      "locator": "https://doi.org/10.1186/s13059-014-0550-8",
+      "title": "Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2",
+      "venue": "Genome Biology 15:550",
+      "year": 2014
+    }
+  ]
+}

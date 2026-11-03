@@ -1,0 +1,503 @@
+{
+  "authoring": {
+    "derived_files": [
+      "SKILL.md",
+      "DATA_SOURCES.md"
+    ],
+    "generator": "phylo-create-skill",
+    "repair_policy": "regenerate derived files from skill_contract.json and rerun the full gate"
+  },
+  "capabilities": {
+    "catalog_claim_ids": [
+      "contrasts"
+    ],
+    "entries": [
+      {
+        "claim": "Per-well read/UMI/gene QC with plate/positional diagnostics that drops low-quality wells and treats wells as samples, not cells.",
+        "id": "qc",
+        "implementation_refs": [
+          "scripts/well_qc.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Compound- and dose-resolved differential expression versus matched vehicle with FDR control and a mandatory vehicle-versus-vehicle null contrast.",
+        "id": "contrasts",
+        "implementation_refs": [
+          "scripts/de_deseq2.R"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Signed, lowest-dose-referenced concentration-response modeling with a transcriptomic point of departure reported only when a compound has at least four doses, positive dose association, and a benchmark crossing; flat responses are explicitly null.",
+        "id": "dose_response",
+        "implementation_refs": [
+          "scripts/dose_response.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Gene-set and TF activity scoring by univariate linear model over supplied gene sets.",
+        "id": "activity",
+        "implementation_refs": [
+          "scripts/activity_ulm.R"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Perturbational signatures and correlation-based mechanism-of-action clustering with an export for optional connectivity analysis.",
+        "id": "signatures",
+        "implementation_refs": [
+          "scripts/signatures_moa.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Input routing across caller-selected counts and FASTQ modes that rejects incomplete input sets.",
+        "id": "routing",
+        "implementation_refs": [
+          "scripts/run_analysis.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Hard stops on barcode/whitelist mismatch and non-identifiable batch-confounded designs, with no fabricated tPOD below four doses.",
+        "id": "failure_stops",
+        "implementation_refs": [
+          "scripts/design_preflight.py",
+          "scripts/demux_umi.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Runtime-component identity is kept separate from version capture: the DESeq2 package version is queried and persisted when DESeq2 is used, and the R interpreter version or an installed boolean is never reused as the package version.",
+        "id": "provenance",
+        "implementation_refs": [
+          "scripts/env_provenance.py",
+          "scripts/de_deseq2.R",
+          "scripts/run_analysis.py"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "Use for DRUG-seq or plate-based bulk RNA-seq compound screens (counts+platemap or barcoded FASTQ): per-well QC, compound/dose differential expression, perturbational signatures with MoA clustering, dose-response/tPOD, and pathway/TF activity. Not for single-cell or Perturb-seq data; wells are samples, not cells."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "tables/de_all_contrasts.csv",
+        "tables/de_summary.csv",
+        "tables/de_model_specification.csv",
+        "tables/null_contrast_gate.json",
+        "tables/activity_scores.csv"
+      ],
+      "choice_id": "counts",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_analysis.py",
+        "scripts/well_qc.py",
+        "scripts/de_deseq2.R"
+      ],
+      "question_id": "qinput"
+    },
+    {
+      "artifact_paths": [
+        "tables/fastq_counts.tsv"
+      ],
+      "choice_id": "fastq",
+      "fallback_status": "partial",
+      "implementation_refs": [
+        "scripts/demux_umi.py",
+        "scripts/run_analysis.py"
+      ],
+      "question_id": "qinput"
+    },
+    {
+      "artifact_paths": [
+        "tables/de_all_contrasts.csv"
+      ],
+      "choice_id": "none",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/de_deseq2.R",
+        "scripts/run_analysis.py"
+      ],
+      "question_id": "qcovariate"
+    },
+    {
+      "artifact_paths": [
+        "tables/de_all_contrasts.csv"
+      ],
+      "choice_id": "edge",
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/de_deseq2.R",
+        "scripts/well_qc.py",
+        "references/batch_correction.md"
+      ],
+      "question_id": "qcovariate"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "counts",
+          "label": "My own counts.tsv plus platemap.csv"
+        },
+        {
+          "id": "fastq",
+          "label": "Barcoded FASTQ plus whitelist and reference (demultiplexing front end)"
+        }
+      ],
+      "id": "qinput",
+      "prompt": "Which DRUG-seq input do you have?",
+      "selection_mode": "single"
+    },
+    {
+      "choices": [
+        {
+          "id": "none",
+          "label": "No positional covariate (use when position diagnostics are clean)"
+        },
+        {
+          "id": "edge",
+          "label": "Include an edge/position covariate in the DESeq2 model"
+        }
+      ],
+      "id": "qcovariate",
+      "prompt": "Adjust differential expression for plate row/column (edge) position?",
+      "selection_mode": "single"
+    }
+  ],
+  "deliverable_policy": {
+    "audience": "user_facing",
+    "infographic": {
+      "artifact": "infographic.png",
+      "content_classification": "qualitative_workflow_only",
+      "forbidden_content": [
+        "run-specific numbers, compound results, or identifiers",
+        "tables, dashboards, scientific result plots, chart axes, or data encodings",
+        "pass/fail badges or analysis outcome claims",
+        "inferred findings",
+        "logos, wordmarks, watermarks, attribution marks, or author names"
+      ],
+      "directional_flow_required": true,
+      "maximum_stage_count": 6,
+      "minimal_explanatory_text_required": true,
+      "minimum_stage_count": 3,
+      "not_applicable_reason": "",
+      "override_prompt_template": "assets/infographic_prompt_template.txt",
+      "prompt_binding_artifact": "infographic_prompt_binding.json",
+      "prompt_file": "assets/infographic_prompt.txt",
+      "required": true,
+      "required_concepts": [
+        "counts and plate map",
+        "well and plate quality control",
+        "differential expression and vehicle-null gate",
+        "dose response and perturbational signatures",
+        "mechanism-of-action and pathway interpretation",
+        "evidence-bound report",
+        "typical workflow, not run-specific results"
+      ],
+      "style_authority": "the immutable provider selection used for the PDF"
+    },
+    "report": {
+      "default_style_provider": "pdf-report-generation",
+      "explicit_style_override_allowed": true,
+      "not_applicable_reason": "",
+      "required": true
+    }
+  },
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/de_deseq2.R",
+      "scripts/activity_ulm.R"
+    ],
+    "command_output_paths": [
+      "tables/de_all_contrasts.csv",
+      "tables/de_summary.csv",
+      "tables/de_model_specification.csv",
+      "tables/activity_scores.csv"
+    ]
+  },
+  "external_dependencies": {
+    "applicable": false,
+    "not_applicable_reason": "The packaged run is fully offline and deterministic and calls no live external service. Optional connectivity/MoA scoring can continue in signature-reversal-lincs; this skill does not call that service."
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "field": "n_compounds",
+        "operational_definition": "number of distinct non-vehicle compounds analyzed in the run"
+      },
+      {
+        "field": "well_qc.n_wells_pass_qc",
+        "operational_definition": "wells passing depth/complexity QC; the analysis unit is the well (a sample), not the cell"
+      },
+      {
+        "field": "contrasts.n_computed",
+        "operational_definition": "compound-by-dose versus matched-vehicle contrasts actually fitted"
+      },
+      {
+        "field": "null_contrast.n_deg",
+        "operational_definition": "DEGs (padj<0.05 and absolute log2 fold-change above 1) in the vehicle-versus-vehicle null contrast; the run hard-stops above the version-controlled maximum of 5"
+      },
+      {
+        "field": "null_contrast.maximum_acceptable_degs",
+        "operational_definition": "pre-specified maximum of 5 apparent DEGs allowed in the vehicle-versus-vehicle null, fixed in scientific_logic.MAX_NULL_DEGS before execution"
+      },
+      {
+        "field": "null_contrast.status",
+        "operational_definition": "passed only when exactly one computed null row has no more than 5 apparent DEGs; failed runs stop before downstream analysis"
+      },
+      {
+        "field": "top_contrast.n_deg",
+        "operational_definition": "DEGs at padj<0.05 and absolute log2 fold-change above 1 in the strongest compound-by-dose contrast"
+      },
+      {
+        "field": "caveats_fired.positional_confounded",
+        "operational_definition": "boolean verdict from the executed plate-position diagnostic; true only when the diagnostic crossed its declared confounding threshold"
+      },
+      {
+        "field": "headline_sentences.positional",
+        "operational_definition": "canonical report sentence derived exactly from caveats_fired.positional_confounded and required verbatim in the final report"
+      },
+      {
+        "field": "top_dose_signature.n_deg",
+        "operational_definition": "DEGs in the strongest signature among each compound's highest tested dose, used to scope the cytotoxicity/general-stress limitation"
+      },
+      {
+        "field": "caveats_fired.cytotoxicity_general_stress",
+        "operational_definition": "true because a high-dose perturbational signature can reflect cytotoxicity, global transcription or translation inhibition, or general stress without a validated viability-adjusted model"
+      },
+      {
+        "field": "headline_sentences.cytotoxicity",
+        "operational_definition": "canonical report limitation derived from the top-dose DEG count, tested-gene denominator, and observed availability of a viability measurement; required verbatim in the final report"
+      }
+    ],
+    "not_applicable_reason": "",
+    "partition_groups": [
+      {
+        "denominator_field": "well_qc.n_wells_total",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "well_qc.n_wells_pass_qc",
+          "well_qc.n_wells_dropped_qc"
+        ],
+        "name": "well_qc"
+      },
+      {
+        "denominator_field": "contrasts.n_total",
+        "identity": "sum_members_equals_denominator",
+        "member_fields": [
+          "contrasts.n_computed",
+          "contrasts.n_skipped"
+        ],
+        "name": "contrasts"
+      }
+    ],
+    "partition_not_applicable_reason": "",
+    "requirement": "required",
+    "runtime_payload_artifact": "facts_payload.json",
+    "schema": "report_facts.json"
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": true,
+    "design_identifiability_check": "scripts/design_preflight.py checks that no condition is confounded with a whole plate; scripts/well_qc.py check_identifiability stops the run otherwise",
+    "experimental_unit": "well (a treated well-group versus matched vehicle wells on the same plate)",
+    "minimum_independent_units": 3,
+    "permutation_support_check": "the vehicle-versus-vehicle null contrast is the empirical negative control and must return approximately zero DEGs",
+    "replicate_type": "replicate wells per condition (technical/plate-level unit that may not be fully independent biological replicates)",
+    "runtime_preflight_ref": "scripts/design_preflight.py"
+  },
+  "installation": {
+    "offer_private_preview_after_generation": true,
+    "registration_managed_outside_package": true,
+    "registration_requires_explicit_user_confirmation": true
+  },
+  "maturity": "evidence_validated",
+  "pdf_review": {
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_required": true
+  },
+  "resource_identity": {
+    "applicable": false,
+    "not_applicable_reason": "The run emits no external accessions, citations, or versioned resource identifiers whose surrounding metadata must be cross-checked; every output is derived from caller-selected inputs."
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "report_facts.json:null_contrast.n_deg",
+        "statement": "Treating each well as a single cell (running a scRNA/Perturb-seq pipeline on well pseudobulk), or ranking hits by raw p-value with no vehicle-versus-vehicle null, lets plate position and library-size differences read as compound biology; this skill uses well-level bulk DESeq2 against per-plate matched vehicle and a mandatory null contrast under the same plate/edge adjustment terms. The run hard-stops when that null exceeds the pre-specified maximum of 5 apparent DEGs."
+      },
+      {
+        "evidence_ref": "report_facts.json:qc.barcode_assignment_rate",
+        "statement": "A wrong barcode whitelist or a transposed plate map collapses the barcode assignment rate; below threshold the run stops and asks you to reconcile the whitelist and plate map rather than mislabeling wells."
+      },
+      {
+        "evidence_ref": "report_facts.json:caveats_fired.positional_confounded",
+        "statement": "Plate row/column/edge gradients can masquerade as dose effects; the run flags positional confounding when plate position explains an outsized share of well-to-well variance."
+      },
+      {
+        "evidence_ref": "report_facts.json:caveats_fired.low_expression_hits",
+        "statement": "Low-count genes yield unstable, inflated fold-changes; hits below the baseMean floor are flagged as low-expression rather than ranked as effects."
+      },
+      {
+        "evidence_ref": "report_facts.json:headline_sentences.cytotoxicity",
+        "statement": "Top-dose transcriptional signatures can reflect cytotoxicity, global transcription/translation inhibition, or general stress rather than compound-specific pharmacology; the report must quote the artifact-derived limitation and disclose whether a viability measurement was available."
+      },
+      {
+        "evidence_ref": "report_facts.json:design.identifiable",
+        "statement": "When a treatment condition is confounded with a whole plate the effect is not identifiable; the run stops rather than reporting a plate effect as compound biology."
+      },
+      {
+        "evidence_ref": "report_facts.json:dose_response.tpod_method",
+        "statement": "The transcriptomic point of departure is method-sensitive by roughly an order of magnitude and requires at least four doses; the method and benchmark response are recorded and no tPOD is invented below four doses."
+      },
+      {
+        "evidence_ref": "report_facts.json:panel.measured_vs_imputed",
+        "statement": "On targeted panels, off-panel genes are absent rather than zero; the run discloses whether values are measured or imputed so absent genes are not read as unchanged."
+      },
+      {
+        "evidence_ref": "report_facts.json:connectivity.status",
+        "statement": "Connectivity/MoA against CMap or LINCS is not computed offline here. The exported signatures can be analyzed with signature-reversal-lincs, which reports at least two metrics under its own data-use terms."
+      },
+      {
+        "evidence_ref": "report_facts.json:software.deseq2.version",
+        "statement": "The R interpreter version and the DESeq2 package version are different identifiers (for example R 4.4.3 versus DESeq2 1.46.0); when DESeq2 is used the run queries and persists the DESeq2 package version separately and never prints the R interpreter version or an installed boolean as the package version."
+      }
+    ],
+    "data_sources": [
+      {
+        "commercial_evidence": "LGPL permits commercial use with the usual copyleft obligations for modifications to the library itself.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "LGPL (>=3)",
+        "name": "DESeq2",
+        "notes": "Well-pseudobulk differential expression engine.",
+        "type": "software",
+        "uri": "https://bioconductor.org/packages/DESeq2/",
+        "verification_ref": "scripts/de_deseq2.R",
+        "version": "Bioconductor 3.x"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "Python scientific stack (numpy, pandas, scipy, scikit-learn, matplotlib, seaborn)",
+        "notes": "QC, dose-response, signatures, and figures.",
+        "type": "software",
+        "uri": "https://scipy.org/",
+        "verification_ref": "scripts/run_analysis.py",
+        "version": "Biomni environment"
+      },
+      {
+        "commercial_evidence": "BSD-3-Clause permits commercial use.",
+        "commercial_status": "allowed",
+        "included": true,
+        "license": "BSD-3-Clause",
+        "name": "ReportLab (via pdf-report-generation)",
+        "notes": "Branded PDF report rendering.",
+        "type": "software",
+        "uri": "https://www.reportlab.com/",
+        "verification_ref": "scripts/report_qc.py",
+        "version": "Biomni environment"
+      },
+      {
+        "commercial_evidence": "clue.io terms permit research use; commercial use is not explicitly prohibited but must be verified before commercial deployment.",
+        "commercial_status": "no_prohibition_found",
+        "included": false,
+        "license": "clue.io / CMap data-use terms",
+        "name": "LINCS L1000 / CMap",
+        "notes": "Available only through optional follow-up analysis in signature-reversal-lincs; not bundled or ingested.",
+        "type": "dataset",
+        "uri": "https://clue.io/",
+        "verification_ref": "references/connectivity_handoff.md",
+        "version": "GSE92742 / GSE70138"
+      },
+      {
+        "commercial_evidence": "Registration and per-collection terms not verified for commercial use.",
+        "commercial_status": "not_checked",
+        "included": false,
+        "license": "MSigDB registration terms (varies by collection)",
+        "name": "MSigDB",
+        "notes": "Not bundled; supply a caller-selected MSigDB or curated gene-set collection at runtime.",
+        "type": "dataset",
+        "uri": "https://www.gsea-msigdb.org/",
+        "verification_ref": "references/targeted_panel.md",
+        "version": "2024.1"
+      }
+    ],
+    "inputs": [
+      "counts.tsv - genes (rows) by wells (columns) matrix of integer UMI counts; the header lists well IDs matching platemap.csv.",
+      "platemap.csv - one row per well with columns well_id, compound, dose_uM, timepoint_h, replicate, plate_id, row, col, and semantic is_control. Flag the matched negative-control vehicle independently of its compound name; mixed global vehicle identities stop before modeling.",
+      "genesets.gmt - caller-selected MSigDB or curated gene sets for activity scoring.",
+      "Optional FASTQ front end - R1 (well barcode + UMI) and R2 (cDNA) FASTQ, a barcode whitelist (barcodes.txt), and a reference.tsv of probe/target genes.",
+      "Wells are experimental units (samples), not cells; dose is in micromolar; counts are UMI-deduplicated integers."
+    ],
+    "workflow": [
+      {
+        "instruction": "Run `scripts/well_qc.py` for per-well UMI/gene metrics, data-driven low-quality-well dropping, and plate row/column/edge positional diagnostics; stop with not_computable when the barcode assignment rate is below threshold. Success: `tables/well_qc.csv` with one row per well and the dropped-well list.",
+        "title": "Per-well and plate QC"
+      },
+      {
+        "instruction": "Run `scripts/design_preflight.py` to check per-condition replicate wells and design identifiability, stopping when a condition is confounded with a whole plate; normalize with a plate (and optional position) covariate. Success: `tables/design_preflight.csv` and an identifiable design.",
+        "title": "Experimental design and normalization"
+      },
+      {
+        "instruction": "Run the bundled `scripts/de_deseq2.R` for each compound-by-dose versus matched vehicle at padj<0.05 and absolute log2 fold-change above 1, applying a baseMean floor so low-count genes are flagged not ranked. Success: `tables/de_all_contrasts.csv` and `tables/de_summary.csv`.",
+        "title": "Differential expression contrasts with FDR control"
+      },
+      {
+        "instruction": "Fit the mandatory NULL_VEHICLE_vs_VEHICLE contrast by splitting the is_control-flagged vehicle wells with the same plate/edge adjustment terms as treatment contrasts. Require a full-rank null design and apply the pre-specified `scientific_logic.MAX_NULL_DEGS=5` delivery gate before any downstream analysis. Success: exactly one null row, `null_contrast.status=passed`, and `null_contrast.n_deg<=5`; otherwise hard-stop.",
+        "title": "Vehicle-versus-vehicle null contrast"
+      },
+      {
+        "instruction": "Run `scripts/dose_response.py` to orient top-dose DEGs by their signed top-dose direction, subtract the lowest tested dose as a within-compound reference, and interpolate the tPOD at the benchmark response only when at least four doses show positive dose association. A flat or non-associated response is explicitly null. Success: `tables/dose_response.csv` with a pinned method, tPODs, or an explicit null reason.",
+        "title": "Concentration-response and transcriptomic POD"
+      },
+      {
+        "instruction": "Run `scripts/signatures_moa.py` to build per-compound signatures, cluster compounds by signature correlation, and export query signatures for optional analysis in signature-reversal-lincs. Success: `tables/moa_clusters.csv` and `tables/query_signatures.json`.",
+        "title": "Perturbational signatures, MOA clustering, and connectivity export"
+      },
+      {
+        "instruction": "Run the bundled `scripts/activity_ulm.R` to score gene-set and TF activity per compound by univariate linear model over the supplied gene sets. Rank the headline set only by the version-controlled maximum absolute ULM t-value in `scientific_logic.PATHWAY_RANKING_METRIC`, preserving its signed t-value for interpretation; no runtime or review-time branch may change that metric. Success: `tables/activity_scores.csv` with activity t-values.",
+        "title": "Pathway and TF-activity scoring"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "skill": {
+    "archetype": "analysis-workflow",
+    "slug": "drug-seq-analysis"
+  },
+  "source_assertions": [],
+  "source_assertions_not_applicable_reason": "The packaged run ingests only caller-selected counts/platemap or FASTQ inputs; it makes no computation-critical claim about an external database record, genome build, coordinate convention, or literature value. Public reference datasets (LINCS/CMap, MSigDB) are referenced only for optional caller-selected inputs or later connectivity analysis and are not silently ingested or asserted by this run.",
+  "starting_task": {
+    "decision_context": "Early drug-discovery triage: prioritize compounds, doses, and mechanisms for follow-up and decide which apparent hits are real versus plate/position or library-size artifacts, at hypothesis-generating strength.",
+    "deliverables": "A branded PDF report_drug-seq-analysis.pdf at the results root with one qualitative workflow infographic, plus infographic.png, infographic_prompt_binding.json, machine-readable tables tables/well_qc.csv, tables/de_all_contrasts.csv, tables/activity_scores.csv, tables/dose_response.csv, tables/moa_clusters.csv, and the facts artifact report_facts.json.",
+    "objective": "Quantify per-compound, per-dose transcriptional responses versus matched vehicle with FDR control, derive perturbational signatures and MoA clustering, and estimate dose-response and the transcriptomic point of departure, treating wells as experimental samples rather than cells.",
+    "subject_input": "A DRUG-seq / plate-based bulk RNA-seq compound screen: a genes-by-wells matrix of integer UMI counts (counts.tsv) and a platemap.csv giving each well's compound, dose_uM, timepoint_h, replicate, plate_id, row, col, and is_control vehicle flag; optionally barcoded FASTQ with a whitelist and reference for the demultiplexing front end.",
+    "user_prompt": "Assess per-well quality in a DRUG-seq compound screen, quantify compound- and dose-resolved differential expression, and summarize perturbational signatures, dose response, and pathway activity."
+  },
+  "analysis_input_selection": {
+    "schema_version": "2.0",
+    "execution_mode": "analysis",
+    "accepted_origins": [
+      "uploaded",
+      "downloaded"
+    ],
+    "package_data_used": false,
+    "manifest": "input_selection.json",
+    "manifest_hash": "SHA-256 of canonical UTF-8 JSON with sorted keys, comma/colon separators, and manifest_sha256 omitted",
+    "downloaded_acquisition": "complete provenance required; partial or failed acquisition cannot enter analysis",
+    "stale_output_policy": "result_root must be nonexistent or empty before sealing"
+  }
+}
