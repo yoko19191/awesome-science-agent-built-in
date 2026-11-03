@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Flow cytometry external review decision receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "stage",
+    "proposal_sha256",
+    "decision_artifact_sha256",
+    "reviewer_role",
+    "reviewer",
+    "source_task_id",
+    "source_message_id",
+    "decision",
+    "decision_reason",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "stage": {"enum": ["gating", "resolution", "rare_population", "annotation", "merging"]},
+    "proposal_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decision_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "selected_value": {"type": ["string", "integer"]},
+    "reviewer_role": {"enum": ["user", "immunologist", "scientist", "reviewer"]},
+    "reviewer": {"type": "string", "minLength": 1},
+    "source_task_id": {"type": "string", "minLength": 1},
+    "source_message_id": {"type": "string", "minLength": 1},
+    "decision": {"type": "string", "minLength": 1},
+    "decision_reason": {"type": "string", "minLength": 1},
+    "acknowledged_uncertainties": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

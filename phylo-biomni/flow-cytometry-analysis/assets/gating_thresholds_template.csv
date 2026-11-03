@@ -1,0 +1,1 @@
+sample_id,gate,channel_x,channel_y,method,proposed_cutoff,direction,pct_removed,valley_confidence,diagnostic_valley_cutoff,diagnostic_valley_confidence,diagnostic_valley_pct_removed,unimodal,status,final_cutoff,apply,notes
