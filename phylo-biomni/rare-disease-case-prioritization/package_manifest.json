@@ -1,0 +1,56 @@
+{
+  "files": [
+    {
+      "bytes": 7231,
+      "path": "DATA_SOURCES.md",
+      "sha256": "47c9854a7c06c0a22b4d84e2a0853d4f13f38d8f6e7ce9c70a8ed7112467d3ac"
+    },
+    {
+      "bytes": 8863,
+      "path": "SKILL.md",
+      "sha256": "ea934ebd2ce8fb7bccca8769f2273b2fc18dacd4e89c4491f31fbc762cea5828"
+    },
+    {
+      "bytes": 3874,
+      "path": "references/bibliography.json",
+      "sha256": "d76f9e67b9d7a655f34dd9af191c9ac3062ed6b3d7206e7f31b17adc637d8c65"
+    },
+    {
+      "bytes": 14647,
+      "path": "references/evidence-gating-model.md",
+      "sha256": "a1c8cbe8fa62740f3dd4d9b17354029e4a75aa3d0b92b6b736c9d6d316e9e511"
+    },
+    {
+      "bytes": 1358,
+      "path": "references/execution-interface.md",
+      "sha256": "07986a17b032980b29be3462bf563b60d3c556d7cf1e1217179947227dcc3a44"
+    },
+    {
+      "bytes": 3081,
+      "path": "references/report-policy.md",
+      "sha256": "e8b7147b3e7063296d210725779bd262df4d2ef163d4a8e69d4afc24b0c2eda0"
+    },
+    {
+      "bytes": 55991,
+      "path": "scripts/prioritize_cases.py",
+      "sha256": "6c11c9314b945f3cae70ceb6af29d96d16fdfc02133d75204bde4755e0e76db0"
+    },
+    {
+      "bytes": 10625,
+      "path": "scripts/report_qc.py",
+      "sha256": "84e8f5d9952e041403eb5bce641b84cebd02e47d4475a77b4c3b686ca26cb23a"
+    },
+    {
+      "bytes": 22593,
+      "path": "scripts/run_skill.py",
+      "sha256": "7bea397aaa8af29b93cd60667f173bf249ddf2f8cc44edb0b497982483b66cfe"
+    },
+    {
+      "bytes": 8556,
+      "path": "skill_spec.json",
+      "sha256": "49b78d73a6c5c443733a22928ee25753c0cbe4ecedea03577c87bd599db4e2ab"
+    }
+  ],
+  "schema": "phylo-package-manifest/1",
+  "sha256": "795e544a33443472dcc969c74e5847365950d4ac6bf49aa2c9712a6c3bc9c939"
+}

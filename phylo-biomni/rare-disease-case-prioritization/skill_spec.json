@@ -1,0 +1,174 @@
+{
+  "analysis": {
+    "entrypoint": "scripts/prioritize_cases.py",
+    "language": "python",
+    "outputs": [
+      {
+        "kind": "file",
+        "min_bytes": 64,
+        "path": "hypotheses.tsv"
+      },
+      {
+        "kind": "json",
+        "min_bytes": 128,
+        "path": "evidence_dossier.json"
+      },
+      {
+        "kind": "json",
+        "min_bytes": 20,
+        "path": "reanalysis_diff.json"
+      },
+      {
+        "kind": "image",
+        "min_bytes": 100,
+        "path": "figures/evidence_completeness.png"
+      }
+    ],
+    "parameters": [
+      {
+        "choices": [
+          "phenotype_first",
+          "genotype_first",
+          "incomplete_evidence"
+        ],
+        "default": "incomplete_evidence",
+        "description": "Label-only entry context recorded on every hypothesis for one identical workflow; it never changes gate precedence, evidence states, ranking, or outputs.",
+        "flag": "--entry-mode",
+        "name": "entry-mode",
+        "required": false,
+        "type": "string"
+      }
+    ],
+    "purpose": "Validate one rare-disease case bundle and rank its established disease-gene hypotheses by explicit evidence state.",
+    "workflow": [
+      "Validate the case bundle fail-closed: check required files, parse the phenopacket, enforce controlled vocabularies, case_id agreement, and transcript presence on consequence-bearing rows, and reject with a named field before writing any output.",
+      "Resolve every cited evidence identifier against the manifest, separating resolved supporting/contradicting evidence from absent or unresolvable identifiers.",
+      "Evaluate each disease-gene hypothesis through the deterministic gate cascade (hard-stop abstentions, then contradictions, then missing-evidence blockers, else concordant), counting independent evidence lines with correlated predictors collapsed by predictor group.",
+      "Rank hypotheses by evidence state then independent evidence support, compute source-version provenance, and compute the optional reanalysis diff against a supplied prior dossier.",
+      "Write the ranked hypotheses table, the evidence dossier, the reanalysis diff, and the per-hypothesis evidence-completeness figure."
+    ]
+  },
+  "category": "genomics_genetics",
+  "caveats": [
+    {
+      "kind": "assumption",
+      "text": "Inputs describe an ESTABLISHED disease-gene relationship with pre-annotated nuclear germline SNVs/indels; the skill never establishes a novel gene-disease association from a single case or publication."
+    },
+    {
+      "kind": "limitation",
+      "text": "Research decision support only: it emits evidence states, contradictions, missing-evidence codes, and abstentions, never a diagnosis, a diagnostic probability, or an ACMG/AMP classification."
+    },
+    {
+      "kind": "limitation",
+      "text": "Variant classes beyond snv/indel, and any hypothesis whose cited evidence cannot be resolved, are abstained rather than forced through SNV/indel logic."
+    },
+    {
+      "kind": "watch-out",
+      "text": "A concordant evidence state is not a clinical result. Canonical runtime checks establish artifact integrity and accounting; report interpretation, citation compliance and visual quality require external inspection and acceptance."
+    }
+  ],
+  "description": "Use to prioritize established rare-disease disease-gene hypotheses for one case by running a deterministic, fail-closed evidence-gating cascade that assigns each hypothesis an explicit evidence state with contradictions, missing-evidence codes, abstentions, provenance, and an optional reanalysis diff.",
+  "guidance": [
+    {
+      "path": "references/evidence-gating-model.md",
+      "use_when": "you need the exact gate precedence, evidence-state definitions, and reason-code vocabulary behind each ranked hypothesis"
+    },
+    {
+      "path": "references/report-policy.md",
+      "use_when": "before preparing report facts, citations, the infographic, or any PDF narrative; its exact bibliography and research-only rules are mandatory"
+    },
+    {
+      "path": "references/execution-interface.md",
+      "use_when": "migrating an existing invocation or interpreting which checks the canonical runner owns"
+    }
+  ],
+  "id": "skill_a86551f8ba061bff32412a7d3c56f283",
+  "input": {
+    "reject_if": [
+      "A required file is missing or unreadable, the phenopacket is malformed, its metaData.phenopacketSchemaVersion is missing/empty/not schema major version 2, or its subject id is unresolved.",
+      "A candidates.tsv row uses an out-of-vocabulary value, disagrees with the phenopacket case_id, or omits a transcript_id on a consequence-bearing row.",
+      "The evidence manifest has a row with an empty evidence_id or a duplicate evidence_id.",
+      "A supplied prior evidence dossier does not match this case by schema or case_id."
+    ],
+    "requirements": [
+      "Provide phenopacket.json using GA4GH Phenopacket schema major version 2, whose top-level id is the case identifier and whose subject has a resolvable id.",
+      "Provide candidates.tsv with the full controlled-vocabulary column set, one row per allele, every row's case_id equal to the phenopacket id, and a transcript_id on every consequence-bearing row.",
+      "Provide evidence_manifest.tsv that declares every cited evidence_id exactly once (no duplicate rows) with its source_type, version_or_date, and verification_status.",
+      "Assert an absent phenotype only with excluded:true; a term that is simply not listed is unknown, never absent."
+    ],
+    "summary": "One case-bundle directory: a GA4GH Phenopacket (phenopacket.json), a candidate disease-gene hypotheses table (candidates.tsv), and an evidence manifest (evidence_manifest.tsv); with optional family.tsv, phenotype-state-companion.json, and a prior evidence dossier for reanalysis."
+  },
+  "objective": "Assign every candidate disease-gene hypothesis a transparent, reproducible evidence state (concordant, incomplete, conflicting, or abstained) with explicit reason codes, ranking, and provenance, so a human expert can decide where to focus follow-up -- without emitting a diagnosis, a diagnostic probability, or a formal variant classification.",
+  "presentation": {
+    "default_provider": "pdf-report-generation",
+    "explicit_provider_allowed": true,
+    "fact_bindings": [
+      {
+        "fact_field": "n_hypotheses_total",
+        "source_field": "summary.n_hypotheses_total",
+        "source_output": "evidence_dossier.json",
+        "value_type": "integer"
+      },
+      {
+        "fact_field": "n_concordant",
+        "source_field": "summary.n_concordant",
+        "source_output": "evidence_dossier.json",
+        "value_type": "integer"
+      },
+      {
+        "fact_field": "n_incomplete",
+        "source_field": "summary.n_incomplete",
+        "source_output": "evidence_dossier.json",
+        "value_type": "integer"
+      },
+      {
+        "fact_field": "n_conflicting",
+        "source_field": "summary.n_conflicting",
+        "source_output": "evidence_dossier.json",
+        "value_type": "integer"
+      },
+      {
+        "fact_field": "n_abstained",
+        "source_field": "summary.n_abstained",
+        "source_output": "evidence_dossier.json",
+        "value_type": "integer"
+      }
+    ],
+    "partition_groups": [
+      {
+        "denominator_field": "n_hypotheses_total",
+        "member_fields": [
+          "n_concordant",
+          "n_incomplete",
+          "n_conflicting",
+          "n_abstained"
+        ],
+        "name": "hypothesis-states",
+        "value_type": "integer"
+      }
+    ],
+    "source_outputs": [
+      "hypotheses.tsv",
+      "evidence_dossier.json",
+      "reanalysis_diff.json",
+      "figures/evidence_completeness.png"
+    ]
+  },
+  "presentation_profile": "scientific-report",
+  "schema": "phylo-analysis-spec/1",
+  "slug": "rare-disease-case-prioritization",
+  "sources": [
+    {
+      "name": "Supplied case evidence",
+      "reference": "DATA_SOURCES.md",
+      "use": "Offline declarative evidence and source-version provenance; verification_status is supplied evidence metadata, not proof of a new external verification."
+    },
+    {
+      "name": "Pinned standards and methodology bibliography",
+      "reference": "references/bibliography.json",
+      "use": "Required numbered report citations; no network retrieval, substitutions or added sources."
+    }
+  ],
+  "starting_prompt": "Prioritize the established disease-gene hypotheses for this rare-disease case and explain each evidence state?",
+  "visibility": "public"
+}

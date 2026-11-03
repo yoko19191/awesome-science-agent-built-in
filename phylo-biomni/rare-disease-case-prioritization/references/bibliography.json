@@ -1,0 +1,81 @@
+{
+  "schema": "phylo-report-bibliography/1",
+  "version": "2026-09-03",
+  "role": "Fixed methodological and standards context, bundled offline for report authoring only. It is NOT a disease-specific or queryable knowledge source, is NOT used to perform ACMG/AMP variant classification, and is NOT used to establish or infer any gene-disease association. Cite only by the fixed [N] numbers below, in numeric order; never retrieve, add, remove, reorder, or substitute a reference at report time.",
+  "network_retrieval": "forbidden",
+  "order": [1, 2, 3, 4, 5],
+  "forbidden_dois": ["10.1101/111039"],
+  "references": [
+    {
+      "n": 1,
+      "display": "Jacobsen JOB, Baudis M, Baynam GS, et al. The GA4GH Phenopacket schema defines a computable representation of clinical data. Nature Biotechnology. 2022;40:817–820. doi:10.1038/s41587-022-01357-4.",
+      "identifier_type": "doi",
+      "doi": "10.1038/s41587-022-01357-4",
+      "doi_url": "https://doi.org/10.1038/s41587-022-01357-4",
+      "container_title": "Nature Biotechnology",
+      "year": 2022,
+      "version_of_record": true,
+      "verification": {
+        "date": "2026-09-03",
+        "source": "publisher version-of-record via DOI resolver"
+      }
+    },
+    {
+      "n": 2,
+      "display": "Gargano MA, Matentzoglu N, Coleman B, et al. The Human Phenotype Ontology in 2024: phenotypes around the world. Nucleic Acids Research. 2024;52(D1):D1333–D1346. doi:10.1093/nar/gkad1005.",
+      "identifier_type": "doi",
+      "doi": "10.1093/nar/gkad1005",
+      "doi_url": "https://doi.org/10.1093/nar/gkad1005",
+      "container_title": "Nucleic Acids Research",
+      "year": 2024,
+      "version_of_record": true,
+      "verification": {
+        "date": "2026-09-03",
+        "source": "publisher version-of-record via DOI resolver"
+      }
+    },
+    {
+      "n": 3,
+      "display": "Vasilevsky NA, Toro S, Matentzoglu N, et al. Mondo: integrating disease terminology across communities. Genetics. 2026;232(4):iyaf215. doi:10.1093/genetics/iyaf215.",
+      "identifier_type": "doi",
+      "doi": "10.1093/genetics/iyaf215",
+      "doi_url": "https://doi.org/10.1093/genetics/iyaf215",
+      "container_title": "Genetics",
+      "year": 2026,
+      "version_of_record": true,
+      "verification": {
+        "date": "2026-09-03",
+        "source": "publisher version-of-record via DOI resolver; year pinned to version-of-record 2026 (online 2025)"
+      }
+    },
+    {
+      "n": 4,
+      "display": "Strande NT, Riggs ER, Buchanan AH, et al. Evaluating the clinical validity of gene–disease associations: an evidence-based framework developed by the Clinical Genome Resource. American Journal of Human Genetics. 2017;100(6):895–906. doi:10.1016/j.ajhg.2017.04.015.",
+      "identifier_type": "doi",
+      "doi": "10.1016/j.ajhg.2017.04.015",
+      "doi_url": "https://doi.org/10.1016/j.ajhg.2017.04.015",
+      "container_title": "American Journal of Human Genetics",
+      "year": 2017,
+      "version_of_record": true,
+      "rejected_identifiers": ["10.1101/111039"],
+      "verification": {
+        "date": "2026-09-03",
+        "source": "journal version-of-record via DOI resolver; bioRxiv preprint DOI 10.1101/111039 explicitly rejected"
+      }
+    },
+    {
+      "n": 5,
+      "display": "Richards S, Aziz N, Bale S, et al. Standards and guidelines for the interpretation of sequence variants: a joint consensus recommendation of the ACMG and AMP. Genetics in Medicine. 2015;17(5):405–424. doi:10.1038/gim.2015.30.",
+      "identifier_type": "doi",
+      "doi": "10.1038/gim.2015.30",
+      "doi_url": "https://doi.org/10.1038/gim.2015.30",
+      "container_title": "Genetics in Medicine",
+      "year": 2015,
+      "version_of_record": true,
+      "verification": {
+        "date": "2026-09-03",
+        "source": "publisher version-of-record via DOI resolver"
+      }
+    }
+  ]
+}
