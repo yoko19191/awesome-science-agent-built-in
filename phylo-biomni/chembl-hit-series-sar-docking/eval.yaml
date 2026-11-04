@@ -1,0 +1,384 @@
+skill: chembl-hit-series-sar-docking
+version: 0.4.2-v2-recovery-r2
+status: draft            # NOT registered. Review Stop 4A recovery (consolidated r2). Commercial-use HOLD open (Phylo/legal); trusted evals to be re-run against the repaired hash; Skill(action=create) not called.
+summary: >
+  v0.4.2-v2-recovery-r2 (Review Stop 4A consolidated recovery repair): repaired the source-owned
+  findings from the exact scientific review + follow-up handoff, preserving the parent byte-identical
+  and all open holds. Family F04 (final_delivery_and_output_manifest_drift): process_activities now
+  emits the contract key 'applied_filter' via build_variant_report (was 'variant_filter_applied', which
+  failed assert_output_contract on a faithful run), and NEW report_qc.assert_delivery_receipt +
+  assets/output_contract.json 'delivery_receipt' block finalize the contract only AFTER staging,
+  failing closed unless every report/table/figure/provenance/test/manifest path resolves (removing or
+  renaming a receipt-named artifact fails it). Family F10 (scientific_or_fixture_specific_defect):
+  prepare_docking.box_diagnostics DERIVES box permissiveness (volume/max-axis) into docking_box.json
+  and surfaces a docking caveat when the box is permissive; report_qc.assert_docking_box_diagnostics
+  fails closed if a permissive box ships without it -- the receptor-conformation/box driver of a
+  near-zero docking-potency correlation is now derived and enforced, not restated. Handoff figures:
+  generate_figures fig10 subsets to the top-N series (legible on high-series targets) and figures use
+  a colorblind-safe colormap + larger fonts (RdYlGn removed). Each changed mechanism has a
+  source-failing/repaired-passing regression + distinct edge case under assets/eval/. Two review items
+  are non-package holds (reconstructed step-1/2 command provenance = harness step-runner; target-
+  metadata refill after a ChEMBL timeout = runtime recovery), recorded not disguised. No sample/
+  campaign execution performed; the commercial-use decision and trusted-eval execution remain open
+  holds. Prior history follows.
+  v0.4.1-v2-recovery-r1 (Review Stop 4A ordinary repair): repaired 7 package-owned mechanisms and
+  preserved the open holds. (1) NEW report_qc.assert_output_contract + assets/output_contract.json,
+  called in the terminal gate, confirms every declared output artifact (variant columns, the
+  WT/unspecified composition bucket, docking-box provenance) exists on disk before facts are written.
+  (2) Added an explicit "## When to Use This Skill" section. (3,4,6) Corrected the ADFR licence
+  (Apache 2.0 -> LGPL2, https://ccsb.scripps.edu/adfr/license/) and Open Babel's mischaracterisation
+  (GPL-2.0 copyleft is a source-distribution obligation, not a commercial-use ban) across all files;
+  added scripts/commercial_inventory.py (derives the inventory from declared + executed dependencies,
+  binds each to its own licence page, fails closed on a conflict / missing evidence / self-clear) and
+  changed license_gate PASS -> HOLD (never self-cleared). (5) prepare_docking selects docking
+  representatives by SAR recommendation (EXPAND first), guaranteeing every EXPAND series is docked,
+  instead of the first 15 series in table order. (7) docking_box.json records excluded_additives.
+  Every changed mechanism has a source-failing/repaired-passing regression under assets/eval/. No
+  sample execution performed (project constraint); the commercial-use decision and trusted-eval
+  execution remain open holds. Prior history follows.
+  v0.4.0 (post-validation citation repair): report citation numbering is now a single-source keyed
+  transformation (scripts/render_citations.py) re-validated by a fail-closed gate
+  (report_qc.assert_citations_resolve) against citation_map.json, so inline [N] citations and the
+  bibliography can no longer diverge -- the shipped 16->7 renumbering, sparse/session-global indices,
+  repeated references, reordered/misbound bibliographies, and missing labels are all caught, and a
+  correct report still passes. The report step also renders the PDF to /workspace and publishes it
+  with staged_copy, and a Figures section was added. Offline regression suite:
+  assets/eval/test_citation_resolution.py (7/7). Earlier: renamed from hit-triage-sar-docking (skill
+  id unchanged) and repaired against successive reviews. v0.3.0 fixes the three findings from the
+  scientific reviews of the EGFR runs:
+  (1) target-variant conflation is no longer silent -- the structured ChEMBL fields
+  assay_variant_mutation / assay_variant_accession are retained end to end, the variant
+  composition is reported to the console, to variant_composition.json and in both reports, a
+  prominent warning fires when more than one variant is pooled (naming the variant the docked
+  structure represents), an opt-in --variant filter restricts scoring to one variant, and the
+  variant of each potency is carried into the per-compound and docking tables; (2) Butina
+  clustering no longer uses a 54.4M-call Python double loop -- distances are computed with
+  BulkTanimotoSimilarity into a NumPy matrix (Butina matrix path), which is bit-identical and,
+  measured on the actual 1-CPU / 16 GB default worker at EGFR scale (10,431 molecules), runs in
+  ~6 s at ~1.4 GB peak vs ~85 s at ~5.1 GB for the old loop -- so the default worker is now
+  viable; (3) the two delivered-artifact defects are fixed -- the HTML template now embeds all
+  10 figures (fig8 included) and fig4 compound labels use offset leader lines and are legible
+  (the honest r/p annotation is retained). Verified end to end on EGFR (CHEMBL203).
+
+evals:
+  - id: representative_egfr_hit_triage
+    prompt: >-
+      Triage small-molecule screening hits against EGFR from ChEMBL: score by potency,
+      cluster into series, run SAR, dock representative ligands, and tell me which series
+      are worth expanding.
+    expected_outputs:
+      - "<target>_hit_triage_report.html — interactive data appendix (NOT the primary report), self-contained, embeds all 10 figures"
+      - "report_<target>_hit_triage.pdf — assembled by pdf-report-generation, first-page GenerateImage infographic"
+      - "<target>_hits_scored_clustered.csv with scores, tiers, cluster IDs, series labels AND variant columns"
+      - "<target>_docking_results.csv with docking score, experimental pChEMBL, and the assay variant"
+      - "variant_composition.json — per-variant counts/percentages with WT/unspecified as its own bucket"
+      - "docking_box.json including a pdb_selection provenance block and receptor_variant"
+    invariants:
+      # ---- existing invariants (unchanged) ----
+      - name: report_pdf_produced
+        blocking: true
+        assert: >
+          A PDF report is always produced, via the pdf-report-generation skill, containing an
+          infographic (Biomni GenerateImage), introduction with literature grounding, methods,
+          results, conclusions, figures, references and next steps. There is no configuration
+          in which the report is skipped, and no "optional PDF" phrasing anywhere in the package.
+          The infographic is LANDSCAPE -- aspect_ratio 3:2 (1536x1024), wider than tall --
+          and is placed as a captioned banner carrying a "Figure N." caption. A portrait or
+          uncaptioned infographic FAILS this invariant. The PDF is written to the RESULTS ROOT
+          (/mnt/results/report_<subject>.pdf), not nested in a run subdirectory.
+      - name: chembl_attribution_and_sharealike
+        blocking: true
+        assert: >
+          The report carries BOTH an attribution line naming ChEMBL and its release AND an
+          explicit CC BY-SA 3.0 share-alike notice. A licence string in a provenance table is
+          not sufficient — the original review rejected exactly that.
+      - name: no_hardcoded_pdf_script
+        blocking: true
+        assert: "No scripts/generate_pdf_report.* exists in the package."
+      - name: pdb_selection_provenance
+        blocking: true
+        assert: >
+          docking_box.json records pdb_selection.mode as one of user_file | user_pdb_id | auto,
+          with a rationale, so a reader can tell how the receptor was chosen.
+      - name: pdb_autoselect_fails_loudly
+        blocking: true
+        assert: >
+          When no structure is given and no UniProt accession is resolvable, or when no
+          candidate has both a resolution and a drug-like co-crystal ligand, the run exits
+          with an explicit message. It never docks into an arbitrarily chosen structure.
+      - name: cliffs_deferred_to_mmp
+        blocking: true
+        assert: >
+          The per-series activity-cliff flag is presented as a coarse orientation aid and is
+          never reported as a cliff statistic. Quantitative cliff and transformation work is
+          directed to matched-molecular-pairs.
+      # ---- new invariants (v0.3.0 fixes) ----
+      - name: variant_provenance_retained_and_reported
+        blocking: true
+        assert: >
+          The structured ChEMBL fields assay_variant_mutation and assay_variant_accession are
+          retained through retrieval and processing. process_activities.py computes the variant
+          composition of the scored activity set (counts + percentages, wild-type/unspecified as
+          its own bucket) and writes it to variant_composition.json AND prints it to the console;
+          both the HTML and PDF reports render the composition table. The variant of each
+          molecule's best measurement (variant_best), the set of variants it was measured against
+          (variant_summary, n_variants) and assay_variant_accession appear in
+          hits_scored_clustered.csv, and the docking results carry the per-ligand variant.
+      - name: variant_pooling_warned_not_silent
+        blocking: true
+        assert: >
+          When the scored set pools more than one assay variant, a prominent warning fires in the
+          console AND in both reports, naming the variants pooled and the variant the docked
+          structure represents (receptor_variant in docking_box.json, resolved from
+          --receptor-variant or RCSB annotation, else 'unspecified'). Default behaviour
+          (--variant any) stays backward compatible but is never silent about pooling.
+      - name: variant_filter_optin
+        blocking: true
+        assert: >
+          process_activities.py exposes --variant with values 'any' (default), 'WT', or a named
+          mutation; a named/WT selector restricts scoring to matching records and fails loudly,
+          listing available variants, when nothing matches.
+      - name: clustering_bulk_bit_identical
+        blocking: true
+        assert: >
+          The Butina distance computation uses DataStructs.BulkTanimotoSimilarity (no per-pair
+          Python TanimotoSimilarity double loop). Distances are bit-identical to the old loop
+          (max abs diff 0.0; SHA256 of the full 54.4M-pair vector matches) and Butina returns the
+          identical clusters (1888 on the EGFR set).
+      - name: clustering_viable_on_default_worker
+        blocking: false
+        assert: >
+          Measured on the default 1-CPU / 16 GB worker at EGFR scale (10,431 molecules,
+          54.4M pairs): the new path runs in ~6 s (5.9 s distances + 0.1 s Butina) at ~1.4 GB
+          peak RSS, vs ~85 s at ~5.1 GB for the old list loop. The default worker is viable;
+          scripts/benchmark_clustering.py reproduces these numbers.
+      - name: all_generated_figures_rendered
+        blocking: true
+        assert: >
+          generate_html_report.py embeds all 10 generated figures (fig1-fig10) including fig8
+          (top-hit structure grid). The package documents 10 PNG and 9 SVG (fig8 is raster-only)
+          consistently in SKILL.md and references/runnable_example.md.
+      - name: fig4_labels_legible
+        blocking: true
+        assert: >
+          fig4_docking_vs_potency labels the most-potent compounds with offset leader lines that
+          do not collide or overlap the points, and retains the honestly computed
+          'Pearson r = <r> (p = <p>, not significant)' annotation.
+      - name: docking_not_affinity_sentence
+        blocking: true
+        assert: >
+          Both reports state, verbatim, that "Docking scores assess structural plausibility, not
+          binding affinity. Experimental validation is required." and report the docking-vs-pChEMBL
+          Pearson r with its p-value and significance, never overclaiming a weak correlation.
+      - name: additive_ignore_list_in_both_paths
+        blocking: true
+        assert: >
+          The crystallisation-additive ignore list (NON_LIGAND_HETATMS, incl. NO3/EDO/sugars/ions)
+          is applied in BOTH PDB auto-selection and docking-box definition, so additives never
+          inflate or off-centre the box.
+      # ---- new invariant (v0.4.0 citation report-integrity repair) ----
+      - name: citations_resolve_single_source
+        blocking: true
+        assert: >
+          Report citation numbering is a single-source keyed transformation. scripts/render_citations.py
+          selects the cited LiteratureSearch records, assigns final bibliography labels 1..N once (in
+          citation order), rewrites every inline [N] through that one map, builds the References section
+          from the same map, and writes citation_map.json. In the delivered PDF every inline [N] resolves
+          to exactly one References entry bound to its intended source identity; no session-global or
+          sparse index survives (the observed 16->7 renumbering), repeated citations collapse to a single
+          entry, and reordered or misbound bibliographies are rejected. report_qc.assert_citations_resolve
+          is CALLED in the terminal gate block and fails closed on any missing, stale, sparse, duplicated,
+          or misbound label; render_citations fails closed on a citation with no record or a record with
+          no resolvable identity. The mechanism hard-codes no target, molecule, paper, or index, and is
+          regression-tested offline (no sample execution) by assets/eval/test_citation_resolution.py,
+          which passes 7/7 and is discrimination-checked (it goes red if the rewrite or the gate is
+          removed). No prior scientific, provenance, or report gate is weakened.
+      # ---- new invariants (v2-recovery-r1: Review Stop 4A repairs) ----
+      - name: outputs_contract_confirmed
+        blocking: true
+        assert: >
+          Every contract-declared output artifact (assets/output_contract.json) is confirmed on disk
+          before the facts artifact is written: report_<target>_hit_triage.pdf,
+          <target>_hit_triage_report.html, <target>_hits_scored_clustered.csv (with the variant columns
+          variant_best/variant_summary/n_variants/assay_variant_accession), <target>_docking_results.csv
+          (docking_score + pchembl + variant + series), <target>_series_stats.csv, variant_composition.json
+          (with a wild-type/unspecified bucket), <target>_sar_results.json, and docking_box.json (with
+          pdb_selection, receptor_variant and excluded_additives). report_qc.assert_output_contract is
+          CALLED in the terminal gate block and fails closed on any missing, misplaced, empty, or
+          schema-incomplete artifact. Regression: assets/eval/test_output_contract.py.
+      - name: when_to_use_section_present
+        blocking: true
+        assert: >
+          SKILL.md carries an explicit user-facing "## When to Use This Skill" section stating the
+          supported inputs/routes, the outputs, and the material exclusions (which sibling skill to use
+          instead). Regression: assets/eval/test_when_to_use_section.py.
+      - name: docking_covers_expand_series
+        blocking: true
+        assert: >
+          Representative selection for docking follows the SAR recommendation priority (EXPAND first),
+          not the incidental table order of the hits CSV, so every EXPAND-recommended series with >=1
+          member gets a docked representative. prepare_docking.select_series_for_docking reads
+          sar_results.json and records selection provenance (expand_series / expand_series_covered) to
+          docking_selection_provenance.json. Regression: assets/eval/test_docking_series_coverage.py.
+      - name: excluded_additives_recorded
+        blocking: true
+        assert: >
+          docking_box.json records an explicit excluded_additives field listing the crystallisation
+          additives/ions kept out of the box (same NON_LIGAND_HETATMS ignore list applied in both PDB
+          auto-selection and box definition), so additive_ignore_list_in_both_paths is provable from
+          the artifact, not only from console output. Built by prepare_docking.build_box_info.
+          Regression: assets/eval/test_docking_box_excluded_additives.py.
+      - name: commercial_inventory_derived_and_held
+        blocking: true
+        assert: >
+          scripts/commercial_inventory.py derives the dependency/commercial-use inventory from the
+          declared dependencies AND the actually-executed imports/tools, binds each to its own
+          licence-evidence URL, and assert_commercial_inventory_consistent fails closed on a licence
+          claim conflicting with the authoritative evidence (e.g. ADFR wrongly stated as 'Apache 2.0'
+          when it is LGPL2), a material dependency with no evidence URL, or a self-clear while open.
+          The overall status stays HOLD (never self-cleared): ChEMBL CC BY-SA 3.0 share-alike and the
+          open human-decision commercial findings require Phylo/legal review.
+          Regression: assets/eval/test_commercial_inventory.py.
+      # ---- new invariants (v0.4.2-v2-recovery-r2: consolidated recovery repair, families F04/F10 + handoff figures) ----
+      - name: post_staging_delivery_receipt_reconciled
+        blocking: true
+        assert: >
+          The declared output contract is finalized only AFTER deliverables are staged.
+          report_qc.assert_delivery_receipt reconciles the on-disk result inventory against BOTH the
+          declared contract (assets/output_contract.json -> artifacts) and the packaged delivery
+          receipt (-> delivery_receipt), and fails closed unless every required
+          report/table/figure/provenance/test/manifest path resolves; removing or renaming any
+          receipt-named artifact after staging fails it. process_activities.build_variant_report now
+          emits the contract key 'applied_filter' (was 'variant_filter_applied'), so a faithful run's
+          variant_composition.json passes assert_output_contract. Called in the terminal gate block as
+          the final finalization step. Regression: assets/eval/test_post_staging_inventory.py
+          (source-failing on the frozen parent, repaired-passing on the child; edge case: a
+          receipt-named artifact removed/renamed after staging).
+      - name: docking_box_permissiveness_derived_and_surfaced
+        blocking: true
+        assert: >
+          Docking-box permissiveness is DERIVED, not restated. prepare_docking.box_diagnostics computes
+          box_volume_A3, box_max_dim_A and a box_permissive flag from box geometry (focused-pocket guide
+          max axis 30 A / volume ~27,000 A^3) and, when permissive, writes a docking_caveats entry into
+          docking_box.json explaining that a wide search box weakens the docking-vs-potency correlation
+          and may not match the docked ligand's binding mode/conformation. report_qc.
+          assert_docking_box_diagnostics fails closed if a permissive box ships without the surfaced
+          caveat. The rule is geometry-only and encodes no structure-specific answer. Called in the
+          terminal gate block. Regression: assets/eval/test_docking_box_conformation.py (negative
+          control: focused box, no caveat; edge case: a distinct large permissive box requires the
+          caveat).
+      - name: docking_by_series_figure_legible
+        blocking: false
+        assert: >
+          scripts/generate_figures.py fig10 (docking-by-series) subsets to the top-N series
+          (top_series_for_figure, MAX_SERIES_IN_FIGURE), mirroring fig5, so a high-series target (471
+          docked series on EGFR) renders legibly instead of drawing every series.
+          Regression: assets/eval/test_fig10_subsets_series.py.
+      - name: figures_colorblind_safe_and_legible
+        blocking: false
+        assert: >
+          scripts/generate_figures.py uses a colorblind-safe sequential colormap (SEQ_CMAP) in place of
+          RdYlGn and larger annotation/legend fonts (ANNOT_FONTSIZE/LEGEND_FONTSIZE >= 11). No figure
+          uses RdYlGn as a colormap/palette value. Regression: assets/eval/test_figure_palette.py.
+
+creation_evidence:
+  rename: >
+    hit-triage-sar-docking -> chembl-hit-series-sar-docking. Skill id
+    skill_4bc5d18f9f1e5aa889f0edec9df4346c is unchanged so platform identity and id-based
+    references survive; "hit triage" is retained in the description so trigger matching works.
+  variant_handling: >
+    ChEMBL activity.json returns assay_variant_mutation and assay_variant_accession as structured
+    fields. retrieve_activities.py already dumps full records (retention) and now prints variant
+    availability; process_activities.py normalizes the variant (WT/unspecified bucket), reports
+    composition to console + variant_composition.json, warns on pooling, applies the opt-in
+    --variant filter, and carries variant_best/variant_summary/n_variants/assay_variant_accession
+    into hits_clean.csv. prepare_docking.py records receptor_variant (from --receptor-variant or
+    RCSB pdbx_mutation / rcsb_mutation_count==0 -> WT, else unspecified) and carries the per-ligand
+    variant into docking_selection.json; run_docking.py carries it into docking_results.csv; both
+    reports render the composition table and a pooling warning. Verified on EGFR: 20,183 scored
+    records span 13 assay variants (WT 74.4%, L858R+T790M 9.6%, L858R 4.3%, T790M 1.4%, plus
+    C797S combinations); 1,826 molecules were measured against >1 variant; auto-selected receptor
+    8A27 resolved to WT (RCSB mutation_count 0); --variant WT/L858R/T790M filtering and a bogus
+    mutation fail-loud were smoke-tested.
+  clustering_performance: >
+    score_and_cluster.py replaces the nested TanimotoSimilarity loop with bulk_distance_matrix
+    (BulkTanimotoSimilarity into a preallocated NumPy matrix, Butina matrix path). Measured on the
+    default 1-CPU/16 GB worker at EGFR scale (10,431 molecules, 54,397,665 pairs):
+    OLD 82.5 s distances + 2.7 s Butina, 5,137 MB peak; NEW 5.9 s distances + 0.1 s Butina,
+    1,385 MB peak (14x faster distances, 3.7x lower peak). Bit-identity confirmed: max abs diff
+    0.0 over 1,999,000 pairs on 2,000 molecules, SHA256 of the full 54.4M-pair vector matches, and
+    Butina returns identical clusters (1888). NOTE: Butina.ClusterData in RDKit 2025.03.5 accepts
+    list/tuple/ndarray but NOT array.array; a dense matrix also skips Butina's internal 1D->matrix
+    expansion, which is what drives the peak-RSS reduction. scripts/benchmark_clustering.py runs it.
+  artifact_fixes: >
+    generate_html_report.py now embeds fig8 (10 base64 PNGs in the report, was 9) and adds a
+    Variant column to the hits and docking tables plus an assay-variant composition section with a
+    pooling warning. generate_figures.py fig4 labels the top-5 potent compounds with offset
+    right-margin leader lines (annotation_clip=False) so they no longer collide; the honest
+    r/p annotation is computed live and retained. runnable_example.md corrected from 10 SVG to
+    9 SVG. Verified: HTML media check + PDF media check both PASS; fig4 and fig8 media checks PASS.
+  report_delegation: >
+    PDF assembly remains delegated to pdf-report-generation (no scripts/generate_pdf_report.*);
+    the EGFR run produced a 9-page PDF with a first-page GenerateImage infographic, a
+    literature-grounded introduction ([1]-[7]), methods, results incl. the variant-composition
+    table, honest docking correlation, caveats, next steps, references, ChEMBL CC BY-SA 3.0
+    attribution + share-alike notice, and a run-probe appendix.
+  citation_repair: >
+    v0.4.0 post-validation repair of the citation report-integrity defect found by independent sample
+    validation: the delivered PDF renumbered the bibliography to 7 entries while inline citations kept
+    the session-global references.jsonl indices ([8]/[9]/[16] resolved to nothing; [5]/[6] pointed to
+    the wrong papers), and it passed 14/14 blocking gates because none checked citation resolution. The
+    brief described a builder script that "defines a label_map but never applies it"; no packaged script
+    contained any label_map or citation code -- PDF assembly is delegated to pdf-report-generation and
+    the remap was improvised in a runtime cell -- so the repair ADDS the missing mechanism rather than
+    patching a nonexistent packaged bug (mismatch reported, not worked around). New scripts/render_citations.py
+    is a stdlib-only, deterministic, single-source keyed transform (select cited records -> assign labels
+    1..N once -> rewrite every inline [N] through that map -> build the bibliography from the same map ->
+    fail closed), writing citation_map.json. New report_qc.assert_citations_resolve re-validates the final
+    PDF against that map and is wired into the terminal gate block; RC010 was fixed (PDF rendered to
+    /workspace then staged_copy'd) and a ## Figures section added. Guarded by
+    assets/eval/test_citation_resolution.py (7 cases: observed 16->7, sparse indices, repeated refs,
+    reordered bibliography, missing labels, wrong identity binding, correct-mapped positive control),
+    which is discrimination-checked and passes 7/7. Determinism: citation_map.json is byte-identical
+    across runs and PYTHONHASHSEED values. No sample execution performed (project constraint); no prior
+    gate weakened.
+
+verified_resources:
+  - {name: ChEMBL API, version: "ChEMBL_37 (runtime)", role: "bioactivity + structured variant fields", verified: "live on CHEMBL203 (EGFR)"}
+  - {name: RCSB Search + Data API, version: v2 / rest v1, role: "PDB auto-selection + mutation annotation", verified: "live; P00533 -> 8A27 (WT, 1.07 A, ligand KY9)"}
+  - {name: RDKit, version: "2025.03.5", role: "standardisation, fingerprints, bulk Butina clustering, MCS, ligand prep"}
+  - {name: AutoDock Vina, version: "1.2.7", role: "docking"}
+  - {name: Meeko/ADFR, version: "meeko 0.7.1", role: "receptor + ligand PDBQT prep (ADFR fallback exercised)"}
+  - {name: pdf-report-generation, role: "PDF assembly (delegated)"}
+  - {name: EGFR end-to-end run, role: "validation", verified: "10,431 hits, 477 series, 20 SAR, 47 docked (r=0.076 p=0.612 NS), HTML + 9-page PDF"}
+
+# Per-dependency licence status. Licences read from each source's OWN licence file,
+# never from GitHub's classifier. See biomni_skills/docs/LICENSE_CONSTRAINTS.md.
+commercial_use:
+  - {dependency: RDKit, licence: BSD-3-Clause, commercial_use: "yes (permissive)"}
+  - {dependency: AutoDock Vina, licence: Apache-2.0, commercial_use: "yes (permissive)"}
+  - {dependency: Meeko, licence: LGPL-2.1, commercial_use: "yes — used as an unmodified library through its public interface"}
+  - {dependency: ChEMBL, licence: CC BY-SA 3.0, commercial_use: "yes, with attribution + ShareAlike", note: "notice must be rendered in the report, not only recorded here"}
+  - {dependency: RCSB PDB, licence: "public domain (CC0)", commercial_use: "yes"}
+  - {dependency: ADFR prepare_receptor, licence: LGPL2, commercial_use: "yes — unmodified standalone CLI tool", evidence: "https://ccsb.scripps.edu/adfr/license/", note: "corrected from the wrong 'Apache 2.0' claim; the exercised receptor-prep fallback"}
+  - {dependency: Open Babel, licence: GPL-2.0, commercial_use: "yes, with copyleft obligation if ever used", distribution_role: "avoided by default (Meeko/ADFR used)", note: "GPL-2.0 copyleft is a source-distribution obligation on derivative works, not a commercial-use ban; not invoked in the workflow"}
+  - license_gate: HOLD
+    note: "NOT self-clearing. Derive the inventory with scripts/commercial_inventory.py --assert (declared + executed deps, each bound to its own licence page; fails closed on a conflict, a material dep with no evidence, or a self-clear while a hold is open). Overall status stays HOLD: ChEMBL CC BY-SA 3.0 share-alike on derived datasets and the open human-decision commercial findings (possible hard veto / prohibition) require Phylo/legal review."
+
+package_rationale: >
+  Kept as its own skill rather than folded into screen-hit-triage-interference: the two answer
+  different questions. This skill assumes the potency is real and organises it into series for
+  expansion; that one judges whether the signal is an assay artefact. They compose in sequence.
+
+known_risks:
+  - "Auto-selection picks the best-resolution ligand-bound structure, which is not always the most RELEVANT one. It cannot reason about which domain or conformational state a series targets. For allosteric series or pseudokinase domains, pass --pdb-id explicitly."
+  - "Docking scores rank poses; they do not predict potency. The docking-vs-pChEMBL correlation must be reported honestly even when poor or absent (EGFR run: r=0.076, p=0.612, not significant)."
+  - "Series membership is a clustering result at a chosen Tanimoto cutoff, not a chemotype truth."
+  - "The per-series activity-cliff flag is coarse. Cliff counts swing by an order of magnitude with the similarity criterion (0.13% Tanimoto-only vs 6.04% consensus on one dataset), so quantitative cliff work belongs to matched-molecular-pairs."
+  - "PDB auto-selection depends on live RCSB APIs. Network degradation surfaces as an explicit failure telling the caller to pass --pdb-id, never as a silent fallback."
+  - "receptor_variant is best-effort: RCSB pdbx_mutation can list engineered/crystallisation mutations rather than the disease variant, and mutation_count==0 is reported as WT. Declare it explicitly with --receptor-variant when the biological variant matters."
+  - "Default scoring still POOLS variants (--variant any) -- this is now visible (composition + warning + per-compound variant column), not silent, and can be restricted with --variant, but a caller who ignores the warning still gets variant-pooled tiers."
+  - "Meeko receptor preparation failed at runtime (empty error) in the EGFR run and the workflow fell back to ADFR prepare_receptor (LGPL2, verified at https://ccsb.scripps.edu/adfr/license/), the documented commercial-safe fallback. Degradation was graceful, but the Meeko receptor path did not work in this environment."
+  - "The scripts write outputs to the run dir; a publish step copies the HTML/PDF/CSVs/figures to /mnt/results. The SKILL.md Outputs table describes the delivered files, not the scripts' working dir."
+  - "Coverage is partial even on a passing run: the user-supplied-CSV entry path, the include_bounds relation filter, the no-co-crystal-ligand branch, the MCS-failure fallback and docking-timeout handling were not exercised in the EGFR run."
+  - "Non-interference items from the original review that were NOT in scope remain with the skill owner if any resurface."

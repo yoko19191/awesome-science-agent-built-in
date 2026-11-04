@@ -1,0 +1,82 @@
+{
+  "_comment": "Machine-readable output contract for chembl-hit-series-sar-docking (Review Stop 4A finding 1). scripts/report_qc.py::assert_output_contract reads this in the terminal step, BEFORE write_facts(), and fails closed unless every artifact exists at its declared path (relative to /mnt/results), is non-empty, and carries the declared columns/keys/content. '{target}' is substituted with the target symbol (e.g. EGFR). This is the run's expectation and the run cannot rewrite it.",
+  "artifacts": [
+    {
+      "path": "report_{target}_hit_triage.pdf",
+      "kind": "file",
+      "min_bytes": 20000
+    },
+    {
+      "path": "{target}_hit_triage_report.html",
+      "kind": "file",
+      "min_bytes": 2000
+    },
+    {
+      "path": "{target}_hits_scored_clustered.csv",
+      "kind": "csv",
+      "required_columns": [
+        "molecule_chembl_id", "smiles", "hit_score", "tier", "cluster_id", "series",
+        "variant_best", "variant_summary", "n_variants", "assay_variant_accession"
+      ],
+      "min_rows": 1
+    },
+    {
+      "path": "{target}_docking_results.csv",
+      "kind": "csv",
+      "required_columns": ["chembl_id", "series", "variant", "pchembl", "docking_score"],
+      "min_rows": 1
+    },
+    {
+      "path": "{target}_series_stats.csv",
+      "kind": "csv",
+      "required_columns": ["size"],
+      "min_rows": 1
+    },
+    {
+      "path": "variant_composition.json",
+      "kind": "json",
+      "required_keys": ["applied_filter", "pooled", "composition"],
+      "checks": ["wt_unspecified_bucket"]
+    },
+    {
+      "path": "{target}_sar_results.json",
+      "kind": "json",
+      "min_bytes": 2
+    },
+    {
+      "path": "docking_box.json",
+      "kind": "json",
+      "required_keys": ["pdb_selection", "receptor_variant", "excluded_additives"],
+      "checks": ["pdb_selection_mode_rationale"]
+    }
+  ],
+  "delivery_receipt": {
+    "_comment": "Family F04 (final_delivery_and_output_manifest_drift). report_qc.assert_delivery_receipt reads THIS block AFTER staging and fails closed unless every required report/table/figure/provenance/test/manifest path resolves on disk, AND the 'artifacts' above are all named here (inventory == declared contract == receipt). It is a superset of 'artifacts' extended with the figure/provenance/test/manifest categories the contract gate does not cover. Removing or renaming any receipt-named artifact after staging fails the gate. The run cannot rewrite it.",
+    "categories": {
+      "report": [
+        {"path": "report_{target}_hit_triage.pdf", "min_bytes": 20000},
+        {"path": "{target}_hit_triage_report.html", "min_bytes": 2000}
+      ],
+      "table": [
+        {"path": "{target}_hits_scored_clustered.csv"},
+        {"path": "{target}_docking_results.csv"},
+        {"path": "{target}_series_stats.csv"},
+        {"path": "{target}_sar_results.json"},
+        {"path": "variant_composition.json"},
+        {"path": "docking_box.json"}
+      ],
+      "figure": [
+        {"glob": "figures/fig*.png", "min_count": 1}
+      ],
+      "provenance": [
+        {"glob": "provenance/*", "min_count": 1}
+      ],
+      "test": [
+        {"path": "test_receipt.json"}
+      ],
+      "manifest": [
+        {"path": "provenance/package_manifest.json"}
+      ]
+    }
+  }
+}
