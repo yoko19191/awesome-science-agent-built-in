@@ -1,5 +1,5 @@
 ---
-name: grn-pyscenic-copy
+name: grn-pyscenic
 description: Use to infer transcription-factor gene-regulatory networks and cell-level
   regulon activity from scRNA-seq data with pySCENIC.
 category: transcriptomics

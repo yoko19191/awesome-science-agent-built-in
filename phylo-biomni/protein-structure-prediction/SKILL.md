@@ -1,5 +1,5 @@
 ---
-name: protein-structure-prediction-copy
+name: protein-structure-prediction
 description: Use to predict a protein or complex 3D structure from sequence, FASTA,
   gene name, or UniProt accession with AlphaFold2, Boltz-2, Chai-1, or ESMCFold2.
   Returns PDB/CIF, per-residue pLDDT, pTM, confidence-band and UniProt-domain summaries,

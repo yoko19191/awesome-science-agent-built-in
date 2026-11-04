@@ -1,5 +1,5 @@
 ---
-name: upstream-regulator-analysis-copy
+name: upstream-regulator-analysis
 description: Use to identify transcription factors and upstream regulators driving
   RNA-seq differential-expression patterns by integrating DE genes with ChIP-Atlas
   binding evidence.

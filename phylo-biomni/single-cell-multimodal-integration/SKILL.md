@@ -1,5 +1,5 @@
 ---
-name: single-cell-multimodal-integration-copy
+name: single-cell-multimodal-integration
 description: Integrate paired CITE-seq (RNA + antibody-derived tags) with modality-specific
   QC, dsb or CLR ADT normalization, Seurat WNN, optional totalVI, clustering, annotation,
   and replicate-aware differential abundance. Route paired RNA+ATAC to `scatac-multiome-analysis`;
