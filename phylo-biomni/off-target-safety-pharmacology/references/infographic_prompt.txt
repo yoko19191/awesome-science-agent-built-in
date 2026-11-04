@@ -1,0 +1,18 @@
+Use the GenerateImage tool unless otherwise specified to create the workflow
+infographic. Edit compound-specific text as needed and save the output to
+<outdir>/figures/infographic.png.
+
+---
+
+A scientific workflow infographic titled "Off-Target Liability Profiling" for a small-molecule drug with five connected stages:
+
+The 5 stages, each a labeled box with a short sub-caption:
+1. "INPUT" - sub: "Compound (name / SMILES / InChIKey / ChEMBL ID)"
+2. "PANEL" - sub: "Core safety panel (32 targets) + adaptive kNN expansion"
+3. "PREDICT" - sub: "Ligand similarity (ECFP4) + Deep learning DTI + ADMET"
+4. "BENCHMARK" - sub: "Leave-query-out vs measured ChEMBL data; Tier A/B/C"
+5. "REPORT" - sub: "Ranked off-targets, ADMET flags, PDF"
+
+Include labels for these target classes: "Ion channel", "GPCR", "Transporter", and "Enzyme".
+
+Include callouts labeled "Cardiac (hERG)", "ADMET", and "Selectivity".
