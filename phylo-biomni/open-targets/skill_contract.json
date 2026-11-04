@@ -1,0 +1,352 @@
+{
+  "capabilities": {
+    "catalog_claim_ids": [
+      "rank_targets",
+      "retrieve_evidence",
+      "paginate_bounded",
+      "provider_styled_pdf_report"
+    ],
+    "entries": [
+      {
+        "claim": "Rank disease-associated targets by overall association score from the Open Targets Platform API",
+        "eval_refs": [
+          "assets/eval/test_ledger.py",
+          "assets/eval/test_queries.py"
+        ],
+        "id": "rank_targets",
+        "implementation_refs": [
+          "scripts/run_analysis.py",
+          "scripts/open_targets_client.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Retrieve bounded evidence rows with discriminated datasource and datatype semantics",
+        "eval_refs": [
+          "assets/eval/test_semantics.py"
+        ],
+        "id": "retrieve_evidence",
+        "implementation_refs": [
+          "scripts/run_analysis.py",
+          "scripts/semantics.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Paginate API results within configurable budgets with completeness labels",
+        "eval_refs": [
+          "assets/eval/test_pagination.py",
+          "assets/eval/test_budget.py"
+        ],
+        "id": "paginate_bounded",
+        "implementation_refs": [
+          "scripts/open_targets_client.py"
+        ],
+        "status": "tested"
+      },
+      {
+        "claim": "Generate one provider-styled canonical PDF report with deterministic figures and a GenerateImage infographic",
+        "eval_refs": [
+          "assets/eval/test_visuals.py",
+          "assets/eval/test_infographic.py",
+          "assets/eval/test_repair_r2.py",
+          "assets/eval/test_native_transcript_schema.py",
+          "assets/eval/test_repair_r4.py"
+        ],
+        "id": "provider_styled_pdf_report",
+        "implementation_refs": [
+          "scripts/report_content.py",
+          "scripts/report_style.py",
+          "scripts/report_qc.py",
+          "scripts/finalize_report.py",
+          "scripts/build_report.py",
+          "scripts/visualize.py"
+        ],
+        "status": "tested"
+      }
+    ],
+    "trigger": "Use when prioritizing therapeutic targets for a disease using the Open Targets Platform GraphQL API."
+  },
+  "clarification_branches": [
+    {
+      "artifact_paths": [
+        "evidence_rows.csv"
+      ],
+      "choice_id": "evidence_only",
+      "eval_refs": [
+        "assets/eval/test_queries.py"
+      ],
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_analysis.py"
+      ],
+      "question_id": "scope"
+    },
+    {
+      "artifact_paths": [
+        "target_ranking.csv"
+      ],
+      "choice_id": "with_credible_sets",
+      "eval_refs": [
+        "assets/eval/test_recovery.py"
+      ],
+      "fallback_status": "complete",
+      "implementation_refs": [
+        "scripts/run_analysis.py"
+      ],
+      "question_id": "scope"
+    }
+  ],
+  "clarification_questions": [
+    {
+      "choices": [
+        {
+          "id": "evidence_only",
+          "label": "Evidence for top target only"
+        },
+        {
+          "id": "with_credible_sets",
+          "label": "Evidence plus GWAS credible sets and L2G"
+        }
+      ],
+      "id": "scope",
+      "prompt": "Only if the prompt does not already determine scope: should the analysis inspect credible sets and L2G predictions for a GWAS study, or retrieve evidence only for the top target?",
+      "selection_mode": "single"
+    }
+  ],
+  "execution": {
+    "bundled_commands_applicable": true,
+    "bundled_file_refs": [
+      "scripts/visualize.py",
+      "scripts/report_content.py",
+      "scripts/report_style.py",
+      "scripts/finalize_report.py",
+      "scripts/build_report.py"
+    ]
+  },
+  "report_contract": {
+    "schema": "biomni-report-contract/1",
+    "canonical_pdf": "report_open-targets.pdf",
+    "content_artifact": "report_content.json",
+    "structure_artifact": "report_structure.json",
+    "package_default_provider": "pdf-report-generation",
+    "provider_override": "explicit_compatible_user_selection_only",
+    "selection_evidence": "immutable_user_messages",
+    "receipt_schema": "phylo-run-receipt/3",
+    "style_outcome": "report_style_verified",
+    "bundled_renderer_provider": "pdf-report-generation",
+    "companion_report_does_not_satisfy_contract": true
+  },
+  "external_dependencies": {
+    "applicable": true,
+    "services": [
+      {
+        "connect_timeout_seconds": 15,
+        "failure_fixture_refs": [
+          "assets/fixtures/failure_body_error.json",
+          "assets/fixtures/failure_http_400.json",
+          "assets/fixtures/failure_malformed_json.txt",
+          "assets/fixtures/failure_empty_semantic.json"
+        ],
+        "max_retries": 2,
+        "name": "open-targets-graphql-api",
+        "read_timeout_seconds": 30,
+        "terminal_states": [
+          "partial",
+          "not_computable"
+        ],
+        "wall_clock_budget_seconds": 600
+      }
+    ]
+  },
+  "facts": {
+    "headline_definitions": [
+      {
+        "definition": "The count of all disease-associated targets reported by the API for the queried EFO ID",
+        "name": "total_associated_targets",
+        "source": "report_facts.json"
+      },
+      {
+        "definition": "An integrated prioritization metric (0-1) combining multiple evidence datasources; not an effect estimate",
+        "name": "overall_association_score",
+        "source": "report_facts.json"
+      },
+      {
+        "definition": "Whether the retrieved target set is exhaustive or a bounded sample",
+        "name": "completeness",
+        "source": "report_facts.json"
+      }
+    ],
+    "known_answer_eval_refs": [
+      "assets/eval/test_queries.py",
+      "assets/eval/test_semantics.py"
+    ],
+    "partition_groups": [],
+    "partition_not_applicable_reason": "The target ranking is a bounded sample, not an exhaustive partition; retrieved rows do not sum to the total associated target count, so sum_members_equals_denominator accounting does not apply.",
+    "requirement": "required",
+    "schema": "report_facts.json"
+  },
+  "figures": {
+    "applicable": true
+  },
+  "inference_readiness": {
+    "applicable": false,
+    "not_applicable_reason": "This skill retrieves and prioritizes target-disease associations from a public API; it performs no statistical inference, hypothesis testing, or experimental design. Association scores are integrated prioritization metrics, not inferential estimates requiring experimental-unit or design-identifiability gates."
+  },
+  "installation": {
+    "personal_skills_requires_explicit_user_approval": true
+  },
+  "maturity": "evidence_validated",
+  "pdf_review": {
+    "render_all_pages_required": true,
+    "text_extraction_required": true,
+    "visual_review_required": true
+  },
+  "resource_identity": {
+    "applicable": false,
+    "not_applicable_reason": "The Open Targets Platform GraphQL API is the authoritative source for all retrieved data; this skill queries it directly and does not match records against a separate local authoritative copy. Resource identity verification against a second source is not applicable."
+  },
+  "runtime_instructions": {
+    "caveats": [
+      {
+        "evidence_ref": "references/semantics.md",
+        "statement": "Association scores are integrated prioritization metrics, not effect estimates, replication, causal proof, or clinical validation."
+      },
+      {
+        "evidence_ref": "scripts/open_targets_client.py",
+        "statement": "The target sample is bounded, not exhaustive; do not label bounded samples as exhaustive."
+      },
+      {
+        "evidence_ref": "scripts/semantics.py",
+        "statement": "L2G and colocalisation records carry null datasource_id with an explicit not-applicable reason."
+      },
+      {
+        "evidence_ref": "scripts/report_qc.py",
+        "statement": "Infographic provenance is reported as a fail-closed three-state outcome: verified, not_evaluable_platform_trace (a genuine GenerateImage event whose proof is truncated/id-less/agent-writable/hashless in the platform trace), or failed. A not_evaluable state is never presented as verified and is release-blocking unless facts, provenance, and the report all disclose that provenance is not independently verified."
+      }
+    ],
+    "data_sources": [
+      {
+        "license": "CC0 1.0 Universal (Public Domain Dedication) for data; API free with no authentication",
+        "name": "Open Targets Platform GraphQL API",
+        "uri": "https://api.platform.opentargets.org/api/v4/graphql",
+        "verification_ref": "references/licensing-and-access.md"
+      }
+    ],
+    "existing_materials": [],
+    "inputs": [
+      "An EFO disease ID (e.g. MONDO_0004975 for Alzheimer disease)",
+      "Optionally a GWAS Catalog study ID (e.g. GCST005194)",
+      "Optionally the number of top targets to retrieve (default 10)"
+    ],
+    "workflow": [
+      {
+        "instruction": "Pass the complete user prompt to scripts/prompt_contract.py. Execute immediately when status is ready; ask only the single unresolved field when status is clarify. Never ask for confirmation, alternative values, or validation depth already fixed by the prompt.",
+        "title": "Resolve supplied inputs without redundant clarification"
+      },
+      {
+        "instruction": "Run the meta query to capture dataVersion and apiVersion, binding them to the operation ledger.",
+        "title": "Capture API release metadata"
+      },
+      {
+        "instruction": "Query associatedTargets for the given EFO ID, retrieving a bounded top-N set with datatype scores.",
+        "title": "Resolve disease identity and rank targets"
+      },
+      {
+        "instruction": "Query evidences for the top-ranked target with cursor pagination, bounded by configured budgets.",
+        "title": "Retrieve evidence for the top target"
+      },
+      {
+        "instruction": "Query study metadata and credible sets with L2G and colocalisation for the given study ID. Before integrating the study, check concordance between the study's returned trait/ontology and the queried disease; non-concordant studies are labeled independent_study_context.",
+        "title": "Inspect GWAS study and credible sets"
+      },
+      {
+        "instruction": "Pass all records through semantics.py serializers with record_type, metric, scale, datasource_id, and interpretation boundary.",
+        "title": "Serialize records through the discriminated schema"
+      },
+      {
+        "instruction": "Run visualize.py to produce the target-ranking bar chart and datatype heatmap from report_facts.json.",
+        "title": "Build deterministic figures"
+      },
+      {
+        "instruction": "Call the Biomni GenerateImage tool with the fixed prompt from assets/infographic_prompt.txt to produce the workflow infographic. Read the prompt immediately before calling GenerateImage; do not edit it afterward. The prompt and image SHA256 are derived into provenance and receipt.",
+        "title": "Generate the qualitative infographic"
+      },
+      {
+        "instruction": "Derive report_content.json and report_structure.json from the gated facts and provenance. Resolve the report-style provider from immutable user messages, render exactly one canonical PDF through that provider, and finalize lineage only after the completed PDF is staged. The bundled build_report.py renderer is default-provider-only.",
+        "title": "Build the provider-styled canonical PDF report"
+      },
+      {
+        "instruction": "Extract text, render pages, record visual review attestation with pdf_sha256 and artifact_sha256s, and write receipt v3 with provider-specific style verification plus infographic lineage verification.",
+        "title": "Record PDF review and write the run receipt"
+      }
+    ]
+  },
+  "schema": "phylo-skill-evidence/1",
+  "source_assertion_policy": "validated_runtime_artifacts",
+  "source_assertions": [
+    {
+      "asserted_value": "MONDO_0004975",
+      "field": "disease.id",
+      "id": "disease_identity",
+      "primary_source_uri": "https://api.platform.opentargets.org/api/v4/graphql",
+      "retrieved_at": "2026-08-16",
+      "runtime_witness": {
+        "artifact": "report_facts.json",
+        "expected_value": "MONDO_0004975",
+        "json_path": "disease_id"
+      },
+      "verification_method": "runtime_witness_against_report_facts"
+    },
+    {
+      "asserted_value": "phylo-ot-provenance/1",
+      "field": "provenance.schema",
+      "id": "provenance_schema",
+      "primary_source_uri": "https://api.platform.opentargets.org/api/v4/graphql",
+      "retrieved_at": "2026-08-16",
+      "runtime_witness": {
+        "artifact": "provenance.json",
+        "expected_value": "phylo-ot-provenance/1",
+        "json_path": "schema"
+      },
+      "verification_method": "runtime_witness_against_provenance"
+    }
+  ],
+  "starting_task": {
+    "decision_context": "target identification and prioritization for drug discovery using public integrated association evidence",
+    "deliverables": "target_ranking.csv, evidence_rows.csv, operation_ledger.json, report_facts.json, deterministic figures, infographic_open_targets_workflow.png generated with GenerateImage, and report_open-targets.pdf",
+    "objective": "Prioritize therapeutic targets for Alzheimer disease (MONDO_0004975) using the Open Targets Platform GraphQL API.",
+    "subject_input": "Alzheimer disease (MONDO_0004975), a bounded top-10 target ranking, and GWAS Catalog study GCST005194 with credible sets"
+  },
+  "validation_matrix": {
+    "auto": {
+      "evidence_refs": [
+        "assets/eval/test_budget.py",
+        "assets/eval/test_finalization_v1.py",
+        "assets/eval/test_finalization_v2.py",
+        "assets/eval/test_infographic.py",
+        "assets/eval/test_ledger.py",
+        "assets/eval/test_native_transcript_schema.py",
+        "assets/eval/test_pagination.py",
+        "assets/eval/test_queries.py",
+        "assets/eval/test_quick_start.py",
+        "assets/eval/test_recovery.py",
+        "assets/eval/test_release_readiness.py",
+        "assets/eval/test_repair_r2.py",
+        "assets/eval/test_repair_r4.py",
+        "assets/eval/test_semantics.py",
+        "assets/eval/test_visuals.py"
+      ],
+      "failures": 0,
+      "note": "test_count is the full offline pytest suite collected count (all assets/eval/test_*.py modules). Offline evals cover frozen fixtures and rejection mutations, including deterministic prompt readiness, prompt/image lineage, content-identity embedding, PDF hash binding, operation counts, concordance, strict JSON, (R3) transcript-normalization for both supported native schemas (typed tool_use/tool_result and flattened assistant.tool_calls[]/type:tool), and (R4) the three-state infographic-lineage outcome (verified / not_evaluable_platform_trace / failed) with its cross-surface disclosure contract for platform-truncated GenerateImage args.",
+      "runner": "pytest",
+      "skips": 0,
+      "status": "passed",
+      "test_count": 142
+    },
+    "guided": {
+      "reason": "Guided validation remains pending; complete prompts auto-resolve and only genuinely missing or ambiguous inputs require a user answer",
+      "status": "not_run"
+    }
+  }
+}

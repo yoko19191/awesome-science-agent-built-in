@@ -1,0 +1,134 @@
+{
+  "data": {
+    "search": {
+      "hits": [
+        {
+          "entity": "target",
+          "id": "ENSG00000130203",
+          "name": "APOE"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0007659",
+          "name": "APOE carrier status"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0011913",
+          "name": "Alzheimer disease 3"
+        },
+        {
+          "entity": "disease",
+          "id": "HP_0003119",
+          "name": "Abnormal circulating lipid concentration"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0005010",
+          "name": "coronary artery disorder"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0005574",
+          "name": "tauopathy"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0021187",
+          "name": "hyperlipidemia"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0004975",
+          "name": "Alzheimer disease"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0001336",
+          "name": "familial hyperlipidemia"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0005763",
+          "name": "pulse pressure measurement"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0004346",
+          "name": "neuroimaging measurement"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0002277",
+          "name": "arteriosclerosis disorder"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0005311",
+          "name": "atherosclerosis"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0006848",
+          "name": "mental or behavioural disorder biomarker"
+        },
+        {
+          "entity": "disease",
+          "id": "GO_0050896",
+          "name": "response to stimulus"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0920032",
+          "name": "concentration of medium HDL particles measurement"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0022263",
+          "name": "free cholesterol in chylomicrons and extremely large VLDL measurement "
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0005053",
+          "name": "ischemic disease"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0008111",
+          "name": "diet measurement"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0000246",
+          "name": "age"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0024644",
+          "name": "myocardial ischemia"
+        },
+        {
+          "entity": "disease",
+          "id": "MONDO_0021661",
+          "name": "coronary atherosclerosis"
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0022305",
+          "name": "saturated fatty acids to total fatty acids percentage "
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0022224",
+          "name": "cholesterol in medium LDL measurement "
+        },
+        {
+          "entity": "disease",
+          "id": "EFO_0008354",
+          "name": "cognitive function measurement"
+        }
+      ],
+      "total": 1339
+    }
+  }
+}

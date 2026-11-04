@@ -1,0 +1,419 @@
+{
+  "data": {
+    "credibleSets": {
+      "count": 176,
+      "rows": [
+        {
+          "colocalisation": {
+            "rows": [
+              {
+                "clpp": 0.9897747601401657,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90691891"
+                }
+              },
+              {
+                "clpp": 0.9046702824478149,
+                "h4": 0.999946657311978,
+                "otherStudyLocus": {
+                  "studyId": "FINNGEN_R12_I9_IHD"
+                }
+              },
+              {
+                "clpp": 0.9997460998725418,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692818"
+                }
+              },
+              {
+                "clpp": 0.9809741905587717,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "FINNGEN_R12_I9_CHD"
+                }
+              },
+              {
+                "clpp": 0.9876172355784033,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692468"
+                }
+              },
+              {
+                "clpp": 0.3283715775493952,
+                "h4": 0.9980976363685927,
+                "otherStudyLocus": {
+                  "studyId": "GCST90691919"
+                }
+              },
+              {
+                "clpp": 0.9984483481196296,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692972"
+                }
+              },
+              {
+                "clpp": 0.6834696569694841,
+                "h4": 0.9996092916284391,
+                "otherStudyLocus": {
+                  "studyId": "GCST90479582"
+                }
+              },
+              {
+                "clpp": 0.9997460998646285,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692772"
+                }
+              },
+              {
+                "clpp": 0.9949525443084034,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692941"
+                }
+              },
+              {
+                "clpp": 0.9997250410998976,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90132314"
+                }
+              },
+              {
+                "clpp": 0.9957105568459412,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST007096"
+                }
+              },
+              {
+                "clpp": 0.9993655371743966,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "FINNGEN_R12_I9_CABG"
+                }
+              },
+              {
+                "clpp": 0.9991464471811634,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90624172"
+                }
+              },
+              {
+                "clpp": 0.5238760076693554,
+                "h4": 0.9991848253367523,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692424"
+                }
+              },
+              {
+                "clpp": 0.8455262731387726,
+                "h4": 0.9998352246518624,
+                "otherStudyLocus": {
+                  "studyId": "GCST90691888"
+                }
+              },
+              {
+                "clpp": 0.9081110453107065,
+                "h4": 0.9999452092355469,
+                "otherStudyLocus": {
+                  "studyId": "GCST90480133"
+                }
+              },
+              {
+                "clpp": 0.9997460998725987,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90310296"
+                }
+              },
+              {
+                "clpp": 0.5348748922810772,
+                "h4": 0.9992221095222164,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692423"
+                }
+              },
+              {
+                "clpp": 0.7443650696883686,
+                "h4": 0.9997239966085346,
+                "otherStudyLocus": {
+                  "studyId": "GCST90473533"
+                }
+              },
+              {
+                "clpp": 0.9997460998725703,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90691912"
+                }
+              },
+              {
+                "clpp": 0.6805351165351367,
+                "h4": 0.9996045129514047,
+                "otherStudyLocus": {
+                  "studyId": "GCST90693007"
+                }
+              },
+              {
+                "clpp": 0.6972845067247793,
+                "h4": 0.9996377878754908,
+                "otherStudyLocus": {
+                  "studyId": "GCST90693006"
+                }
+              },
+              {
+                "clpp": 0.9997460998725418,
+                "h4": 1,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692753"
+                }
+              },
+              {
+                "clpp": 0.8232759150612858,
+                "h4": 0.9998420512383682,
+                "otherStudyLocus": {
+                  "studyId": "GCST90449055"
+                }
+              }
+            ]
+          },
+          "l2GPredictions": {
+            "rows": [
+              {
+                "score": 0.6033689975738525,
+                "target": {
+                  "approvedSymbol": "CDH13",
+                  "id": "ENSG00000140945"
+                }
+              }
+            ]
+          },
+          "pValueExponent": -16,
+          "pValueMantissa": 2.5868496894836426,
+          "region": "16:82704011-83144976",
+          "studyLocusId": "02efabcd063579aa19ea10629b548b25",
+          "variant": {
+            "id": "16_83012185_A_G",
+            "mostSevereConsequence": {
+              "label": "intron_variant"
+            },
+            "rsIds": [
+              "rs7500448"
+            ]
+          }
+        },
+        {
+          "colocalisation": {
+            "rows": [
+              {
+                "clpp": 0.05196806757047189,
+                "h4": 0.9836442244490184,
+                "otherStudyLocus": {
+                  "studyId": "GCST90498449"
+                }
+              },
+              {
+                "clpp": 0.49966040974627735,
+                "h4": 0.9991557518350017,
+                "otherStudyLocus": {
+                  "studyId": "GCST90498153"
+                }
+              },
+              {
+                "clpp": 0.4420797061445824,
+                "h4": 0.9988915736266157,
+                "otherStudyLocus": {
+                  "studyId": "GCST90475985"
+                }
+              },
+              {
+                "clpp": 0.0312021557435087,
+                "h4": 0.9719384724141896,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692980"
+                }
+              },
+              {
+                "clpp": 0.017554122282185846,
+                "h4": 0.9506209565851849,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269724"
+                }
+              },
+              {
+                "clpp": 0.1588985941551697,
+                "h4": 0.9950592097028986,
+                "otherStudyLocus": {
+                  "studyId": "GCST007066"
+                }
+              },
+              {
+                "clpp": 0.033423731400999385,
+                "h4": 0.9734386939896308,
+                "otherStudyLocus": {
+                  "studyId": "GCST90827896"
+                }
+              },
+              {
+                "clpp": 0.0322388438320179,
+                "h4": 0.9727293991669038,
+                "otherStudyLocus": {
+                  "studyId": "GCST90691920"
+                }
+              },
+              {
+                "clpp": 0.38258680846464904,
+                "h4": 0.998572123600111,
+                "otherStudyLocus": {
+                  "studyId": "GCST90500725"
+                }
+              },
+              {
+                "clpp": 0.37977978169026855,
+                "h4": 0.9985574766518771,
+                "otherStudyLocus": {
+                  "studyId": "GCST90497784"
+                }
+              },
+              {
+                "clpp": 0.3832455075559692,
+                "h4": 0.9985755429062317,
+                "otherStudyLocus": {
+                  "studyId": "GCST005196"
+                }
+              },
+              {
+                "clpp": 0.037178674124858556,
+                "h4": 0.9762628533388068,
+                "otherStudyLocus": {
+                  "studyId": "GCST90497539"
+                }
+              },
+              {
+                "clpp": 0.04647570501877942,
+                "h4": 0.9816112999452943,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269691"
+                }
+              },
+              {
+                "clpp": 0.3660128239112903,
+                "h4": 0.9984838298602352,
+                "otherStudyLocus": {
+                  "studyId": "GCST90309866"
+                }
+              },
+              {
+                "clpp": 0.043002566413210326,
+                "h4": 0.9797223242203975,
+                "otherStudyLocus": {
+                  "studyId": "GCST90501239"
+                }
+              },
+              {
+                "clpp": 0.032169736335849713,
+                "h4": 0.9731930389308067,
+                "otherStudyLocus": {
+                  "studyId": "GCST90692773"
+                }
+              },
+              {
+                "clpp": 0.5433700939505168,
+                "h4": 0.9992692638430622,
+                "otherStudyLocus": {
+                  "studyId": "GCST90000062"
+                }
+              },
+              {
+                "clpp": 0.0536341802855466,
+                "h4": 0.9842112190407764,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269696"
+                }
+              },
+              {
+                "clpp": 0.04381097258829515,
+                "h4": 0.9801349852674461,
+                "otherStudyLocus": {
+                  "studyId": "GCST006172"
+                }
+              },
+              {
+                "clpp": 0.40628290652961047,
+                "h4": 0.9986910035630407,
+                "otherStudyLocus": {
+                  "studyId": "GCST90500761"
+                }
+              },
+              {
+                "clpp": 0.07381738467030398,
+                "h4": 0.9887498673884181,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269687"
+                }
+              },
+              {
+                "clpp": 0.06525811837515376,
+                "h4": 0.9871605984346146,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269682"
+                }
+              },
+              {
+                "clpp": 0.5787671669693827,
+                "h4": 0.9993587162371305,
+                "otherStudyLocus": {
+                  "studyId": "GCST90000063"
+                }
+              },
+              {
+                "clpp": 0.07203637305476054,
+                "h4": 0.9880612545278019,
+                "otherStudyLocus": {
+                  "studyId": "GCST90269700"
+                }
+              },
+              {
+                "clpp": 0.3666304307292289,
+                "h4": 0.9984871995007069,
+                "otherStudyLocus": {
+                  "studyId": "GCST004232"
+                }
+              }
+            ]
+          },
+          "l2GPredictions": {
+            "rows": [
+              {
+                "score": 0.14192050695419312,
+                "target": {
+                  "approvedSymbol": "PCNX3",
+                  "id": "ENSG00000197136"
+                }
+              }
+            ]
+          },
+          "pValueExponent": -11,
+          "pValueMantissa": 1.8592861890792847,
+          "region": "11:65481592-65902934",
+          "studyLocusId": "02f91706537e871b1dd53a0bd0c89c27",
+          "variant": {
+            "id": "11_65623846_G_A",
+            "mostSevereConsequence": {
+              "label": "intron_variant"
+            },
+            "rsIds": [
+              "rs12801636"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

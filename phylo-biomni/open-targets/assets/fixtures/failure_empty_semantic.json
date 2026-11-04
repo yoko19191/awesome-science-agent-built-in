@@ -1,0 +1,10 @@
+{
+  "data": {
+    "disease": null,
+    "meta": {
+      "dataVersion": {"year": 26, "month": 6},
+      "apiVersion": {"x": 26, "y": 6, "z": 3, "suffix": null},
+      "product": "platform"
+    }
+  }
+}

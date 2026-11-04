@@ -1,0 +1,55 @@
+{
+  "data": {
+    "study": {
+      "credibleSets": {
+        "count": 176,
+        "rows": [
+          {
+            "pValueExponent": -15,
+            "pValueMantissa": 9.189254760742188,
+            "region": "12:89242121-89806118",
+            "studyLocusId": "ffe0e468777bafe3a0e28f5fe8465f42"
+          },
+          {
+            "pValueExponent": -13,
+            "pValueMantissa": 5.664083957672119,
+            "region": "11:116580059-117109740",
+            "studyLocusId": "fe693762fb405b5c7feb6ff0bd7b620d"
+          },
+          {
+            "pValueExponent": -7,
+            "pValueMantissa": 2.4600939750671387,
+            "region": "22:23815150-24612728",
+            "studyLocusId": "fba453a2e6bd33116a69c04373651c71"
+          },
+          {
+            "pValueExponent": -10,
+            "pValueMantissa": 3.89784574508667,
+            "region": "11:100540550-100875925",
+            "studyLocusId": "fb262edaadf671f978bc2d6ceac8d3ba"
+          },
+          {
+            "pValueExponent": -10,
+            "pValueMantissa": 3.6229984760284424,
+            "region": "6:160380144-161880144",
+            "studyLocusId": "f9f2852e6cdfee52e378b952b97cc35f"
+          }
+        ]
+      },
+      "diseases": [
+        {
+          "id": "MONDO_0005010",
+          "name": "coronary artery disorder"
+        }
+      ],
+      "id": "GCST005194",
+      "nCases": 34541,
+      "nControls": 261984,
+      "nSamples": 296525,
+      "publicationFirstAuthor": "van der Harst P",
+      "pubmedId": "29212778",
+      "studyType": "gwas",
+      "traitFromSource": "Coronary artery disease"
+    }
+  }
+}

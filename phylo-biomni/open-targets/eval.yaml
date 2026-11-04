@@ -1,0 +1,245 @@
+# Eval specification for the open-targets skill package.
+# Declares the offline eval contract, invariants, and known risks.
+# Nothing runs this automatically; it documents what assets/eval/ pins.
+
+schema: phylo-skill-eval/1
+skill_slug: open-targets
+skill_id: skill_032628bba2f145cfba0f7c5acb46ee45
+
+# --- Original example prompt (customer-neutral) ---
+example_prompt: |
+  Prioritize therapeutic targets for Alzheimer disease (MONDO_0004975) using the
+  Open Targets Platform GraphQL API. Rank a bounded top-10 target set with
+  datatype scores, retrieve bounded evidence for the top target, inspect GWAS
+  study GCST005194 and its credible sets, and produce a provider-styled canonical PDF report
+  with deterministic figures and a GenerateImage infographic.
+
+# --- Expected outputs ---
+expected_outputs:
+  - target_ranking.csv
+  - evidence_rows.csv
+  - operation_ledger.json
+  - provenance.json
+  - report_facts.json
+  - run_receipt.json
+  - qc_run_log.json
+  - figures/figure_1_target_ranking.png
+  - figures/figure_2_datatype_heatmap.png
+  - infographic_open_targets_workflow.png
+  - report_open-targets.pdf
+
+# --- Offline eval suite ---
+offline_evals:
+  suite_dir: assets/eval
+  runner: "python3 -m pytest assets/eval/ -v"
+  all_skipped_is_failure: true
+  tests:
+    - file: test_ledger.py
+      finding: OT-01
+      defect: "Recovered failures disappear from the provenance ledger."
+      asserts: "HTTP failure, body error, malformed JSON, timeout, retry, and final query preserve exact attempt counts; dropping a failed record fails."
+    - file: test_quick_start.py
+      finding: OT-02
+      defect: "The quick start bypasses the package's own body-error guard."
+      asserts: "Direct requests.post() examples outside the shipped helper are rejected; body-error fixture exits nonzero and writes a failed ledger entry."
+    - file: test_queries.py
+      finding: OT-03
+      defect: "No executable query library or schema-compatibility gate."
+      asserts: "Frozen fixtures pass all nine operations; a removed/renamed field fails with the exact operation and field; empty-but-HTTP-200 semantic fixtures fail."
+    - file: test_pagination.py
+      finding: OT-06
+      defect: "Pagination and exhaustive-count semantics are underspecified."
+      asserts: "Exhaustion, repeated cursor, missing next cursor, declared-total mismatch, configured cap, and top-N sample are classified; bounded samples are not labelled exhaustive."
+    - file: test_budget.py
+      finding: OT-09
+      defect: "The API-to-bulk boundary is contradictory and unbounded."
+      asserts: "Over-budget entities/pages/rows/bytes return a structured bulk handoff before network iteration; a bounded single-entity request proceeds."
+    - file: test_semantics.py
+      finding: OT-07, OT-08
+      defect: "Scientific score types can be conflated; non-evidence rows received invented datasource IDs."
+      asserts: "Each metric type validates into a distinct schema branch; cross-labeling fails; ot_genetics_l2g and ot_genetics_colocalisation are absent from datasource fields; an injected fake ID fails."
+    - file: test_recovery.py
+      finding: OT-12
+      defect: "Successful final queries can erase the audit trail of schema discovery."
+      asserts: "The calibration trace produces failed plus succeeding attempts with recovered_by/retry_of links; deleting a predecessor or claiming zero failures fails reconciliation."
+    - file: test_visuals.py
+      finding: OT-11
+      defect: "Requested visualizations are not reproducible package behavior."
+      asserts: "Visual payload extraction equals source facts exactly; swapped labels, changed counts/scores, missing targets, blank images, and post-facts mutation fail."
+    - file: test_infographic.py
+      finding: OT-11 (infographic addendum), OT-R2-03
+      defect: "A missing GenerateImage trace, wrong infographic filename, unembedded image, or data-bearing generated image could pass as a successful receipt."
+      asserts: "Missing transcript success line, wrong filename, missing/blank/corrupt infographic (InfographicError abort), and non-qualitative prompt each prevent a successful receipt. Content-identity embedding check verifies the exact delivered image is embedded."
+    - file: test_repair_r2.py
+      finding: OT-R2-02, OT-R2-03, OT-R2-05, OT-R2-06, OT-R2-07, OT-R2-08
+      defect: "Round-2 structural repair: prompt/image lineage, mandatory infographic embedding identity, PDF hash binding, executed-operation counts, disease-study concordance, strict JSON payloads."
+      asserts: "Prompt hash verified in transcript, content-identity embedding check, PDF SHA256 binding in review events, operation counts derived from ledger, concordance gate rejects CAD/Alzheimer pair, NaN converted to null with allow_nan=False."
+    - file: test_finalization_v1.py
+      finding: OT-R2-01 through OT-R2-06
+      defect: "Independent call/result evidence, unavailable review, dropped ontology fields, and unhashed response bodies could be combined into a false success."
+      asserts: "Production projection preserves study.diseases; exact request/response bytes are hashed for successes and failures; retry links reject successful predecessors; byte-budget failures remain in the ledger; visual review requires an explicit typed state."
+    - file: test_finalization_v2.py
+      finding: OT-F1-01
+      defect: "A complete starting prompt could be parked on unnecessary clarification, while anonymous flattened tool records were mistaken for verifiable image lineage."
+      asserts: "Complete prompts resolve to ready with exact inputs; missing or conflicting required inputs resolve to a precise clarification; the typed task-messages API envelope preserves same-id lineage; flattened tool records without join ids are rejected."
+
+# --- Invariants (one per finding) ---
+invariants:
+  OT-01:
+    statement: "Every GraphQL request is recorded in an immutable operation ledger before returning or raising; failed attempts are preserved, not replaced by successful retries."
+    eval_ref: assets/eval/test_ledger.py
+  OT-02:
+    statement: "No executable snippet uses direct requests.post().json() outside the shipped client helper; the body-error path is explicit and exits nonzero."
+    eval_ref: assets/eval/test_quick_start.py
+  OT-03:
+    statement: "Nine pinned operation families pass frozen fixtures; schema drift fails with the exact operation and field; empty semantic results fail."
+    eval_ref: assets/eval/test_queries.py
+  OT-04:
+    statement: "One offline executable test per observed defect invokes production code from fresh temporary outputs; all-skipped exits 2 and is not accepted as pass."
+    eval_ref: assets/eval/
+  OT-05:
+    statement: "provenance.json, operation ledger, result tables, report_facts.json, and run_receipt.json are emitted through production code with release-bound hashes."
+    eval_ref: assets/eval/test_ledger.py
+  OT-06:
+    statement: "Maximum entities, pages, rows, bytes, and elapsed time are enforced; completeness is classified as complete or bounded_sample; bounded samples are never labelled exhaustive."
+    eval_ref: assets/eval/test_pagination.py
+  OT-07:
+    statement: "Each record carries a discriminated record_type, metric, scale, datasource_id (when applicable), and interpretation boundary; scores are never labelled effect estimates, replication, causal proof, or clinical validation."
+    eval_ref: assets/eval/test_semantics.py
+  OT-08:
+    statement: "datasource_id is populated only from real evidence records; L2G and colocalisation rows leave datasource fields null with an explicit not-applicable reason."
+    eval_ref: assets/eval/test_semantics.py
+  OT-09:
+    statement: "Over-budget requests stop with a release-pinned bulk-data handoff naming the official route and required downstream filtering; they do not loop or silently truncate."
+    eval_ref: assets/eval/test_budget.py
+  OT-10:
+    statement: "Data license, commercial-use statement, API authentication, observed response behavior, and unknown rate limits are separated; no unlimited-use guarantee is inferred from missing headers."
+    eval_ref: references/licensing-and-access.md
+  OT-11:
+    statement: "Deterministic figures read validated facts at build time; captions and report text use the same facts artifact; the GenerateImage infographic is qualitative and non-data-bearing and is embedded in the PDF."
+    eval_ref: assets/eval/test_visuals.py
+  OT-12:
+    statement: "Retries and recoveries are modelled as a graph with unique attempt IDs and recovered_by/retry_of links; reports state failure/recovery counts and never claim zero failures when failures occurred."
+    eval_ref: assets/eval/test_recovery.py
+  OT-R2-02:
+    statement: "The infographic prompt SHA256 is consistent across the package prompt file, the actual GenerateImage tool-use record, provenance, and receipt. A unique same-id pair binds the exact prompt, requested and returned filename, invocation id, and successful result id."
+    eval_ref: assets/eval/test_infographic.py
+  OT-R2-03:
+    statement: "build_report.py aborts before publication when the infographic is missing, blank, corrupt, or unembedded. Exact decoded-pixel identity, the final PDF hash, and the matching embedded page are recorded; the infographic is the first substantive visual on page 1."
+    eval_ref: assets/eval/test_infographic.py
+  OT-R2-05:
+    statement: "Every PDF review event (text extraction, page render, visual review) is hash-bound to the current final-PDF SHA256 and every artifact SHA256. Figure headings use KeepTogether; heatmap labels are wrapped and not clipped."
+    eval_ref: assets/eval/test_repair_r2.py
+  OT-R2-06:
+    statement: "Executed-operation counts and names are derived from operation_ledger.json. Five executed in the representative run; nine registered and separately smoke-tested. No hard-coded executed count remains."
+    eval_ref: assets/eval/test_repair_r2.py
+  OT-R2-07:
+    statement: "The production study-facts projection preserves study.diseases. Ontology IDs are compared first-class with trait text as fallback; non-concordant studies are labeled independent_study_context and excluded from target-support conclusions."
+    eval_ref: assets/eval/test_finalization_v1.py
+  OT-R2-08:
+    statement: "Machine-readable JSON artifacts are serialized with allow_nan=False; non-finite floats are converted to null and remain visually distinct from numeric zero."
+    eval_ref: assets/eval/test_repair_r2.py
+  OT-F1-01:
+    statement: "A complete prompt executes without confirmation; clarification is permitted only for a missing required identifier or a genuinely conflicting input. GenerateImage lineage accepts typed API message envelopes only when an exact join id is present and rejects anonymous flattened tool records."
+    eval_ref: assets/eval/test_finalization_v2.py
+
+# --- Creation evidence ---
+creation_evidence:
+  authoring_contract: phylo-create-skill
+  authoring_contract_sha256: fd2996a9bffc53f421ec297b24bcadb7276812d1eb4e3d0bbe94907c5ead8b23
+  source_git_commit: 86f8b0a380a80cec7845d026d474f7f19c517420
+  repair_brief: open-targets-structural-repair-r2.zip
+  repair_brief_sha256: de78e13b5509e12930a4fa3068c5e88f1769fc461243ee2d39aa16847d25d916
+  source_package_snapshot_sha256: 4118dde67fc1ee3c53d0cb67124bca05344e07d10e0985c8793d9074fd0cbc07
+  skill_id: skill_032628bba2f145cfba0f7c5acb46ee45
+
+# --- Verified resources ---
+verified_resources:
+  - name: Open Targets Platform GraphQL API
+    uri: https://api.platform.opentargets.org/api/v4/graphql
+    access_date: "2026-08-16"
+    release_label: "26.06"
+    api_version: "26.6.3"
+    license: CC0 1.0 Universal (Public Domain Dedication)
+    authentication: none
+    verification_ref: references/licensing-and-access.md
+
+# --- Package rationale ---
+package_rationale: |
+  The original open-targets package was a general-purpose conceptual skill with no
+  production scripts, no eval suite, and no enforced provenance. This repair moves
+  fragile network, pagination, provenance, semantic typing, validation, and
+  visualization behavior into deterministic package code with one offline test per
+  observed defect. The package stays customer-neutral and does not add raw GWAS
+  summary-statistics retrieval, causal inference, clinical recommendations, or
+  controlled-access data.
+
+# --- Commercial-use statuses ---
+commercial_use:
+  open_targets_data:
+    status: permitted
+    basis: "CC0 1.0 Universal (Public Domain Dedication)"
+    caveat: "Data is public domain; API terms do not constitute a commercial-use contract. Verify current terms before commercial deployment."
+  gwas_catalog:
+    status: permitted
+    basis: "CC0 1.0 (integrated by Open Targets, not retrieved directly)"
+    caveat: "Retrieved through the Open Targets API; direct GWAS Catalog access has its own terms."
+  api_service:
+    status: unknown
+    basis: "No authentication required; no published rate-limit or SLA guarantee"
+    caveat: "Service stability and rate limits are not promised; do not infer unlimited use from missing headers."
+
+# --- Scientific checks ---
+scientific_checks:
+  - id: score_semantics
+    statement: "Association scores are integrated prioritization metrics (0-1), not effect estimates, replication, or causal proof."
+    eval_ref: assets/eval/test_semantics.py
+  - id: completeness_label
+    statement: "Bounded samples are labelled bounded_sample, never exhaustive."
+    eval_ref: assets/eval/test_pagination.py
+  - id: study_disease_conflation
+    statement: "GWAS study trait is not conflated with the queried EFO disease; non-concordant studies are labeled independent_study_context."
+    eval_ref: assets/eval/test_repair_r2.py
+  - id: infographic_qualitative
+    statement: "The GenerateImage infographic carries no run-specific numbers, scores, rankings, variant IDs, or p-values."
+    eval_ref: assets/eval/test_infographic.py
+  - id: operation_count_honesty
+    statement: "Executed-operation counts are derived from the ledger; five executed in the representative run, nine registered and separately smoke-tested."
+    eval_ref: assets/eval/test_repair_r2.py
+  - id: strict_json_payloads
+    statement: "Machine-readable JSON artifacts contain no NaN or inf; non-finite values are null."
+    eval_ref: assets/eval/test_repair_r2.py
+  - id: pdf_hash_binding
+    statement: "PDF review events are hash-bound to the current final-PDF SHA256 and artifact SHA256s."
+    eval_ref: assets/eval/test_repair_r2.py
+  - id: infographic_lineage
+    statement: "A unique same-id GenerateImage call/result pair binds exact prompt, filenames, source-image hash, decoded-pixel hash, final PDF hash, and page-1 embedded-pixel hash."
+    eval_ref: assets/eval/test_infographic.py
+  - id: response_hash_lineage
+    statement: "Every terminal API attempt records canonical request-body and exact received response-body hashes, including failures and explicit retry/recovery links."
+    eval_ref: assets/eval/test_finalization_v1.py
+
+# --- Known risks ---
+known_risks:
+  - risk: "API schema drift between releases may break pinned field selections."
+    mitigation: "schema_smoke.py runs all nine operations; a removed/renamed field fails with the exact operation and field."
+  - risk: "Bounded target samples are not exhaustive; over-reading rankings as a complete target list is a misuse."
+    mitigation: "completeness field labels bounded_sample; report text states the bound."
+  - risk: "L2G and colocalisation records have no datasource_id; treating them as evidence rows is a semantic error."
+    mitigation: "Discriminated record_type with null datasource_id and explicit not-applicable reason."
+  - risk: "The GenerateImage infographic is qualitative; it must not be read as a data figure."
+    mitigation: "test_infographic.py rejects data-bearing prompts; build_report.py aborts on missing/blank/corrupt; content-identity embedding check verifies exact image."
+  - risk: "Visual inspection of PDF pages is not_evaluable under a text-only model."
+    mitigation: "record_pdf_review attests not_evaluable with exact blocker; pages are rendered programmatically and text is extracted."
+  - risk: "A non-concordant GWAS study (e.g. CAD for Alzheimer) could be silently treated as disease-supporting evidence."
+    mitigation: "study_concordance gate in run_analysis.py; non-concordant studies labeled independent_study_context and excluded from conclusions."
+  - risk: "PDF review events could become stale if the PDF is overwritten after review."
+    mitigation: "Every review event records pdf_sha256; _pdf_review_evidence verifies agreement with current PDF."
+  - risk: "NaN values in figure payloads are not valid RFC JSON."
+    mitigation: "visualize.py uses allow_nan=False and converts non-finite floats to null."
+
+# --- Live smoke test (opt-in, never replaces offline evals) ---
+live_smoke:
+  command: "python3 scripts/schema_smoke.py --live"
+  requires_network: true
+  note: "Opt-in only. Runs all nine operations against the live API. Never replaces offline rejection tests."

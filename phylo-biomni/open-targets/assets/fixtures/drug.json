@@ -1,0 +1,1979 @@
+{
+  "data": {
+    "drug": {
+      "adverseEvents": {
+        "count": 19,
+        "rows": [
+          {
+            "count": 1635,
+            "logLR": 3329.7627577272942,
+            "name": "proteinuria"
+          },
+          {
+            "count": 3475,
+            "logLR": 3057.488174134138,
+            "name": "hypertension"
+          },
+          {
+            "count": 2511,
+            "logLR": 2910.5996612061863,
+            "name": "disease progression"
+          },
+          {
+            "count": 690,
+            "logLR": 1576.2753184886242,
+            "name": "endophthalmitis"
+          },
+          {
+            "count": 561,
+            "logLR": 1480.6446134939906,
+            "name": "gastrointestinal perforation"
+          }
+        ]
+      },
+      "drugType": "Antibody",
+      "id": "CHEMBL1201583",
+      "indications": {
+        "count": 275,
+        "rows": [
+          {
+            "disease": {
+              "id": "MONDO_0021211",
+              "name": "brain neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005005",
+              "name": "clear cell renal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005401",
+              "name": "colonic neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006713",
+              "name": "corneal neovascularization"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016748",
+              "name": "hemangioblastoma"
+            },
+            "maxClinicalStage": "EARLY_PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005369",
+              "name": "carcinoid tumor"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0023833",
+              "name": "multifocal choroiditis"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006763",
+              "name": "frozen shoulder"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_0009784",
+              "name": "central serous retinopathy"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008375",
+              "name": "retinal detachment"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006244",
+              "name": "HER2 positive breast carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021640",
+              "name": "grade III glioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006256",
+              "name": "invasive breast carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021223",
+              "name": "digestive system neoplasm"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005206",
+              "name": "renal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003345",
+              "name": "hilar cholangiocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "HP_0100806",
+              "name": "Sepsis"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "HP_0002018",
+              "name": "Nausea"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0020743",
+              "name": "mixed phenotype acute leukemia"
+            },
+            "maxClinicalStage": "EARLY_PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001187",
+              "name": "urinary bladder cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0009831",
+              "name": "malignant pancreatic neoplasm"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016684",
+              "name": "anaplastic astrocytoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016696",
+              "name": "anaplastic oligodendroglioma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002670",
+              "name": "ampulla of vater adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005089",
+              "name": "sarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0100233",
+              "name": "long COVID-19"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006519",
+              "name": "rectal cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005148",
+              "name": "type 2 diabetes mellitus"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006058",
+              "name": "Wilms tumor"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002271",
+              "name": "colon adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019086",
+              "name": "carcinoma of esophagus"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019297",
+              "name": "lymphedema"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002771",
+              "name": "pulmonary fibrosis"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018906",
+              "name": "follicular lymphoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0044937",
+              "name": "rectal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005601",
+              "name": "ovarian mucinous adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0017827",
+              "name": "malignant peripheral nerve sheath tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0011996",
+              "name": "chronic myelogenous leukemia, BCR-ABL1 positive"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018364",
+              "name": "malignant epithelial tumor of ovary"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005150",
+              "name": "age-related macular degeneration"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007254",
+              "name": "breast cancer"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005365",
+              "name": "hearing loss disorder"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005061",
+              "name": "lung adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002158",
+              "name": "fallopian tube cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005549",
+              "name": "renal cell adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019087",
+              "name": "cholangiocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005512",
+              "name": "malignant peritoneal mesothelioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005348",
+              "name": "keloid"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005131",
+              "name": "cervical carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005335",
+              "name": "colorectal neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005283",
+              "name": "retinal disorder"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004988",
+              "name": "breast adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007935",
+              "name": "cystoid macular edema"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006468",
+              "name": "thyroid gland undifferentiated (anaplastic) carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0100114",
+              "name": "dry age related macular degeneration"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006335",
+              "name": "ovarian endometrioid adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005328",
+              "name": "eye disorder"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0015075",
+              "name": "thyroid gland carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002352",
+              "name": "larynx cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0013792",
+              "name": "intracerebral hemorrhage"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "EFO_0003895",
+              "name": "epistaxis"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016642",
+              "name": "meningioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005417",
+              "name": "wet macular degeneration"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005140",
+              "name": "ovarian carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0002014",
+              "name": "Diarrhea"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0020560",
+              "name": "atypical teratoid rhabdoid tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005338",
+              "name": "open-angle glaucoma"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "EFO_1001471",
+              "name": "Merkel cell skin cancer"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_0008626",
+              "name": "vitreous hemorrhage"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018876",
+              "name": "mantle cell lymphoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018908",
+              "name": "non-Hodgkin lymphoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0044638",
+              "name": "hypopharynx squamous cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008433",
+              "name": "small cell lung carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016698",
+              "name": "ependymoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016681",
+              "name": "gliosarcoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0025569",
+              "name": "Polypoidal choroidal vasculopathy"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006451",
+              "name": "thymic carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0010269",
+              "name": "Coats disease"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019783",
+              "name": "neovascular glaucoma"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021038",
+              "name": "Ewing sarcoma/peripheral primitive neuroectodermal tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002744",
+              "name": "fallopian tube mucinous adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005062",
+              "name": "lymphoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019954",
+              "name": "pancreatic neuroendocrine tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005105",
+              "name": "melanoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MP_0001914",
+              "name": "hemorrhage"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008383",
+              "name": "rheumatoid arthritis"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005011",
+              "name": "Crohn disease"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006130",
+              "name": "central nervous system neoplasm"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005627",
+              "name": "head and neck cancer"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003198",
+              "name": "small intestine adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007576",
+              "name": "esophageal cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "HP_0001541",
+              "name": "Ascites"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004989",
+              "name": "breast carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_0005288",
+              "name": "non-small cell lung adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006456",
+              "name": "thymoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002087",
+              "name": "peritoneum cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005070",
+              "name": "neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0040679",
+              "name": "urothelial carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0002098",
+              "name": "Respiratory distress"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0009807",
+              "name": "osteosarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005611",
+              "name": "bladder transitional cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018078",
+              "name": "soft tissue sarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003219",
+              "name": "gastroesophageal junction adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005055",
+              "name": "Kaposi's sarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021632",
+              "name": "primary brain neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004970",
+              "name": "adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0010150",
+              "name": "head and neck squamous cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016262",
+              "name": "leiomyosarcoma of the corpus uteri"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0100280",
+              "name": "Waldenstrom macroglobulinemia"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0009693",
+              "name": "plasma cell myeloma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005515",
+              "name": "oral cavity cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004992",
+              "name": "cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021637",
+              "name": "low grade glioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_0009760",
+              "name": "non-proliferative diabetic retinopathy"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0000544",
+              "name": "mucosal melanoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005041",
+              "name": "glaucoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007154",
+              "name": "arteriovenous malformations of the brain"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019373",
+              "name": "desmoplastic small round cell tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002691",
+              "name": "liver cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0009348",
+              "name": "classic Hodgkin lymphoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006901",
+              "name": "peritoneal neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0044881",
+              "name": "hematopoietic and lymphoid cell neoplasm"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005059",
+              "name": "leukemia"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002714",
+              "name": "central nervous system cancer"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002229",
+              "name": "ovarian epithelial tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002363",
+              "name": "papilloma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005085",
+              "name": "pterygium"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006952",
+              "name": "retinopathy of prematurity"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007256",
+              "name": "hepatocellular carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001657",
+              "name": "brain cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006486",
+              "name": "uveal melanoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016692",
+              "name": "pilomyxoid astrocytoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003060",
+              "name": "biliary tract cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006292",
+              "name": "malignant mesothelioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0012817",
+              "name": "Ewing sarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001416",
+              "name": "female reproductive organ cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006260",
+              "name": "kidney medullary carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021092",
+              "name": "fallopian tube neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "HP_0004936",
+              "name": "Venous thrombosis"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005004",
+              "name": "clear cell adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005058",
+              "name": "leiomyosarcoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003865",
+              "name": "acral lentiginous melanoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "HP_0009588",
+              "name": "Vestibular schwannoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002120",
+              "name": "neuroendocrine carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0011782",
+              "name": "angioid streaks"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003210",
+              "name": "intrahepatic cholangiocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0015686",
+              "name": "primary peritoneal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018944",
+              "name": "gestational trophoblastic neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0011719",
+              "name": "gastrointestinal stromal tumor"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021085",
+              "name": "gastric neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002974",
+              "name": "cervical cancer"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006142",
+              "name": "cervical small cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001409",
+              "name": "esophagitis"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005184",
+              "name": "pancreatic ductal adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004948",
+              "name": "B-cell chronic lymphocytic leukemia"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018177",
+              "name": "glioblastoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021553",
+              "name": "transverse myelitis"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018881",
+              "name": "myelodysplastic syndrome"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019496",
+              "name": "neuroendocrine neoplasm"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005580",
+              "name": "esophageal squamous cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006662",
+              "name": "aseptic meningitis"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002728",
+              "name": "rhabdoid tumor"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004728",
+              "name": "diabetic macular edema"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005191",
+              "name": "metastatic melanoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005009",
+              "name": "congestive heart failure"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005072",
+              "name": "neuroblastoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016690",
+              "name": "pleomorphic xanthoastrocytoma"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018905",
+              "name": "diffuse large B-cell lymphoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005212",
+              "name": "rhabdomyosarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008315",
+              "name": "prostate cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005028",
+              "name": "esophageal adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006047",
+              "name": "pancreatic adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0024282",
+              "name": "mucinous ovarian cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006210",
+              "name": "fibrolamellar hepatocellular carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0000448",
+              "name": "paraganglioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_1001012",
+              "name": "leptomeningeal metastasis"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021042",
+              "name": "glioma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0000529",
+              "name": "Progressive visual loss"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0015459",
+              "name": "nasopharyngeal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005375",
+              "name": "nasopharyngeal neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002169",
+              "name": "rectum adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004950",
+              "name": "gastric carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006474",
+              "name": "transitional cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005211",
+              "name": "ovarian serous adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005112",
+              "name": "malignant pleural mesothelioma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004037",
+              "name": "retinal edema"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006206",
+              "name": "fallopian tube carcinoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0015796",
+              "name": "acute lung injury"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0011962",
+              "name": "endometrial cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006087",
+              "name": "appendix adenocarcinoma"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019180",
+              "name": "hereditary hemorrhagic telangiectasia"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005220",
+              "name": "collecting duct carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005517",
+              "name": "pharynx cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001660",
+              "name": "proliferative diabetic retinopathy"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005233",
+              "name": "non-small cell lung carcinoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005885",
+              "name": "optic neuritis"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006215",
+              "name": "gallbladder adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005494",
+              "name": "triple-negative breast carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006804",
+              "name": "inflammatory breast carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0100342",
+              "name": "malignant glioma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005893",
+              "name": "pancreatic endocrine carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016982",
+              "name": "angiosarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0017884",
+              "name": "papillary renal cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019781",
+              "name": "astrocytoma (excluding glioblastoma)"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021063",
+              "name": "malignant colon neoplasm"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0020311",
+              "name": "chronic myelomonocytic leukemia"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005096",
+              "name": "squamous cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005192",
+              "name": "exocrine pancreatic carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005008",
+              "name": "colorectal adenocarcinoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006639",
+              "name": "adrenal cortex carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0024331",
+              "name": "colorectal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006382",
+              "name": "poorly differentiated thyroid gland carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021163",
+              "name": "kidney neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0043510",
+              "name": "brain injury"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005266",
+              "name": "diabetic retinopathy"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002113",
+              "name": "peritoneal carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006951",
+              "name": "retinal vein occlusion"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002806",
+              "name": "bronchogenic carcinoma"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005097",
+              "name": "squamous cell lung carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005575",
+              "name": "colorectal cancer"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006033",
+              "name": "diffuse intrinsic pontine glioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021068",
+              "name": "ovarian neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002280",
+              "name": "anemia"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0002202",
+              "name": "Pleural effusion"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005366",
+              "name": "chronic hepatitis B virus infection"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0100096",
+              "name": "COVID-19"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "EFO_0003863",
+              "name": "urogenital neoplasm"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "EFO_0010133",
+              "name": "diabetic maculopathy"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006143",
+              "name": "cervical squamous cell carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006649",
+              "name": "anterior ischemic optic neuropathy"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002367",
+              "name": "kidney cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0056806",
+              "name": "non-small cell squamous lung carcinoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0810000",
+              "name": "choroidal neovascularization"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006684",
+              "name": "brain edema"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002752",
+              "name": "ovarian adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005036",
+              "name": "gastric adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005207",
+              "name": "choriocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018874",
+              "name": "acute myeloid leukemia"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018092",
+              "name": "Vogt-Koyanagi-Harada disease"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005552",
+              "name": "ocular vascular disorder"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007039",
+              "name": "NF2-related schwannomatosis"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0016695",
+              "name": "oligodendroglioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0018842",
+              "name": "primary effusion lymphoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006362",
+              "name": "peritoneal mesothelioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "HP_0002094",
+              "name": "Dyspnea"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021100",
+              "name": "breast neoplasm"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002447",
+              "name": "endometrial carcinoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002032",
+              "name": "colon carcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005065",
+              "name": "mesothelioma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005411",
+              "name": "gallbladder cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005086",
+              "name": "renal cell carcinoma"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008170",
+              "name": "ovarian cancer"
+            },
+            "maxClinicalStage": "PREAPPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0004971",
+              "name": "adenoid cystic carcinoma"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006502",
+              "name": "acute respiratory distress syndrome"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "HP_0001250",
+              "name": "Seizure"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0019100",
+              "name": "neuromyelitis optica"
+            },
+            "maxClinicalStage": "PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "Orphanet_98671",
+              "name": "Optic neuropathy"
+            },
+            "maxClinicalStage": "EARLY_PHASE_1"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0008903",
+              "name": "lung cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0003005",
+              "name": "macular retinal edema"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005277",
+              "name": "migraine disorder"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0006003",
+              "name": "uterine corpus cancer"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005012",
+              "name": "cutaneous melanoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0000548",
+              "name": "ovarian clear cell cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005306",
+              "name": "ankylosing spondylitis"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0000430",
+              "name": "mature T-cell and NK-cell non-Hodgkin lymphoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005101",
+              "name": "ulcerative colitis"
+            },
+            "maxClinicalStage": "UNKNOWN"
+          },
+          {
+            "disease": {
+              "id": "EFO_1001480",
+              "name": "metastatic colorectal cancer"
+            },
+            "maxClinicalStage": "APPROVAL"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0001056",
+              "name": "gastric cancer"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005040",
+              "name": "germ cell tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0021657",
+              "name": "ovarian sex cord-stromal tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0044903",
+              "name": "myelofibrosis"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0005462",
+              "name": "primitive neuroectodermal tumor"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0002746",
+              "name": "fallopian tube adenocarcinoma"
+            },
+            "maxClinicalStage": "PHASE_3"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0007959",
+              "name": "medulloblastoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          },
+          {
+            "disease": {
+              "id": "MONDO_0011655",
+              "name": "alveolar soft part sarcoma"
+            },
+            "maxClinicalStage": "PHASE_2"
+          }
+        ]
+      },
+      "maximumClinicalStage": "APPROVAL",
+      "mechanismsOfAction": {
+        "rows": [
+          {
+            "actionType": "INHIBITOR",
+            "mechanismOfAction": "Vascular endothelial growth factor A inhibitor",
+            "targetName": "Vascular endothelial growth factor A, long form"
+          }
+        ]
+      },
+      "name": "BEVACIZUMAB"
+    }
+  }
+}

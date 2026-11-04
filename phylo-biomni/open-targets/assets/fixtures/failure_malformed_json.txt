@@ -1,0 +1,1 @@
+{"data": {"disease": {"id": "MONDO_0004975", "name": "Alzheimer's disease", "associatedTargets": {"count": 13367, "rows": [{"target": {"id": "ENSG00000142192", "approvedSymbol": "APP"

@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "message": "Cannot query field \"apiVersion\" on type \"Meta\". Field \"apiVersion\" of type \"APIVersion\" must have a subselection.",
+      "locations": [{"line": 2, "column": 10}],
+      "extensions": {"code": "GRAPHQL_VALIDATION_FAILED"}
+    }
+  ]
+}

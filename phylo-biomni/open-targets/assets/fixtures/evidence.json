@@ -1,0 +1,97 @@
+{
+  "data": {
+    "disease": {
+      "evidences": {
+        "count": 29675,
+        "cursor": "eyJpbmRleCI6MSwic2l6ZSI6NX0=",
+        "rows": [
+          {
+            "datasourceId": "europepmc",
+            "datatypeId": "literature",
+            "literature": [
+              "37680541"
+            ],
+            "publicationFirstAuthor": null,
+            "publicationYear": 2023,
+            "score": 1,
+            "studyOverview": null,
+            "urls": [
+              {
+                "niceName": "Open Targets Platform",
+                "url": "https://platform.opentargets.org/evidence/europepmc"
+              }
+            ]
+          },
+          {
+            "datasourceId": "europepmc",
+            "datatypeId": "literature",
+            "literature": [
+              "35471463"
+            ],
+            "publicationFirstAuthor": null,
+            "publicationYear": 2022,
+            "score": 1,
+            "studyOverview": null,
+            "urls": [
+              {
+                "niceName": "Open Targets Platform",
+                "url": "https://platform.opentargets.org/evidence/europepmc"
+              }
+            ]
+          },
+          {
+            "datasourceId": "europepmc",
+            "datatypeId": "literature",
+            "literature": [
+              "30902061"
+            ],
+            "publicationFirstAuthor": null,
+            "publicationYear": 2019,
+            "score": 1,
+            "studyOverview": null,
+            "urls": [
+              {
+                "niceName": "Open Targets Platform",
+                "url": "https://platform.opentargets.org/evidence/europepmc"
+              }
+            ]
+          },
+          {
+            "datasourceId": "europepmc",
+            "datatypeId": "literature",
+            "literature": [
+              "39907966"
+            ],
+            "publicationFirstAuthor": null,
+            "publicationYear": 2025,
+            "score": 1,
+            "studyOverview": null,
+            "urls": [
+              {
+                "niceName": "Open Targets Platform",
+                "url": "https://platform.opentargets.org/evidence/europepmc"
+              }
+            ]
+          },
+          {
+            "datasourceId": "europepmc",
+            "datatypeId": "literature",
+            "literature": [
+              "32941599"
+            ],
+            "publicationFirstAuthor": null,
+            "publicationYear": 2020,
+            "score": 1,
+            "studyOverview": null,
+            "urls": [
+              {
+                "niceName": "Open Targets Platform",
+                "url": "https://platform.opentargets.org/evidence/europepmc"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

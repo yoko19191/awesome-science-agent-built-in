@@ -1,0 +1,855 @@
+{
+  "data": {
+    "variant": {
+      "alleleFrequencies": [
+        {
+          "alleleFrequency": 0.04164195744478971,
+          "populationName": "sas_adj"
+        },
+        {
+          "alleleFrequency": 0.07050511124473842,
+          "populationName": "remaining_adj"
+        },
+        {
+          "alleleFrequency": 0.07829800943905539,
+          "populationName": "nfe_adj"
+        },
+        {
+          "alleleFrequency": 0.05814905814905815,
+          "populationName": "mid_adj"
+        },
+        {
+          "alleleFrequency": 0.04811567706818465,
+          "populationName": "fin_adj"
+        },
+        {
+          "alleleFrequency": 0.060504609412906356,
+          "populationName": "eas_adj"
+        },
+        {
+          "alleleFrequency": 0.07415462326364529,
+          "populationName": "asj_adj"
+        },
+        {
+          "alleleFrequency": 0.03489459533180065,
+          "populationName": "amr_adj"
+        },
+        {
+          "alleleFrequency": 0.01206140350877193,
+          "populationName": "ami_adj"
+        },
+        {
+          "alleleFrequency": 0.10555282421064131,
+          "populationName": "afr_adj"
+        }
+      ],
+      "alternateAllele": "T",
+      "chromosome": "19",
+      "id": "19_44908822_C_T",
+      "mostSevereConsequence": {
+        "id": "SO:0001583",
+        "label": "missense_variant"
+      },
+      "position": 44908822,
+      "referenceAllele": "C",
+      "rsIds": [
+        "rs7412"
+      ],
+      "transcriptConsequences": [
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CBLC",
+            "id": "ENSG00000142273"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "NECTIN2",
+            "id": "ENSG00000130202"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ZNF296",
+            "id": "ENSG00000170684"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "PPP1R13L",
+            "id": "ENSG00000104881"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM19",
+            "id": "ENSG00000186567"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM16",
+            "id": "ENSG00000213892"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "EXOC3L2",
+            "id": "ENSG00000283632"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "BCAM",
+            "id": "ENSG00000187244"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "BCL3",
+            "id": "ENSG00000069399"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ERCC2",
+            "id": "ENSG00000104884"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ERCC1",
+            "id": "ENSG00000012061"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CKM",
+            "id": "ENSG00000104879"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "TOMM40",
+            "id": "ENSG00000130204"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "TRAPPC6A",
+            "id": "ENSG00000007255"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "IGSF23",
+            "id": "ENSG00000216588"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "NKPD1",
+            "id": "ENSG00000179846"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "PVR",
+            "id": "ENSG00000073008"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000302595",
+            "id": "ENSG00000302595"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ZNF285BP",
+            "id": "ENSG00000176761"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "RPS16P9",
+            "id": "ENSG00000242675"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000307301",
+            "id": "ENSG00000307301"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000279095",
+            "id": "ENSG00000279095"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000267044",
+            "id": "ENSG00000267044"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "GEMIN7-AS1",
+            "id": "ENSG00000267348"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000288773",
+            "id": "ENSG00000288773"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "MIR8085",
+            "id": "ENSG00000284258"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "SNORA70",
+            "id": "ENSG00000253027"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000236807",
+            "id": "ENSG00000236807"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000285128",
+            "id": "ENSG00000285128"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000267114",
+            "id": "ENSG00000267114"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001632",
+              "label": "downstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ZNF180",
+            "id": "ENSG00000167384"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ZNF229",
+            "id": "ENSG00000278318"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "GEMIN7",
+            "id": "ENSG00000142252"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "MARK4",
+            "id": "ENSG00000007047"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CLASRP",
+            "id": "ENSG00000104859"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM20",
+            "id": "ENSG00000273777"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "BLOC1S3",
+            "id": "ENSG00000189114"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "KLC3",
+            "id": "ENSG00000104892"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "RELB",
+            "id": "ENSG00000104856"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOC4",
+            "id": "ENSG00000267467"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOC2",
+            "id": "ENSG00000234906"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOC1",
+            "id": "ENSG00000130208"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CLPTM1",
+            "id": "ENSG00000104853"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "PPP1R37",
+            "id": "ENSG00000104866"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "POLR1G",
+            "id": "ENSG00000117877"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000267614",
+            "id": "ENSG00000267614"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM22P",
+            "id": "ENSG00000230666"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000224366",
+            "id": "ENSG00000224366"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM22P",
+            "id": "ENSG00000290603"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "MIR4531",
+            "id": "ENSG00000283673"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "EIF5AP3",
+            "id": "ENSG00000267346"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "CEACAM16-AS1",
+            "id": "ENSG00000266903"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000252200",
+            "id": "ENSG00000252200"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000302986",
+            "id": "ENSG00000302986"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000302962",
+            "id": "ENSG00000302962"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "RNU6-611P",
+            "id": "ENSG00000207003"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "ENSG00000302518",
+            "id": "ENSG00000302518"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOC1P1",
+            "id": "ENSG00000214855"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "LNCOB1",
+            "id": "ENSG00000267282"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOC1P1",
+            "id": "ENSG00000291128"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001631",
+              "label": "upstream_gene_variant"
+            }
+          ]
+        },
+        {
+          "isEnsemblCanonical": true,
+          "target": {
+            "approvedSymbol": "APOE",
+            "id": "ENSG00000130203"
+          },
+          "variantConsequences": [
+            {
+              "id": "SO:0001583",
+              "label": "missense_variant"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
