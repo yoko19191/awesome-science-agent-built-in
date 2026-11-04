@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Med-chem filter report</title>
+<style>
+:root {
+  --page: #FAF9F3; --surface: #FFFFFF; --ink: #2C2A26; --heading: #111111; --muted: #8A8378;
+  --rule: #D5CFC5; --alt: #F9F7F3; --accent: #D4A04A; --accent-ink: #FFFFFF; --link: #0563C1;
+  --chip: #ECE9E2; --focus: #0279EE; --pass: #009E73; --fail: #D55E00; --bar: #0072B2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #1B1A18; --surface: #24221F; --ink: #E8E4DC; --heading: #F5F2EA; --muted: #A39C90;
+    --rule: #3D3A35; --alt: #2A2825; --accent: #D4A04A; --accent-ink: #1B1A18; --link: #7AB8FF;
+    --chip: #34312C; --focus: #7AB8FF; --pass: #3CC79A; --fail: #F08A4B; --bar: #56B4E9;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { color: var(--heading); font-size: 24px; margin: 0 0 4px; }
+h2 { color: var(--heading); font-size: 18px; margin: 32px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+.meta, .note { color: var(--muted); }
+.note { font-size: 12.5px; margin: 6px 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+.tile { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; }
+.tile .value { font-size: 22px; font-weight: 600; color: var(--heading); }
+.tile .label { color: var(--muted); font-size: 12.5px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+a { color: var(--link); }
+.hits { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 14px; }
+.hit { display: grid; grid-template-columns: 190px 1fr 70px; gap: 10px; align-items: center; padding: 3px 0; }
+.hit .name { overflow-wrap: anywhere; }
+.hit .role { color: var(--muted); font-size: 12px; }
+.hit .track { background: var(--chip); border-radius: 3px; height: 8px; }
+.hit .fill { background: var(--bar); height: 8px; border-radius: 0 4px 4px 0; }
+.hit .count { text-align: right; font-variant-numeric: tabular-nums; }
+.hists { display: flex; flex-wrap: wrap; gap: 12px; }
+.hist { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 8px; width: 360px; max-width: 100%; }
+.hist svg { width: 100%; height: auto; display: block; }
+.hist text { fill: var(--muted); font-size: 11px; }
+.hist rect { fill: var(--bar); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+input[type="search"], select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 5px 8px; }
+input[type="search"] { min-width: 260px; }
+input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; max-height: 760px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: middle; }
+thead th { position: sticky; top: 0; background: var(--accent); color: var(--accent-ink); font-weight: 600; white-space: nowrap; cursor: pointer; }
+thead th[aria-sort="ascending"]::after { content: " \2191"; }
+thead th[aria-sort="descending"]::after { content: " \2193"; }
+tbody tr:nth-child(even) { background: var(--alt); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .mol { background: #FFFFFF; border-radius: 6px; display: inline-block; line-height: 0; }
+td .mol svg { width: 170px; height: auto; }
+.status { font-weight: 600; }
+.status.pass { color: var(--pass); }
+.status.fail { color: var(--fail); }
+.reasons { font-size: 12.5px; overflow-wrap: anywhere; max-width: 420px; }
+.smiles { font: 11.5px ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; max-width: 260px; color: var(--muted); margin-top: 4px; }
+@media (max-width: 640px) {
+  .hit { grid-template-columns: 120px 1fr 50px; }
+  input[type="search"] { min-width: 0; width: 100%; }
+  td .mol svg { width: 120px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Med-chem filter report</h1>
+  <p class="meta" id="caption"></p>
+  <p class="note" id="context" hidden></p>
+  <p class="note" id="qc" hidden></p>
+  <div class="tiles" id="tiles"></div>
+  <nav class="links" aria-label="Output files">
+    <a class="pf-only" href="filtered_pass.csv">filtered_pass.csv</a>
+    <a class="pf-only" href="filtered_fail.csv">filtered_fail.csv</a>
+    <a href="annotated_all.csv">annotated_all.csv</a>
+    <a href="summary.json">summary.json</a>
+    <a href="report.md">report.md</a>
+  </nav>
+
+  <div id="panel-section" hidden>
+    <h2>Agreement across expert rule sets</h2>
+    <p class="note" id="panel-note"></p>
+    <div class="hits" id="panel-bars"></div>
+  </div>
+
+  <h2>Molecules flagged per filter</h2>
+  <p class="note">Bars show the number of molecules each filter flagged. <span class="pf-only"><b>reject</b> filters decide pass/fail; <b>flag</b> filters only annotate; <b>vote</b> filters count toward the consensus (a molecule is rejected when enough expert rule sets flag it).</span> Alerts are prompts for chemist review, not verdicts.</p>
+  <div class="hits" id="hits"></div>
+
+  <div id="score-section">
+    <h2>Score distributions</h2>
+    <div class="hists" id="hists"></div>
+  </div>
+
+  <h2>Molecules</h2>
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Search ID, SMILES, alerts or reasons" aria-label="Search molecules">
+    <select class="pf-only" id="status" aria-label="Filter by outcome">
+      <option value="all">All</option><option value="pass">Passed</option><option value="fail">Failed</option>
+    </select>
+  </div>
+  <p class="note" id="count"></p>
+  <div class="scroll"><table id="table"></table></div>
+</main>
+<script id="data" type="application/json">__REPORT_DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById("data").textContent);
+const S = D.summary;
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+$("caption").textContent = `${S.input} · mode ${S.mode} · medchem ${S.versions.medchem}, RDKit ${S.versions.rdkit}`;
+if (S.context) { $("context").textContent = `Expected chemistry: ${S.context}`; $("context").hidden = false; }
+if (S.qc) {
+  const aside = Object.entries(S.qc.row_partition).filter(([k, v]) => k !== "retained" && v).map(([k, v]) => `${v} ${k.replaceAll("_", " ")}`).join(", ") || "none";
+  $("qc").textContent = `Cleaned beforehand by molecular-dataset-qc (${S.qc.steps.join(", ")}; status ${S.qc.status}): ${S.qc.n_records} raw records, ${S.qc.row_partition.retained} retained. Set aside by QC and not in this table: ${aside} (qc_details/removed_data.csv).`;
+  $("qc").hidden = false;
+}
+const PF = S.pass_fail;
+document.querySelectorAll(".pf-only").forEach((node) => { node.hidden = !PF; });
+const tiles = [[S.n_input, "molecules in"], ...(PF ? [[S.n_pass, "passed"], [S.n_fail, "failed"]] : []), [S.n_unparsable, "unparsable"]];
+for (const [value, label] of tiles) {
+  const t = el("div", "tile"); t.append(el("div", "value", value), el("div", "label", label)); $("tiles").append(t);
+}
+
+const EP = S.expert_panel;
+if (EP) {
+  $("panel-section").hidden = false;
+  $("panel-note").textContent = `Rule sets are expert opinion and often disagree, and their lists overlap, so agreement is a heuristic, not independent corroboration. A molecule is rejected when ${EP.min_agree} or more of the ${EP.sets.length} voting sets flag it (${EP.sets.join(", ")}). Counts cover parsable molecules. The final pass/fail also reflects explicit reject filters and unparsable structures.`;
+  const counts = Object.entries(EP.vote_distribution).map(([v, n]) => [Number(v), n]);
+  const peak = Math.max(1, ...counts.map(([, n]) => n));
+  for (const [v, n] of counts) {
+    const row = el("div", "hit");
+    const name = el("div", "name", `${v} of ${EP.sets.length} sets`); name.append(el("div", "role", v >= EP.min_agree ? "meets the consensus threshold" : "below the consensus threshold"));
+    const track = el("div", "track"); const fill = el("div", "fill"); fill.style.width = `${(100 * n) / peak}%`; track.append(fill);
+    row.append(name, track, el("div", "count", n)); $("panel-bars").append(row);
+  }
+}
+
+const maxHit = Math.max(1, ...S.filters.map((f) => f.n_hit));
+for (const f of S.filters) {
+  const row = el("div", "hit");
+  const name = el("div", "name", f.token); if (PF) name.append(el("div", "role", f.role));
+  const track = el("div", "track"); const fill = el("div", "fill"); fill.style.width = `${(100 * f.n_hit) / maxHit}%`; track.append(fill);
+  row.append(name, track, el("div", "count", f.n_hit)); $("hits").append(row);
+}
+
+const LABELS = { calc_qed: "QED (0-1)", nibr_severity: "NIBR severity (10 = exclude)", lilly_demerits: "Lilly demerits (reject rule = cutoff)" };
+function histogram({ counts, edges, n }, title) {
+  if (!n) return null;
+  const w = 340, h = 150, pad = 22, bins = counts.length, top = Math.max(...counts), bw = (w - 2 * pad) / bins;
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  const add = (tag, attrs, text) => { const node = document.createElementNS(ns, tag); for (const k in attrs) node.setAttribute(k, attrs[k]); if (text !== undefined) node.textContent = text; svg.append(node); return node; };
+  counts.forEach((c, i) => { const bh = (c / top) * (h - 2 * pad); const r = add("rect", { x: pad + i * bw + 1, y: h - pad - bh, width: Math.max(1, bw - 2), height: bh, rx: 2 }); const tip = document.createElementNS(ns, "title"); tip.textContent = `${edges[i].toFixed(2)} to ${edges[i + 1].toFixed(2)}: ${c} molecules`; r.append(tip); });
+  add("text", { x: pad, y: h - 6 }, edges[0].toFixed(2)); add("text", { x: w - pad, y: h - 6, "text-anchor": "end" }, edges[bins].toFixed(2));
+  add("text", { x: pad, y: 12 }, `${title} · n=${n}`);
+  return svg;
+}
+let anyHist = false;
+for (const [col, bins] of Object.entries(D.histograms)) {
+  if (col !== "calc_qed" && !S.filters.some((f) => col.startsWith(f.token))) continue;
+  const svg = histogram(bins, LABELS[col]); if (!svg) continue;
+  const box = el("div", "hist"); box.append(svg); $("hists").append(box); anyHist = true;
+}
+if (!anyHist) $("score-section").hidden = true;
+
+const cols = [["Row", "input_row", "num"], ["ID", "id", ""], ["Structure", null, ""], ["Outcome", "pass", ""], ["QED", "calc_qed", "num"], ["NIBR", "nibr_severity", "num"], ["Lilly", "lilly_demerits", "num"], ["# Alerts", "n_hit", "num", "Number of selected filters that matched this molecule"], ...(EP ? [["Expert sets", "votes", "num", `Voting expert rule sets that flagged this molecule; consensus rejects at ${EP.min_agree} or more of ${EP.sets.length}`]] : []), ["Matched alerts", "hit_details", "reasons"], ["Failed because", "fail_reasons", "reasons"]];
+const passFailKeys = ["pass", "fail_reasons"];
+const present = cols.filter(([, key]) => {
+  if (passFailKeys.includes(key)) return PF;
+  if (key === "id") return S.id_col !== null;
+  return !key || ["input_row", "n_hit", "votes", "hit_details"].includes(key) || key in D.histograms;
+});
+const value = (r, key) => (key in r ? r[key] : r.scores[key]);
+let sortKey = null, sortDir = 1;
+function render() {
+  const q = $("search").value.toLowerCase(), st = $("status").value;
+  let rows = D.rows.filter((r) => (!PF || st === "all" || (st === "pass") === r.pass) && (`${r.id} ${r.smiles} ${r.hit_details} ${r.fail_reasons}`.toLowerCase().includes(q)));
+  if (sortKey) rows = [...rows].sort((a, b) => { const x = value(a, sortKey), y = value(b, sortKey); return (x === y ? 0 : x === null || x < y ? -1 : y === null || x > y ? 1 : 0) * sortDir; });
+  const table = $("table"); table.replaceChildren();
+  const head = el("tr");
+  for (const [label, key, , tip] of present) {
+    const th = el("th", "", label); if (tip) th.title = tip; if (key) { th.tabIndex = 0; th.setAttribute("aria-sort", key === sortKey ? (sortDir > 0 ? "ascending" : "descending") : "none"); const toggle = () => { sortDir = key === sortKey ? -sortDir : 1; sortKey = key; render(); }; th.onclick = toggle; th.onkeydown = (e) => { if (e.key === "Enter") toggle(); }; }
+    head.append(th);
+  }
+  const thead = el("thead"); thead.append(head); table.append(thead);
+  const body = el("tbody");
+  for (const r of rows) {
+    const tr = el("tr");
+    for (const [, key, cls] of present) {
+      const td = el("td", cls);
+      if (key === null) { if (r.svg) { const m = el("div", "mol"); m.innerHTML = r.svg; td.append(m); } td.append(el("div", "smiles", r.smiles)); }
+      else if (key === "pass") { td.append(el("span", `status ${r.pass ? "pass" : "fail"}`, r.pass ? "pass" : "fail")); }
+      else if (key === "hit_details") { td.textContent = r.hit_details || (r.fail_reasons === "unparsable structure" ? "unparsable structure" : ""); }
+      else { const v = value(r, key); td.textContent = v === null ? "" : typeof v === "number" && !Number.isInteger(v) ? v.toFixed(2) : v; }
+      tr.append(td);
+    }
+    body.append(tr);
+  }
+  table.append(body);
+  $("count").textContent = `${rows.length} of ${D.rows.length} embedded molecules shown` + (S.n_input > D.limits.rows_embedded ? ` (first ${D.limits.rows_embedded} of ${S.n_input}; the CSV files hold all rows)` : "") + (D.rows.length > D.limits.rows_drawn ? `; drawings for the first ${D.limits.rows_drawn}, SMILES for all` : "");
+}
+$("search").oninput = render; $("status").onchange = render; render();
+</script>
+</body>
+</html>
