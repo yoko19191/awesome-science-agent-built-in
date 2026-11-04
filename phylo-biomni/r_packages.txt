@@ -1,0 +1,140 @@
+# ==============================================================================
+# Phylo-Biomni R Package Requirements
+# Comprehensive R package manifest covering all 92 skills in phylo-biomni
+# Automated installation available via: Rscript install_packages.R
+# Recommended R version: >= 4.3 (R >= 4.4 recommended)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CRAN Packages (48)
+# ------------------------------------------------------------------------------
+# Data Manipulation & I/O
+data.table
+dplyr
+tidyr
+readr
+reshape2
+jsonlite
+yaml
+openxlsx
+optparse
+
+# Visualization & Graphics
+ggplot2
+patchwork
+ggrepel
+svglite
+ggprism
+ggplate
+RColorBrewer
+
+# Clustering & Matrix Operations
+Matrix
+matrixStats
+cluster
+factoextra
+dendextend
+circlize
+mclust
+
+# Statistical Modeling & Machine Learning
+glmnet
+lme4
+pROC
+survival
+survminer
+meta
+metafor
+vegan
+
+# Pharmacometrics & Clinical Trials
+nlmixr2
+rxode2
+rpact
+designit
+
+# Single-cell & Multi-omics Infrastructure
+Seurat
+SeuratObject
+WGCNA
+harmony
+lisi
+susieR
+bigstatsr
+bigsnpr
+immunarch
+
+# ------------------------------------------------------------------------------
+# 2. Bioconductor Packages (45)
+# ------------------------------------------------------------------------------
+# Differential Expression & Bulk RNA-seq
+DESeq2
+edgeR
+limma
+apeglm
+DEqMS
+tximport
+sva
+airway
+pasilla
+
+# Functional Enrichment & Annotation
+clusterProfiler
+org.Hs.eg.db
+AnnotationDbi
+GEOquery
+ExperimentHub
+Biobase
+fgsea
+msigdbr
+enrichplot
+ComplexHeatmap
+ConsensusClusterPlus
+impute
+
+# Single-cell RNA-seq & Multi-modal Integration
+SingleCellExperiment
+SummarizedExperiment
+GenomicRanges
+GenomicFeatures
+Signac
+SingleR
+celldex
+Azimuth
+miloR
+glmGamPoi
+zellkonverter
+muscat
+
+# Flow & Mass Cytometry / Proteomics
+flowCore
+flowWorkspace
+openCyto
+CATALYST
+diffcyt
+
+# Multi-omics & Microbiome
+MOFA2
+MOFAdata
+phyloseq
+ANCOMBC
+ALDEx2
+Maaslin2
+RTCGA.clinical
+
+# Power Analysis & Benchmarks
+RNASeqPower
+RnaSeqSampleSize
+ALL
+IMvigor210CoreBiologies
+
+# ------------------------------------------------------------------------------
+# 3. GitHub / Remotes Packages (7)
+# ------------------------------------------------------------------------------
+jinworks/CellChat
+chris-mcginnis-ucsf/DoubletFinder
+MRCIEU/TwoSampleMR
+mrcieu/ieugwasr
+immunogenomics/presto
+satijalab/seurat-data
+constantAmateur/SoupX
