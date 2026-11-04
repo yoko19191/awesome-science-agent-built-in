@@ -1,0 +1,169 @@
+{
+  "analysis": {
+    "entrypoint": "scripts/analyze_scaffolds.py",
+    "language": "python",
+    "outputs": [
+      {
+        "kind": "csv",
+        "min_bytes": 40,
+        "path": "frequency_table.csv"
+      },
+      {
+        "kind": "csv",
+        "min_bytes": 40,
+        "path": "molecule_assignments.csv"
+      },
+      {
+        "kind": "json",
+        "min_bytes": 40,
+        "path": "analysis_summary.json"
+      },
+      {
+        "kind": "image",
+        "min_bytes": 200,
+        "path": "figures/top_structures.png"
+      }
+    ],
+    "parameters": [
+      {
+        "choices": [
+          "scaffold",
+          "ring_system"
+        ],
+        "description": "scaffold reduces each molecule to its whole core framework (rings plus the linkers between them); ring_system cuts linkers and reports each fused or spiro set of connected rings separately.",
+        "flag": "--analysis",
+        "name": "analysis",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "choices": [
+          "bemis_murcko",
+          "generic_bemis_murcko",
+          "common_core",
+          "ring_systems",
+          "generic_ring_systems",
+          "individual_rings"
+        ],
+        "description": "Scaffold methods: bemis_murcko keeps atom and bond types; generic_bemis_murcko turns atoms to carbon and bonds to single; common_core finds shared cores by cutting acyclic single bonds (Hussain-Rea fragments). Ring-system methods: ring_systems merges fused and spiro rings and keeps exocyclic double bonds; generic_ring_systems is its all-carbon, single-bond form; individual_rings reports each SSSR ring.",
+        "flag": "--method",
+        "name": "method",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "smiles",
+        "description": "Header of the SMILES column in a CSV or TSV (matched case-insensitively); ignored for .smi files.",
+        "flag": "--smiles-column",
+        "name": "smiles-column",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "",
+        "description": "Header of a unique molecule identifier column; empty uses the .smi name field or the 1-based row number.",
+        "flag": "--id-column",
+        "name": "id-column",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": 0.67,
+        "description": "common_core only: a fragment counts as a core only when it keeps more than this fraction of the parent molecule's heavy atoms. Lower values admit smaller, more widely shared cores.",
+        "flag": "--min-core-fraction",
+        "name": "min-core-fraction",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": 30,
+        "description": "Number of most frequent structures drawn in the structure grid; the frequency table always lists every structure.",
+        "flag": "--top-n",
+        "name": "top-n",
+        "required": false,
+        "type": "integer"
+      }
+    ],
+    "purpose": "Extract scaffolds or ring systems from a SMILES table with one named method and rank them by frequency.",
+    "workflow": [
+      "Validate the table, the SMILES and identifier columns, and that the method belongs to the chosen analysis before writing any output.",
+      "Parse every SMILES with RDKit, keep the largest organic fragment, neutralize charges, and mark rows that fail to parse or have no ring.",
+      "Reduce each valid molecule to its structures with the chosen method: Bemis-Murcko, generic Bemis-Murcko or common-core fragments for scaffolds; ring systems, generic ring systems or individual SSSR rings for ring systems.",
+      "Count, for every distinct canonical structure, the molecules that contain it and its total occurrences, then rank by molecule count and size.",
+      "Write the ranked frequency table, per-molecule assignments, a run summary, and a grid image of the most frequent structures."
+    ]
+  },
+  "category": "drug_discovery",
+  "caveats": [
+    {
+      "kind": "assumption",
+      "text": "Frequencies describe this dataset only. They reflect how the set was assembled (a single series, a vendor library, ChEMBL drugs) and are not a measure of drug-likeness or novelty."
+    },
+    {
+      "kind": "limitation",
+      "text": "Generic forms (generic Bemis-Murcko, generic ring systems) turn every atom into carbon and every bond into a single bond, so distinct chemotypes such as benzene, pyridine and cyclohexane merge into one entry."
+    },
+    {
+      "kind": "limitation",
+      "text": "Common-core fragments overlap: one molecule contributes to many cores, including the molecule itself, so counts do not add up to the number of molecules and fractions are not a partition."
+    },
+    {
+      "kind": "watch-out",
+      "text": "A shared scaffold or ring system is a structural grouping, not a chemical series, a binding mode or SAR evidence. Stereochemistry is kept only by the atom-typed methods, and acyclic molecules have no scaffold."
+    }
+  ],
+  "description": "Use to find the scaffolds or ring systems in a small-molecule dataset (CSV/TSV/SMI of SMILES) and count how often each occurs. Scaffold analysis covers the whole core framework: Bemis-Murcko, generic Bemis-Murcko, or common-core fragments. Ring-system analysis covers fused or spiro ring sets, generic ring systems, or individual rings. Returns a ranked frequency table, per-molecule assignments, and a structure grid. Not for matched molecular pairs, R-group SAR, clustering, or property prediction.",
+  "guidance": [
+    {
+      "path": "references/choosing-an-analysis.md",
+      "use_when": "before running: it lists the three questions to ask the user, what each method means, and how the answers map to parameters"
+    },
+    {
+      "path": "references/optional-pdf-report.md",
+      "use_when": "the user asked for a PDF report, after the run is finalized and verified"
+    },
+    {
+      "path": "references/methods.md",
+      "use_when": "you need the algorithm details, the differences between methods, or citations"
+    }
+  ],
+  "id": "skill_888cc4fbe319900c19e5feb09c7853f7",
+  "input": {
+    "reject_if": [
+      "The file is missing, empty, not UTF-8, or not a .csv, .tsv, or .smi table.",
+      "The SMILES or identifier column is absent or matches more than one header, or identifiers are empty or duplicated.",
+      "No row yields a valid RDKit molecule that contains a ring.",
+      "The chosen method does not belong to the chosen analysis, --min-core-fraction is outside (0, 1), or --top-n is below 1."
+    ],
+    "requirements": [
+      "Before running, ask the user the questions in references/choosing-an-analysis.md, in order: scaffold or ring-system analysis, then the method for that analysis, then whether they want a PDF report.",
+      "A CSV or TSV must have a header row containing the SMILES column named by --smiles-column; a .smi file has SMILES in the first whitespace-separated field and an optional identifier in the second.",
+      "When --id-column is given it must exist and hold a unique, non-empty identifier on every row; otherwise the 1-based row number is the identifier.",
+      "Salts and mixtures are reduced to their largest organic fragment and neutralized before analysis."
+    ],
+    "summary": "One molecule table: a CSV or TSV with a SMILES column, or a headerless .smi file of SMILES with optional identifiers."
+  },
+  "objective": "Reduce every valid molecule in a SMILES dataset to its scaffolds or ring systems with one chosen, named method, and rank the resulting structures by how many molecules contain them. Invalid and acyclic molecules are reported, never dropped silently.",
+  "presentation_profile": "artifacts-only",
+  "schema": "phylo-analysis-spec/1",
+  "slug": "scaffold-and-ring-systems-analysis",
+  "sources": [
+    {
+      "name": "RDKit (BSD-3-Clause)",
+      "reference": "https://www.rdkit.org",
+      "use": "Parsing, standardization, Murcko scaffolds, Hussain-Rea fragmentation (rdMMPA), ring perception and drawing."
+    },
+    {
+      "name": "useful_rdkit_utils RingSystemFinder, P. Walters (MIT)",
+      "reference": "https://github.com/PatWalters/useful_rdkit_utils",
+      "use": "Algorithm reimplemented for ring_systems; no code or package dependency is shipped."
+    },
+    {
+      "name": "practical_cheminformatics_tutorials scaffold_finder, P. Walters (MIT)",
+      "reference": "https://github.com/PatWalters/practical_cheminformatics_tutorials",
+      "use": "Algorithm reimplemented for common_core, after Naveja et al. 2019."
+    }
+  ],
+  "starting_prompt": "Can you download all FDA-approved small-molecule drugs and analyze their ring systems?",
+  "visibility": "public"
+}

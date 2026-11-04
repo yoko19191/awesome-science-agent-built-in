@@ -1,0 +1,51 @@
+{
+  "files": [
+    {
+      "bytes": 631,
+      "path": "DATA_SOURCES.md",
+      "sha256": "275a9e5797fe9eaae7acac03cd2a02cf62e8ef7b1c4cdff9fa3253f1058f725b"
+    },
+    {
+      "bytes": 9179,
+      "path": "SKILL.md",
+      "sha256": "ae05f65d81da7b075c66bf2bedb17bb40189430023c2d9559a62b71a4123e90b"
+    },
+    {
+      "bytes": 4270,
+      "path": "references/choosing-an-analysis.md",
+      "sha256": "0a83eb6825f236753ca72f3a1273c2c673875a918a5779081d607280445089b6"
+    },
+    {
+      "bytes": 4855,
+      "path": "references/methods.md",
+      "sha256": "6f60c863005a3e408145a9cae236878f84385aa282b3d0d93e49ddbd139a3042"
+    },
+    {
+      "bytes": 2384,
+      "path": "references/optional-pdf-report.md",
+      "sha256": "d0fa5988ef8432ecf3fe609546ae05150baef8df0685d092986b62861ddc4332"
+    },
+    {
+      "bytes": 11170,
+      "path": "scripts/analyze_scaffolds.py",
+      "sha256": "9d89ed7e24f0c86aa218771fa809e1d302bbe85a36ca9a65de7ef5f80631d4b2"
+    },
+    {
+      "bytes": 22593,
+      "path": "scripts/run_skill.py",
+      "sha256": "7bea397aaa8af29b93cd60667f173bf249ddf2f8cc44edb0b497982483b66cfe"
+    },
+    {
+      "bytes": 8780,
+      "path": "scripts/scaffold_methods.py",
+      "sha256": "245eb674c87213a28c6b4fbc27b3228f3f6b394c0d83d284c26247d04ca64cfa"
+    },
+    {
+      "bytes": 8695,
+      "path": "skill_spec.json",
+      "sha256": "d9ab34d8b401cf37d50276034d6a480fe65227eeb7fd56a0fd0314072622c3c1"
+    }
+  ],
+  "schema": "phylo-package-manifest/1",
+  "sha256": "2c456faa7fc32edf5b3b74bf32b17c1447aa752a0e8915414f2612638944798d"
+}
