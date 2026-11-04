@@ -1,0 +1,575 @@
+# ==============================================================================
+# Phylo-Biomni Databases Manifest (db.txt)
+# Complete inventory of Biological, Chemical, Clinical, Pharmacological,
+# and Genomic Databases utilized across 92 skills in phylo-biomni
+# ==============================================================================
+
+# ==============================================================================
+# 1. Chemical Biology, Small Molecules & Bioactivity Databases
+# ==============================================================================
+
+Database: ChEMBL
+Full Name / Host: ChEMBL Bioactivity Database (EMBL-EBI)
+Access Method: REST API (https://www.ebi.ac.uk/chembl/api/data), Python (chembl_webresource_client), SQLite dump
+Data Types: Small molecule structures (SMILES/InChI), bioactivity measurements (IC50, Ki, Kd, EC50), assay protocols, target annotations, clinical drug phases
+Associated Skills:
+  - drug-bioactivity-chembl
+  - chembl-hit-series-sar-docking
+  - large-scale-virtual-screening
+  - adme-ml-modeling
+  - direction-of-effect-concordance
+  - off-target-safety-pharmacology
+
+Database: PubChem
+Full Name / Host: PubChem (NCBI / NLM)
+Access Method: PUG-REST API (https://pubchem.ncbi.nlm.nih.gov/rest/pug), Python (requests, urllib)
+Data Types: Chemical structures, compound synonyms, biological test results, physical properties, 3D conformers
+Associated Skills:
+  - targeted-degrader-design
+  - med-chem-filters
+  - drug-bioactivity-chembl
+
+Database: DrugBank
+Full Name / Host: DrugBank Online (OMx Personal Health Analytics)
+Access Method: REST API / XML dump / academic licensing
+Data Types: FDA/EMA approved drug mechanisms of action, pharmacokinetics (ADME), drug-drug interactions, drug targets, indications
+Associated Skills:
+  - molecular-property-admet
+  - knowledge-graph-target-reasoning
+  - methods-landscape-review
+  - drug-repurposing-indication-expansion
+
+Database: BindingDB
+Full Name / Host: BindingDB (University of California San Diego)
+Access Method: REST API / TSV download (https://www.bindingdb.org)
+Data Types: Experimental binding affinities (Ki, Kd, IC50) for proteins with drug-like small molecules
+Associated Skills:
+  - binding-affinity-ml-model
+  - molecular-property-admet
+  - large-scale-virtual-screening
+
+Database: ZINC20 / ZINC
+Full Name / Host: ZINC Database (UCSF Irwin and Shoichet Laboratories)
+Access Method: REST API / Tranches download (https://zinc20.docking.org)
+Data Types: Commercially available chemical compounds for virtual screening and generative compound design
+Associated Skills:
+  - generative-molecule-design
+  - med-chem-filters
+  - large-scale-virtual-screening
+
+Database: DGIdb
+Full Name / Host: Drug-Gene Interaction Database (Washington University)
+Access Method: GraphQL API / TSV dump (https://dgidb.org)
+Data Types: Curated drug-gene interactions and druggable genome categories
+Associated Skills:
+  - target-tractability-druggability
+  - drug-repurposing-indication-expansion
+
+Database: LINCS L1000 / Connectivity Map (CMap)
+Full Name / Host: Library of Integrated Network-Based Cellular Signatures (Broad Institute / NIH)
+Access Method: REST API / GEO (GSE92742) / S3 / clue.io / Harmonizome
+Data Types: Transcriptomic perturbation profiles (1,000 landmark genes + inferred transcriptome) across thousands of chemical and genetic perturbagens
+Associated Skills:
+  - signature-reversal-lincs
+  - drug-seq-analysis
+  - drug-repurposing-indication-expansion
+
+Database: CTD
+Full Name / Host: Comparative Toxicogenomics Database (NC State University)
+Access Method: TSV downloads / API (https://ctdbase.org)
+Data Types: Chemical-gene, chemical-disease, and gene-disease interactions with toxicological annotations
+Associated Skills:
+  - knowledge-graph-target-reasoning
+  - off-target-safety-pharmacology
+
+Database: SIDER
+Full Name / Host: Side Effect Resource (EMBL)
+Access Method: TSV dumps (http://sideeffects.embl.de)
+Data Types: Marketed medicines and their recorded adverse drug reactions (ADRs) with MedDRA frequency terms
+Associated Skills:
+  - pharmacovigilance-ae-signal-detection
+  - off-target-safety-pharmacology
+
+Database: FDA FAERS / openFDA
+Full Name / Host: FDA Adverse Event Reporting System (US FDA / openFDA API)
+Access Method: REST API (https://api.fda.gov/drug/event.json)
+Data Types: Post-marketing pharmacovigilance safety reports, drug-event associations, reporting odds ratios (ROR), proportional reporting ratios (PRR)
+Associated Skills:
+  - pharmacovigilance-ae-signal-detection
+  - real-world-evidence
+
+
+# ==============================================================================
+# 2. Macromolecular Structure & Biophysics Databases
+# ==============================================================================
+
+Database: RCSB PDB
+Full Name / Host: Protein Data Bank (RCSB PDB / wwPDB)
+Access Method: Search REST API (https://search.rcsb.org), Data API (https://data.rcsb.org), mmCIF/PDB downloads
+Data Types: 3D experimental structures (X-ray, Cryo-EM, NMR) of proteins, nucleic acids, and ligand complexes
+Associated Skills:
+  - protein-structure-prediction
+  - chembl-hit-series-sar-docking
+  - ligand-binding-mode-analysis
+  - target-tractability-druggability
+  - cell-therapy-car-design
+
+Database: AlphaFold DB
+Full Name / Host: AlphaFold Protein Structure Database (EMBL-EBI / DeepMind)
+Access Method: REST API (https://alphafold.ebi.ac.uk/api), Direct PDB/mmCIF download
+Data Types: High-accuracy deep-learning predicted 3D proteome structures and pLDDT / PAE confidence metrics across >200 million proteins
+Associated Skills:
+  - protein-structure-prediction
+  - target-tractability-druggability
+  - molecular-property-admet
+
+Database: SAbDab / Thera-SAbDab
+Full Name / Host: Structural Antibody Database & Therapeutic Antibody Database (Oxford OPIG)
+Access Method: Web API / TSV / PDB coordinate downloads (https://opig.stats.ox.ac.uk)
+Data Types: Structural antibody-antigen complexes, CDR loop structures, therapeutic antibody clinical stages and target epitopes
+Associated Skills:
+  - binder-antibody-design
+  - antibody-developability-humanization
+
+
+# ==============================================================================
+# 3. Genomics, Genome Browsers & Variation Databases
+# ==============================================================================
+
+Database: Ensembl
+Full Name / Host: Ensembl Genome Browser (EMBL-EBI / Wellcome Sanger Institute)
+Access Method: REST API (https://rest.ensembl.org), Biomart, FTP FASTA/GTF/GFF3
+Data Types: Gene models, canonical transcripts, sequence alignments, regulatory features, homolog and ortholog mappings (GRCh38 / GRCh37)
+Associated Skills:
+  - direction-of-effect-concordance
+  - genetic-constraint-gating
+  - variant-calling-from-sequencing
+  - rnaseq-fastq-to-counts
+  - pcr-primer-design
+
+Database: NCBI Entrez / Gene / RefSeq
+Full Name / Host: NCBI National Center for Biotechnology Information (NIH / NLM)
+Access Method: Entrez E-utilities API (https://eutils.ncbi.nlm.nih.gov/entrez/eutils/), Python (Bio.Entrez)
+Data Types: Curated non-redundant reference genomes, gene summaries, RefSeq mRNAs and proteins, taxonomy
+Associated Skills:
+  - pcr-primer-design
+  - chip-atlas-peak-enrichment
+  - signature-response-enrichment
+  - functional-enrichment-from-degs
+
+Database: UCSC Genome Browser
+Full Name / Host: UCSC Genomics Institute (University of California Santa Cruz)
+Access Method: REST API (https://api.genome.ucsc.edu), GoldenPath FTP, 2bit files, LiftOver chains
+Data Types: Genome annotations, repeat maskers, conservation tracks (PhyloP, PhastCons), cCREs
+Associated Skills:
+  - long-read-structural-variants
+  - chip-atlas-diff-analysis
+  - fine-mapping-susie
+
+Database: gnomAD
+Full Name / Host: Genome Aggregation Database (Broad Institute)
+Access Method: GraphQL API (https://gnomad.broadinstitute.org/api), VCF downloads (Google Cloud / AWS buckets)
+Data Types: Population allele frequencies, loss-of-function intolerance (pLI, LOEUF scores), missense constraint, structural variants
+Associated Skills:
+  - genetic-constraint-gating
+  - genetic-variant-annotation
+  - rare-disease-case-prioritization
+  - variant-calling-from-sequencing
+
+Database: ClinVar
+Full Name / Host: ClinVar (NCBI / NIH)
+Access Method: VCF / XML downloads, Entrez E-utilities, web queries
+Data Types: Curated clinical significance of human genetic variations (Pathogenic, Benign, VUS) and phenotype associations
+Associated Skills:
+  - clinical-variant-allelic-series
+  - genetic-variant-annotation
+  - rare-disease-case-prioritization
+
+Database: dbSNP
+Full Name / Host: Database of Single Nucleotide Polymorphisms (NCBI / NIH)
+Access Method: Entrez API / VCF downloads / SPDI notation
+Data Types: Unique rsID identifiers, molecular alleles, genomic locations, validation status for short genetic variations
+Associated Skills:
+  - genetic-variant-annotation
+  - variant-calling-from-sequencing
+
+Database: 1000 Genomes Project
+Full Name / Host: International Genome Sample Resource (IGSR / EMBL-EBI)
+Access Method: FTP (ftp://ftp.1000genomes.ebi.ac.uk), AWS S3
+Data Types: Phase 3 haplotype reference panels, linkage disequilibrium (LD) matrices across global populations
+Associated Skills:
+  - fine-mapping-susie
+  - gwas-to-function-twas
+  - polygenic-risk-score-prs-catalog
+
+Database: COSMIC
+Full Name / Host: Catalogue of Somatic Mutations in Cancer (Wellcome Sanger Institute)
+Access Method: TSV / VCF downloads / Cancer Gene Census (CGC)
+Data Types: Somatic mutations, mutational signatures, cancer gene census classifications, drug resistance mutations
+Associated Skills:
+  - cancer-cohort-genomics
+  - rare-disease-case-prioritization
+
+Database: CIViC
+Full Name / Host: Clinical Interpretation of Variants in Cancer (civicdb.org / McDonnell Genome Institute)
+Access Method: GraphQL API / REST API (https://civicdb.org/api)
+Data Types: Peer-reviewed clinical evidence items regarding predictive, prognostic, diagnostic, and predisposing cancer variants
+Associated Skills:
+  - clinical-variant-allelic-series
+  - cancer-cohort-genomics
+
+Database: CADD
+Full Name / Host: Combined Annotation Dependent Depletion (University of Washington / BIH)
+Access Method: Pre-scored TSV / Tabix VCF queries
+Data Types: Machine learning deleteriousness score for all possible single nucleotide substitutions and short indels in the human genome
+Associated Skills:
+  - genetic-variant-annotation
+  - rare-disease-case-prioritization
+
+
+# ==============================================================================
+# 4. Genetics, GWAS, TWAS & Phenotype Databases
+# ==============================================================================
+
+Database: Open Targets Platform
+Full Name / Host: Open Targets (EMBL-EBI / Sanger / GSK / BMS / Sanofi / Genentech)
+Access Method: GraphQL API (https://api.platform.opentargets.org/api/v4/graphql), Parquet downloads
+Data Types: Systematic target-disease association scores, genetic evidence, tractability assessments, safety liabilities, clinical precedence
+Associated Skills:
+  - open-targets
+  - target-tractability-druggability
+  - direction-of-effect-concordance
+  - scrna-disease-drug-discovery
+  - off-target-safety-pharmacology
+
+Database: GWAS Catalog
+Full Name / Host: NHGRI-EBI Catalog of Published GWAS (EMBL-EBI / NHGRI)
+Access Method: REST API (https://www.ebi.ac.uk/gwas/rest/api), TSV summary statistics downloads
+Data Types: Curated trait-associated SNP-phenotype associations (p < 5e-8), study sample sizes, publication metadata
+Associated Skills:
+  - open-targets
+  - fine-mapping-susie
+  - endelian-randomization-twosamplemr
+  - direction-of-effect-concordance
+
+Database: PGS / PRS Catalog
+Full Name / Host: Polygenic Score Catalog (EMBL-EBI / Cambridge University)
+Access Method: REST API (https://www.pgscatalog.org/rest/), Scoring file downloads (.txt.gz)
+Data Types: Standardized polygenic risk score (PRS/PGS) weight files, variant coordinates, effect weights, performance evaluation metrics
+Associated Skills:
+  - polygenic-risk-score-prs-catalog
+
+Database: UK Biobank (UKB)
+Full Name / Host: UK Biobank (UKB Research Analysis Platform / Pan-UKBB / Neale Lab)
+Access Method: Authorized RAP platform / Public summary statistics downloads (AWS/GCP)
+Data Types: Phenotype data, deep electronic health records, biomarker measurements, exome/genome sequencing, GWAS summary stats
+Associated Skills:
+  - direction-of-effect-concordance
+  - polygenic-risk-score-prs-catalog
+  - omics-dataset-retrieval
+  - real-world-evidence
+
+Database: GTEx Portal
+Full Name / Host: Genotype-Tissue Expression Project (Broad Institute / NIH)
+Access Method: REST API (https://gtexportal.org/api/v2), Google Cloud / AnVIL downloads
+Data Types: Multi-tissue expression quantitative trait loci (eQTLs, sQTLs), normalized RNA-seq gene expression across 54 non-diseased human tissues
+Associated Skills:
+  - fine-mapping-susie
+  - gwas-to-function-twas
+  - direction-of-effect-concordance
+  - tissue-expression-specificity
+
+Database: TWAS Hub
+Full Name / Host: TWAS Hub (Gusev Lab / DFCI / Harvard)
+Access Method: Web downloads / SQLite databases (http://twas-hub.org)
+Data Types: Pre-computed gene expression weights (FUSION/S-PrediXcan) across GTEx, GEUVADIS, and CMC tissues
+Associated Skills:
+  - gwas-to-function-twas
+
+Database: DisGeNET
+Full Name / Host: DisGeNET Discovery Platform (IBI / UPF Barcelona)
+Access Method: REST API / TSV dumps (https://www.disgenet.org)
+Data Types: Human gene-disease and variant-disease associations gathered from curated repositories and text mining
+Associated Skills:
+  - knowledge-graph-target-reasoning
+  - methods-landscape-review
+  - omics-dataset-retrieval
+
+Database: OMIM
+Full Name / Host: Online Mendelian Inheritance in Man (Johns Hopkins University)
+Access Method: REST API (https://api.omim.org) / mim2gene TSV download
+Data Types: Comprehensive catalog of human genes and genetic phenotypes for monogenic and Mendelian disorders
+Associated Skills:
+  - genetic-variant-annotation
+  - methods-landscape-review
+
+Database: PharmGKB
+Full Name / Host: Pharmacogenomics Knowledgebase (Stanford University / NIH)
+Access Method: REST API / TSV downloads (https://www.pharmgkb.org)
+Data Types: Curated clinical annotations relating human genetic variations to drug response, dosing guidelines (CPIC), and drug metabolism
+Associated Skills:
+  - genetic-variant-annotation
+  - methods-landscape-review
+
+Database: PrimeKG
+Full Name / Host: Precision Medicine Knowledge Graph (Harvard Zitnik Lab)
+Access Method: CSV downloads (Dataverse Harvard: https://dataverse.harvard.edu)
+Data Types: Heterogeneous biomedical knowledge graph comprising 129,375 nodes (diseases, drugs, genes, phenotypes) and 4,050,249 relationships
+Associated Skills:
+  - knowledge-graph-target-reasoning
+  - direction-of-effect-concordance
+
+
+# ==============================================================================
+# 5. Epigenomics, Chromatin & Gene Regulation Databases
+# ==============================================================================
+
+Database: ChIP-Atlas
+Full Name / Host: ChIP-Atlas (DBCLS / University of Tokyo / Kyoto University)
+Access Method: REST API (https://chip-atlas.dbcls.jp), BigWig / BigBed / BED bulk downloads
+Data Types: Uniformly re-processed public ChIP-seq, ATAC-seq, and DNase-seq data (>150,000 experiments across human, mouse, and model organisms)
+Associated Skills:
+  - chip-atlas-diff-analysis
+  - chip-atlas-peak-enrichment
+  - chip-atlas-target-genes
+  - upstream-regulator-analysis
+
+Database: ENCODE
+Full Name / Host: Encyclopedia of DNA Elements (ENCODE Consortium / Stanford)
+Access Method: REST API (https://www.encodeproject.org), Search API, BAM/BED/BigWig downloads
+Data Types: Candidate cis-Regulatory Elements (cCREs), chromatin accessibility, histone modifications, transcription factor binding
+Associated Skills:
+  - fine-mapping-susie
+  - scatac-multiome-analysis
+  - spatial-transcriptomics
+  - variant-calling-from-sequencing
+
+Database: Roadmap Epigenomics
+Full Name / Host: NIH Roadmap Epigenomics Mapping Consortium (NIH / Broad Institute)
+Access Method: NCBI GEO / Washington University Epigenome Browser
+Data Types: Reference epigenomic maps of primary human tissues and stem cells (DNA methylation, chromatin states)
+Associated Skills:
+  - fine-mapping-susie
+  - gwas-to-function-twas
+
+
+# ==============================================================================
+# 6. Single-Cell, Spatial & Transcriptomic Atlases
+# ==============================================================================
+
+Database: CZ CELLxGENE / Census
+Full Name / Host: Chan Zuckerberg CELLxGENE Discover (CZI Science)
+Access Method: Python SDK (cellxgene-census), TileDB, S3 direct access
+Data Types: Curated, standardized single-cell RNA-seq and spatial transcriptomics datasets (>50 million cells with unified ontologies)
+Associated Skills:
+  - single-cell-census-query
+  - cell-surface-antigen-discovery
+  - deconvolution-bulk-rnaseq
+
+Database: GEO (Gene Expression Omnibus)
+Full Name / Host: NCBI Gene Expression Omnibus (NCBI / NLM / NIH)
+Access Method: Python (GEOparse), R (GEOquery), Entrez E-utilities, FTP
+Data Types: High-throughput microarray, bulk RNA-seq, scRNA-seq, ChIP-seq, and functional genomics count and raw matrices
+Associated Skills:
+  - omics-dataset-retrieval
+  - chip-atlas-diff-analysis
+  - scrna-disease-drug-discovery
+  - signature-response-enrichment
+
+Database: SRA (Sequence Read Archive)
+Full Name / Host: Sequence Read Archive (NCBI / INSDC / AWS / GCP)
+Access Method: SRA Toolkit, NCBI Cloud Data Delivery, AWS Open Data
+Data Types: Raw high-throughput sequencing data (FASTQ / SRA formats)
+Associated Skills:
+  - omics-dataset-retrieval
+  - rnaseq-fastq-to-counts
+  - chip-atlas-diff-analysis
+
+Database: TCGA (The Cancer Genome Atlas)
+Full Name / Host: NCI Genomic Data Commons (GDC / NIH)
+Access Method: GDC Data Portal REST API, R (TCGAbiolinks, RTCGA.clinical)
+Data Types: Harmonized multi-omics cancer profiles (RNA-seq, WES, copy number, methylation, clinical outcomes) across 33 tumor types
+Associated Skills:
+  - cancer-cohort-genomics
+  - survival-analysis-clinical
+  - omics-dataset-retrieval
+
+Database: DepMap / CCLE
+Full Name / Host: Cancer Dependency Map & Cancer Cell Line Encyclopedia (Broad Institute)
+Access Method: REST API, CSV/HDF5 downloads (https://depmap.org/portal)
+Data Types: Genome-wide CRISPR-Cas9 and RNAi viability screen scores, PRISM small-molecule sensitivities, gene expression across 1,000+ cell lines
+Associated Skills:
+  - target-tractability-druggability
+  - genetic-constraint-gating
+  - knowledge-graph-target-reasoning
+  - direction-of-effect-concordance
+
+Database: Human Protein Atlas (HPA)
+Full Name / Host: Human Protein Atlas (SciLifeLab / KTH / Uppsala University)
+Access Method: REST API, TSV downloads (https://www.proteinatlas.org)
+Data Types: Spatially resolved protein expression via immunohistochemistry, single-cell RNA expression across organs, subcellular localization
+Associated Skills:
+  - tissue-expression-specificity
+  - cell-surface-antigen-discovery
+  - direction-of-effect-concordance
+  - drug-bioactivity-chembl
+
+
+# ==============================================================================
+# 7. Biological Pathways, Networks & Functional Ontologies
+# ==============================================================================
+
+Database: Gene Ontology (GO)
+Full Name / Host: Gene Ontology Consortium
+Access Method: OBO / OWL ontology files, Annotation files (GAF), R (org.Hs.eg.db, clusterProfiler)
+Data Types: Hierarchical structured vocabulary of Biological Process (BP), Molecular Function (MF), and Cellular Component (CC)
+Associated Skills:
+  - functional-enrichment-from-degs
+  - signature-response-enrichment
+  - upstream-regulator-analysis
+
+Database: MSigDB
+Full Name / Host: Molecular Signatures Database (Broad Institute / UC San Diego)
+Access Method: R (msigdbr, fgsea), GMT downloads, GSEA software
+Data Types: Curated gene sets: Hallmark (H), Positional (C1), Curated Pathways (C2: KEGG/Reactome/BioCarta), Regulatory Targets (C3), Oncogenic (C6), Immunologic (C7)
+Associated Skills:
+  - functional-enrichment-from-degs
+  - signature-response-enrichment
+  - flow-cytometry-analysis
+
+Database: KEGG
+Full Name / Host: Kyoto Encyclopedia of Genes and Genomes (Kanehisa Laboratories)
+Access Method: KEGG REST API (https://rest.kegg.jp), R (clusterProfiler)
+Data Types: Manually curated pathway maps, enzymatic reactions, orthology (KO), disease classifications
+Associated Skills:
+  - functional-enrichment-from-degs
+  - microbiome-analysis
+  - knowledge-graph-target-reasoning
+
+Database: Reactome
+Full Name / Host: Reactome Knowledgebase (OICR / NYU Langone / EBI / OHSU)
+Access Method: Content REST API (https://reactome.org/ContentService), R (clusterProfiler, ReactomePA)
+Data Types: Open-source peer-reviewed biomolecular pathway and reaction cascade database
+Associated Skills:
+  - functional-enrichment-from-degs
+  - signature-response-enrichment
+  - knowledge-graph-target-reasoning
+
+Database: STRING
+Full Name / Host: Search Tool for the Retrieval of Interacting Genes/Proteins (STRING Consortium / SIB / EMBL)
+Access Method: REST API (https://string-db.org/api), TSV network downloads
+Data Types: Protein-protein interaction (PPI) networks with physical and functional confidence scores
+Associated Skills:
+  - protein-structure-prediction
+  - clinical-variant-allelic-series
+  - literature-deep-review
+  - functional-enrichment-from-degs
+
+Database: IntAct & BioGRID
+Full Name / Host: IntAct Molecular Interaction Database (EMBL-EBI) & BioGRID (Tyre Lab)
+Access Method: REST API / PSI-MI tab downloads
+Data Types: Experimentally validated molecular interactions (physical protein-protein, protein-nucleic acid, complexes)
+Associated Skills:
+  - targeted-degrader-design
+  - deconvolution-bulk-rnaseq
+  - flow-cytometry-analysis
+
+Database: Enrichr / Harmonizome
+Full Name / Host: Ma'ayan Laboratory (Mount Sinai)
+Access Method: REST API (https://maayanlab.cloud/Enrichr)
+Data Types: Meta-library containing hundreds of gene set libraries spanning transcription factors, kinases, diseases, and drugs
+Associated Skills:
+  - functional-enrichment-from-degs
+  - signature-response-enrichment
+
+
+# ==============================================================================
+# 8. Immunology & Cell Repertoire Databases
+# ==============================================================================
+
+Database: IEDB
+Full Name / Host: Immune Epitope Database (La Jolla Institute for Immunology / NIAID)
+Access Method: REST API (https://tools-cluster-interface.iedb.org), MySQL dump
+Data Types: Experimental data on antibody and T cell epitopes recognized by human and non-human animal immune systems
+Associated Skills:
+  - cell-therapy-car-design
+  - binder-antibody-design
+
+Database: VDJdb
+Full Name / Host: VDJdb T-cell Receptor Database (Chudakov Lab / MiLaboratory)
+Access Method: GitHub releases / TSV database (https://vdjdb.cdr3.net)
+Data Types: Curated collection of T-cell receptor (TCR) alpha and beta sequences with known cognate epitope and MHC specificity
+Associated Skills:
+  - immune-repertoire-airr
+
+Database: AIRR Data Commons
+Full Name / Host: Adaptive Immune Receptor Repertoire Community (iReceptor / AIRR)
+Access Method: AIRR compliant API / R (immunarch)
+Data Types: Bulk and single-cell Rep-seq sequencing data of B-cell receptors (BCR) and T-cell receptors (TCR)
+Associated Skills:
+  - immune-repertoire-airr
+
+Database: Surfaceome / CSCdb
+Full Name / Host: Cell Surface Protein Atlas (Wollscheid Lab / ETH Zurich)
+Access Method: Web download / TSV (http://wlab.ethz.ch/surfaceome/)
+Data Types: Experimentally validated surfaceome proteins and high-confidence transmembrane surface targets
+Associated Skills:
+  - cell-surface-antigen-discovery
+  - cell-therapy-car-design
+
+
+# ==============================================================================
+# 9. Clinical Trials, Scientific Literature & Preprint Repositories
+# ==============================================================================
+
+Database: ClinicalTrials.gov
+Full Name / Host: ClinicalTrials.gov (U.S. National Library of Medicine / NIH)
+Access Method: Modern v2 REST API (https://clinicaltrials.gov/api/v2/studies)
+Data Types: Protocols, recruitment status, eligibility criteria, interventions, sponsors, and results for global clinical trials
+Associated Skills:
+  - clinicaltrials-landscape
+  - drug-repurposing-indication-expansion
+  - clinical-trial-design-simulation
+
+Database: PubMed & PubMed Central (PMC)
+Full Name / Host: PubMed & PMC (NCBI / NLM / NIH)
+Access Method: Entrez E-utilities (https://eutils.ncbi.nlm.nih.gov), PMC Open Access Subset FTP
+Data Types: Biomedical literature abstracts (>36 million records) and open-access full-text research articles (XML/PDF)
+Associated Skills:
+  - literature-deep-review
+  - literature-preclinical
+  - literature-review
+  - methods-landscape-review
+  - evidence-synthesis-meta-analysis
+
+Database: Europe PMC
+Full Name / Host: Europe PubMed Central (EMBL-EBI)
+Access Method: REST API (https://europepmc.org/RestWebService)
+Data Types: Life sciences articles, preprints, patents, and text-mined biomedical entities
+Associated Skills:
+  - literature-deep-review
+  - evidence-synthesis-meta-analysis
+
+Database: OpenAlex & Semantic Scholar
+Full Name / Host: OpenAlex (OurResearch) & Semantic Scholar (Allen Institute for AI)
+Access Method: REST API (https://api.openalex.org, https://api.semanticscholar.org)
+Data Types: Universal scholarly knowledge graph connecting papers, authors, citations, concepts, and funding sources
+Associated Skills:
+  - literature-deep-review
+  - literature-preclinical
+  - methods-landscape-review
+
+Database: bioRxiv & medRxiv
+Full Name / Host: Cold Spring Harbor Laboratory Preprints
+Access Method: REST API (https://api.biorxiv.org)
+Data Types: Life sciences and health sciences unpublished preprints
+Associated Skills:
+  - literature-deep-review
+  - methods-landscape-review
+
+Database: PhysioNet (MIMIC-IV)
+Full Name / Host: PhysioNet (MIT Laboratory for Computational Physiology)
+Access Method: Credentialed Google BigQuery / AWS S3 downloads (https://physionet.org)
+Data Types: De-identified electronic health records, critical care vital signs, laboratory tests, medication administrations, and diagnostic codes
+Associated Skills:
+  - real-world-evidence

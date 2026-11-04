@@ -1,0 +1,432 @@
+# ==============================================================================
+# Phylo-Biomni Models Manifest (models.txt)
+# Complete inventory of AI, Deep Learning, Foundation Models, Structural Models,
+# and Machine Learning Algorithms required across 92 skills in phylo-biomni
+# ==============================================================================
+
+# ==============================================================================
+# SECTION 1: Protein & Macromolecular Structure Prediction / Design Models
+# ==============================================================================
+
+Model: AlphaFold2 / AlphaFold-Multimer
+Category: Macromolecular Structure Prediction
+Provider / Source: DeepMind / EMBL-EBI (open-source weights)
+Framework: JAX / PyTorch (via OpenFold or Biomni HPC service)
+Description: Deep learning model using evoformer and structural attention to predict 3D atomic coordinates of monomeric proteins and protein-protein complexes from multiple sequence alignments (MSAs).
+Required Weights: AF2 model parameters (params_model_1..5.npz, multimer params_model_1..5_multimer_v3.npz)
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM) or Biomni HPC runner
+Associated Skills:
+  - protein-structure-prediction
+  - binder-antibody-design
+  - target-tractability-druggability
+
+Model: Boltz-2 (Boltz-1 / Boltz-2)
+Category: Biomolecular Complex Structure Prediction
+Provider / Source: MIT / Valence Labs (GitHub: HannesStark/boltz)
+Framework: PyTorch
+Description: Next-generation all-atom biomolecular structure prediction model handling proteins, RNA, DNA, ligands, and covalent modifications with high speed and competitive accuracy.
+Required Weights: boltz2.pt / HuggingFace checkpoints
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - protein-structure-prediction
+  - binder-antibody-design
+  - targeted-degrader-design
+
+Model: Chai-1
+Category: Multi-Modal Molecular Complex Structure Prediction
+Provider / Source: Chai Discovery (chai-lab)
+Framework: PyTorch
+Description: Foundation model for molecular structure prediction that predicts co-folded structures of proteins, nucleic acids, small molecules, and covalent modifications directly from sequence and SMILES.
+Required Weights: Chai-1 checkpoint weights (downloaded via chai_lab python package)
+Resource Requirement: NVIDIA GPU (>= 24 GB VRAM)
+Associated Skills:
+  - protein-structure-prediction
+  - off-target-safety-pharmacology
+  - targeted-degrader-design
+
+Model: ESM-2 / ESMFold / ESMCFold2
+Category: Protein Language Model & Zero-Shot Folding
+Provider / Source: Meta FAIR / EvolutionaryScale (fair-esm / esm)
+Framework: PyTorch / HuggingFace
+Description: Large-scale evolutionary protein language models (ESM-2, ESM-C) providing single-sequence structure prediction (ESMFold) and residue-level representations for variant effect prediction.
+Required Weights: esm2_t33_650M_UR50D, esm2_t36_3B_UR50D, or esmfold_v1
+Resource Requirement: NVIDIA GPU (16 GB - 48 GB VRAM depending on parameter size)
+Associated Skills:
+  - protein-structure-prediction
+  - antibody-developability-humanization
+  - binding-affinity-ml-model
+
+Model: RFdiffusion
+Category: De Novo Macromolecular Backbone Generation
+Provider / Source: Baker Lab / Institute for Protein Design (IPD)
+Framework: PyTorch
+Description: Denoising diffusion probabilistic model trained on protein structures for de novo binder design, motif scaffolding, symmetric oligomer generation, and enzyme active site scaffolding.
+Required Weights: RFdiffusion model checkpoints (ActiveSite_model.pt, Base_model.pt, Complex_model.pt)
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - binder-antibody-design
+  - cell-therapy-car-design
+
+Model: RFantibody
+Category: De Novo Antibody CDR / Variable Domain Generation
+Provider / Source: Baker Lab / IPD
+Framework: PyTorch
+Description: Specialized diffusion model fine-tuned for antibody variable region (Fv) backbone generation, CDR-H3 loop modeling, and epitope-targeted antibody design.
+Required Weights: RFantibody checkpoint weights
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - binder-antibody-design
+  - antibody-developability-humanization
+
+Model: ProteinMPNN
+Category: Sequence Design & Inverse Folding
+Provider / Source: Baker Lab / IPD
+Framework: PyTorch
+Description: Message-passing neural network for designing amino acid sequences that fold into targeted protein backbone structures with high expressibility and stability.
+Required Weights: proteinmpnn_v_48_020.pt, soluble_model_weights, or v_48_010.pt
+Resource Requirement: NVIDIA GPU (>= 8 GB VRAM) or modern multi-core CPU
+Associated Skills:
+  - binder-antibody-design
+  - antibody-developability-humanization
+
+
+# ==============================================================================
+# SECTION 2: Single-Cell Omics & Perturbation Foundation Models
+# ==============================================================================
+
+Model: scGPT
+Category: Single-Cell Generative Pretrained Transformer
+Provider / Source: Bo Wang Lab / University of Toronto
+Framework: PyTorch / HuggingFace (scgpt)
+Description: Foundation model for single-cell biology pre-trained on >33M human cells; enables zero-shot cell type annotation, batch integration, gene-gene interaction, and in silico genetic/chemical perturbation simulation.
+Required Weights: scGPT human/whole-human checkpoints (scGPT_human.pt, best_model.pt, vocab.json)
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - virtual-cell-perturbation
+
+Model: GEARS (Gene Activation and Repression Simulator)
+Category: In Silico Combinatorial Genetic Perturbation Model
+Provider / Source: Marinka Zitnik Lab / Harvard Biomedical Informatics
+Framework: PyTorch / PyTorch Geometric (cell-gears)
+Description: Graph neural network integrating prior knowledge gene regulatory networks with expression embeddings to predict transcriptomic responses to single and multi-gene CRISPR perturbations.
+Required Weights: Gene ontology co-expression graph + pre-trained perturbation models
+Resource Requirement: NVIDIA GPU (>= 12 GB VRAM) or CPU
+Associated Skills:
+  - virtual-cell-perturbation
+
+Model: scFoundation
+Category: Large-Scale Single-Cell Foundation Model
+Provider / Source: BioMap / Tsinghua University
+Framework: PyTorch
+Description: 100M-parameter single-cell model pre-trained on read-depth-normalized single-cell transcriptomics for cell state prediction, drug response simulation, and gene perturbation.
+Required Weights: scFoundation model weights (models.ckpt)
+Resource Requirement: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - virtual-cell-perturbation
+
+Model: CellFlow
+Category: Continuous Cell Trajectory & Perturbation Flow Model
+Provider / Source: Computational Single-Cell Biology Community
+Framework: PyTorch
+Description: Neural optimal transport and continuous normalizing flow model for mapping single-cell perturbation trajectories across dose and time series.
+Required Weights: Flow network parameters
+Resource Requirement: GPU (>= 12 GB VRAM)
+Associated Skills:
+  - virtual-cell-perturbation
+
+Model: RegVelo
+Category: Regulatory-Directed RNA Velocity Deep Generative Model
+Provider / Source: Broad Institute / scverse (regvelo)
+Framework: PyTorch / Pyro
+Description: Mechanistic deep generative model that couples transcriptional regulation with splicing kinetics to infer directional cell differentiation and transcription factor velocity drivers.
+Required Weights: Model trained per dataset using scverse/regvelo pipeline
+Resource Requirement: NVIDIA GPU (>= 8 GB VRAM) or multi-core CPU
+Associated Skills:
+  - regvelo
+
+Model: scVI (single-cell Variational Inference)
+Category: Deep Generative Variational Autoencoder
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch (scvi-tools)
+Description: Hierarchical Bayesian deep generative model for unsupervised dimensionality reduction, zero-inflated negative binomial (ZINB) count modeling, batch effect removal, and differential expression.
+Required Weights: Architecture instantiated and trained on input anndata
+Resource Requirement: GPU (>= 8 GB VRAM) or CPU
+Associated Skills:
+  - scrnaseq-scanpy-core-analysis
+  - scatac-multiome-analysis
+  - methods-landscape-review
+
+Model: totalVI
+Category: Multimodal Deep Generative Model (CITE-seq)
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch (scvi-tools)
+Description: Joint probabilistic variational autoencoder modeling paired single-cell RNA and surface protein (ADT) counts, normalizing background noise and non-specific antibody binding.
+Required Weights: Architecture trained on joint RNA + ADT MuData
+Resource Requirement: GPU (>= 12 GB VRAM) or CPU
+Associated Skills:
+  - single-cell-multimodal-integration
+
+Model: CellRank
+Category: Probabilistic Cell Fate Mapping & Markov Transition Model
+Provider / Source: Theis Lab / scverse (cellrank)
+Framework: Python (cellrank)
+Description: Unified probabilistic framework integrating RNA velocity, pseudotime, and developmental kernels to compute cell absorption probabilities, driver genes, and terminal states.
+Required Weights: Computed on dataset graph
+Resource Requirement: CPU (>= 16 GB RAM)
+Associated Skills:
+  - regvelo
+  - scrna-trajectory-inference
+
+Model: CellTypist
+Category: Logistic Regression & SGD Classifiers with Immune/Tissue Models
+Provider / Source: Teichmann Lab / Wellcome Sanger Institute
+Framework: Python / scikit-learn (celltypist)
+Description: Pre-trained immune and cross-tissue logistic classification models for automated, consensus-level single-cell cell type annotation.
+Required Weights: Pre-trained models (.pkl) such as Immune_All_Low.pkl, Cells_Intestinal_Tract.pkl, COVID19_Immune_Landscape.pkl
+Resource Requirement: CPU (>= 8 GB RAM)
+Associated Skills:
+  - scrnaseq-scanpy-core-analysis
+  - scrna-disease-drug-discovery
+
+Model: SingleR & Azimuth
+Category: Reference-Based Probabilistic Cell Type Annotation Models
+Provider / Source: Irizarry Lab / Satija Lab (Bioconductor / Seurat)
+Framework: R (SingleR, Azimuth)
+Description: Supervised classification and reference-mapping engines utilizing curated reference transcriptomes (BlueprintEncode, HPCA, Human PBMC reference).
+Required Weights: Reference RDS matrices and Azimuth supervised PCA/WNN models
+Resource Requirement: CPU (>= 16 GB RAM)
+Associated Skills:
+  - scrnaseq-seurat-core-analysis
+  - cell-therapy-qc-scorecard
+
+
+# ==============================================================================
+# SECTION 3: Drug Discovery, Small Molecule & ADMET Models
+# ==============================================================================
+
+Model: Chemprop
+Category: Directed Message Passing Neural Network (D-MPNN)
+Provider / Source: Barzilay Lab / MIT (chemprop)
+Framework: PyTorch (chemprop)
+Description: Deep learning architecture that learns representations directly from molecular 2D graphs to predict continuous bioactivity values, toxicological endpoints, and quantum mechanical properties.
+Required Weights: Checkpoints trained per target or pre-trained ADMET models (.pt)
+Resource Requirement: GPU (>= 8 GB VRAM) or CPU
+Associated Skills:
+  - adme-ml-modeling
+  - targeted-degrader-design
+
+Model: ADMET-AI
+Category: Fast Machine Learning ADMET Profiling Engine
+Provider / Source: Barzilay Lab / MIT (admet-ai)
+Framework: PyTorch (admet-ai)
+Description: Ensemble model combining Chemprop D-MPNNs and RDKit descriptors trained on TDC (Therapeutics Data Commons) benchmark datasets to predict 41 absorption, distribution, metabolism, excretion, and toxicity endpoints.
+Required Weights: Packaged TDC ADMET-AI ensemble model weights
+Resource Requirement: GPU or multi-core CPU
+Associated Skills:
+  - molecular-property-admet
+  - off-target-safety-pharmacology
+  - targeted-degrader-design
+
+Model: DeepPurpose
+Category: Deep Learning Framework for Drug-Target Interaction (DTI)
+Provider / Source: Kexin Huang / Harvard Biomedical Informatics (DeepPurpose)
+Framework: PyTorch (DeepPurpose)
+Description: Modular deep learning library supporting compound encoders (MPNN, CNN, Morgan, Transformer) and protein encoders (CNN, Transformer, ESM) for affinity score (pKd, pKi, IC50) estimation.
+Required Weights: Pre-trained DTI weights (BindingDB_IC50_Morgan_CNN.pt, etc.)
+Resource Requirement: GPU (>= 8 GB VRAM) or CPU
+Associated Skills:
+  - binding-affinity-ml-model
+  - off-target-safety-pharmacology
+  - large-scale-virtual-screening
+  - targeted-degrader-design
+
+Model: TxGNN
+Category: Graph Neural Network for Drug Repurposing
+Provider / Source: Zitnik Lab / Harvard Biomedical Informatics
+Framework: PyTorch / PyG (TxGNN)
+Description: Geometric deep learning model operating over PrimeKG medical knowledge graph to forecast zero-shot therapeutic indications and contraindications across 17,000+ diseases.
+Required Weights: TxGNN pre-trained model weights on PrimeKG
+Resource Requirement: GPU (>= 16 GB VRAM) or high-memory CPU
+Associated Skills:
+  - knowledge-graph-target-reasoning
+  - signature-reversal-lincs
+
+Model: GraphGA (Graph Genetic Algorithm)
+Category: Generative Molecular Graph Optimization
+Provider / Source: Jensen Lab / GuacaMol Benchmark
+Framework: Python / RDKit
+Description: Evolutionary graph mutation and crossover algorithm optimizing multi-parameter objective functions (QED, SAScore, target docking score) for de novo hit expansion.
+Required Weights: Algorithmic heuristic (no pre-trained weights required)
+Resource Requirement: Multi-core CPU
+Associated Skills:
+  - generative-molecule-design
+
+Model: AutoDock Vina
+Category: Empirical / Knowledge-Based Molecular Docking Engine
+Provider / Source: The Scripps Research Institute (vina / autodock-vina)
+Framework: C++ / Python bindings
+Description: High-performance gradient-based conformational search and scoring engine for predicting small molecule binding poses and affinity to macromolecular receptor cavities.
+Required Weights: Scoring parameter sets (Vina, Vinardo, or AutoDock4 weights)
+Resource Requirement: Multi-core CPU
+Associated Skills:
+  - chembl-hit-series-sar-docking
+  - large-scale-virtual-screening
+  - ligand-binding-mode-analysis
+
+Model: fpocket
+Category: Voronoi Tessellation & Alpha Sphere Cavity Detection
+Provider / Source: Peter Schmidtke et al. (fpocket)
+Framework: C / CLI
+Description: Geometric cavity and binding pocket detection model calculating pocket volume, druggability score, hydrophobicity ratio, and polarity index.
+Required Weights: Built-in scoring functions
+Resource Requirement: CPU
+Associated Skills:
+  - target-tractability-druggability
+  - ligand-binding-mode-analysis
+
+
+# ==============================================================================
+# SECTION 4: Genomics, Variant Calling & Functional Regulation Models
+# ==============================================================================
+
+Model: DeepVariant
+Category: CNN-Based Genomic Variant Caller
+Provider / Source: Google Health / Genomics
+Framework: TensorFlow / C++
+Description: Convolutional neural network treating aligned read pileup images as computer vision inputs to classify germline SNPs, insertions, and deletions with high sensitivity and specificity.
+Required Weights: Google pre-trained model weights for WGS, WES, and PacBio HiFi
+Resource Requirement: NVIDIA GPU (>= 8 GB VRAM) or multi-core CPU
+Associated Skills:
+  - variant-calling-from-sequencing
+  - rare-disease-case-prioritization
+
+Model: pySCENIC / GRNBoost2
+Category: Gradient Boosted Tree Gene Regulatory Network Engine
+Provider / Source: Aerts Lab / VIB-KU Leuven (pyscenic, arboreto)
+Framework: Python (arboreto, ctxcore, pyscenic)
+Description: Machine learning pipeline combining gradient boosting (GRNBoost2) and cis-regulatory motif ranking (RcisTarget) to discover high-confidence regulons and transcription factor target genes.
+Required Weights: RcisTarget motif rankings database (.feather) and motif annotation files
+Resource Requirement: High-memory multi-core CPU (>= 32 GB RAM)
+Associated Skills:
+  - grn-pyscenic
+  - disease-progression-longitudinal
+  - regvelo
+
+Model: MACS3 (Model-based Analysis of ChIP-seq)
+Category: Dynamic Poisson Distribution Peak Calling Model
+Provider / Source: Liu Lab / DFCI
+Framework: Python / Cython (macs3)
+Description: Probabilistic sequencing coverage model capturing local spatial biases in chromatin accessibility and transcription factor ChIP-seq / ATAC-seq experiments.
+Required Weights: Statistical parameter estimation
+Resource Requirement: CPU (>= 8 GB RAM)
+Associated Skills:
+  - scatac-multiome-analysis
+  - chip-atlas-diff-analysis
+
+Model: MAGeCK
+Category: Negative Binomial Model for Pooled CRISPR Screens
+Provider / Source: Shirley Liu Lab / DFCI
+Framework: Python / C (mageck)
+Description: Model-based statistical framework for identifying positively and negatively selected genes and pathways in genome-wide CRISPR/Cas9 knockout screens.
+Required Weights: Algorithmic statistical estimation
+Resource Requirement: CPU
+Associated Skills:
+  - pooled-crispr-screens
+  - cell-therapy-car-design
+  - virtual-cell-perturbation
+
+Model: PICRUSt2
+Category: Hidden-State Evolutionary Placement Model
+Provider / Source: Langille Lab / Dalhousie University
+Framework: Python / R (picrust2)
+Description: Phylogenetic placement algorithm predicting functional metagenomic pathway abundances and enzyme gene families from 16S rRNA amplicon sequencing data.
+Required Weights: Pre-computed reference tree and 16S copy number databases
+Resource Requirement: CPU (>= 16 GB RAM)
+Associated Skills:
+  - microbiome-analysis
+
+
+# ==============================================================================
+# SECTION 5: Statistical Genetics, Multi-Omics & Classical ML
+# ==============================================================================
+
+Model: SuSiE (Sum of Single Effects)
+Category: Bayesian Variable Selection for Genetic Fine-Mapping
+Provider / Source: Stephens Lab / University of Chicago (susieR)
+Framework: R (susieR)
+Description: Sparse Bayesian regression model estimating posterior inclusion probabilities (PIP) and credible sets of causal genetic variants from GWAS and eQTL summary statistics with linkage disequilibrium.
+Required Weights: LD reference matrices
+Resource Requirement: CPU
+Associated Skills:
+  - fine-mapping-susie
+  - open-targets
+  - gwas-to-function-twas
+
+Model: TwoSampleMR
+Category: Instrumental Variable Causal Inference Models
+Provider / Source: MRC Integrative Epidemiology Unit / Bristol (TwoSampleMR)
+Framework: R (TwoSampleMR, ieugwasr)
+Description: Causal inference engine performing inverse-variance weighted (IVW), MR-Egger, weighted median, and Steiger filtering to assess causal relationships between molecular traits and clinical outcomes.
+Required Weights: IEU OpenGWAS database summary statistics
+Resource Requirement: CPU
+Associated Skills:
+  - endelian-randomization-twosamplemr
+  - survival-analysis-clinical
+
+Model: MOFA2 (Multi-Omics Factor Analysis)
+Category: Group Factor Analysis & Bayesian Matrix Factorization
+Provider / Source: Stegle Lab / EMBL (MOFA2)
+Framework: R / Python (MOFA2, mofapy2)
+Description: Unsupervised Bayesian latent factor model that decomposes multi-modal matrices (RNA, DNA methylation, proteomics, ATAC) into shared and modality-specific sources of biological variation.
+Required Weights: Trained on experimental multi-omics matrices
+Resource Requirement: CPU (>= 16 GB RAM)
+Associated Skills:
+  - multi-omics-integration
+  - single-cell-multimodal-integration
+
+Model: DESeq2
+Category: Negative Binomial Generalized Linear Model (GLM)
+Provider / Source: Love, Huber & Anders / Bioconductor (DESeq2)
+Framework: R (DESeq2)
+Description: Empirical Bayes shrinkage model for dispersion and log fold changes in high-throughput count data (RNA-seq, Drug-seq, proteomics).
+Required Weights: Estimated from experimental counts
+Resource Requirement: Multi-core CPU
+Associated Skills:
+  - bulk-rnaseq-counts-to-de-deseq2
+  - drug-seq-analysis
+  - functional-enrichment-from-degs
+  - experimental-design-statistics
+
+Model: LightGBM / XGBoost
+Category: Gradient Boosted Decision Tree Ensembles
+Provider / Source: Microsoft / DMLC (lightgbm, xgboost)
+Framework: Python (xgboost, lightgbm, scikit-learn)
+Description: High-performance gradient boosted decision trees for quantitative structure-activity relationships (QSAR), biomarker panel selection, and clinical progression forecasting.
+Required Weights: Checkpoints trained per task
+Resource Requirement: CPU or GPU
+Associated Skills:
+  - adme-ml-modeling
+  - binding-affinity-ml-model
+  - bulk-omics-clustering
+
+Model: ElasticNet / glmnet
+Category: L1/L2 Regularized Generalized Linear Models
+Provider / Source: Hastie & Qian / Stanford (glmnet)
+Framework: R / Python (glmnet, scikit-learn)
+Description: Penalized regression combining lasso and ridge penalties for high-dimensional feature selection, minimal biomarker gene signature discovery, and survival modeling.
+Required Weights: Cross-validation fitted models
+Resource Requirement: CPU
+Associated Skills:
+  - elastic-net-biomarker-panel
+  - survival-analysis-clinical
+
+Model: nlmixr2 / rxode2
+Category: Nonlinear Mixed-Effects Pharmacometrics & ODE Modeling
+Provider / Source: nlmixr2 Development Team (nlmixr2, rxode2)
+Framework: R (nlmixr2, rxode2)
+Description: Pharmacokinetic and pharmacodynamic (PK/PD) ordinary differential equation simulation and population parameter estimation engine for clinical trial dose regimens.
+Required Weights: Mechanistic compartmental equations
+Resource Requirement: CPU
+Associated Skills:
+  - pkpd-pharmacometrics
+  - clinical-trial-design-simulation
