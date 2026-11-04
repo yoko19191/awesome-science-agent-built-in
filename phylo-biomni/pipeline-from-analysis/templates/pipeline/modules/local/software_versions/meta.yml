@@ -1,0 +1,11 @@
+name: software_versions
+description: Collect tool versions from the versions topic into one table
+input:
+  - versions:
+      type: file
+      description: Tab-separated process, tool, version lines
+output:
+  tsv:
+    - software_versions.tsv:
+        type: file
+        description: Software versions table
