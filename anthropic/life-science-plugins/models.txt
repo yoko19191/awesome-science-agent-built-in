@@ -1,0 +1,89 @@
+# ==============================================================================
+# Life Sciences Marketplace Plugins Models Manifest (models.txt)
+# Inventory of AI Validation Models, Biostatistical Simulation Models, and
+# Computational Structural Models utilized in life-science-plugins/skills
+# ==============================================================================
+
+# ==============================================================================
+# 1. Protein Binder Re-Prediction & Structural Validation Models (binder-gauntlet)
+# ==============================================================================
+
+Model: Boltz-1 / Boltz-2
+Category: All-Atom Biomolecular Complex Re-Prediction
+Provider / Source: MIT CSAIL / Valence Labs
+Framework: PyTorch
+Description: Independent all-atom validation engine assessing target-binder interface geometry, complex pLDDT, and interface affinity without relying on training priors from the design model.
+Resource: NVIDIA GPU (>= 16 GB VRAM) on local workstation or cluster.
+Associated Skills:
+  - binder-gauntlet
+
+Model: AlphaFold2 / ColabFold
+Category: Orthogonal Structural Verification & ipTM Assessment
+Provider / Source: DeepMind / ColabFold
+Framework: JAX / PyTorch
+Description: Used as an orthogonal structural verification model to calculate interface predicted TM-score (ipTM), interface contacts, and binder stability metrics.
+Resource: NVIDIA GPU (>= 16 GB VRAM).
+Associated Skills:
+  - binder-gauntlet
+
+Model: Chai-1
+Category: Multi-Modal Complex Co-Folding Cross-Validation
+Provider / Source: Chai Discovery
+Framework: PyTorch
+Description: Fast single-sequence and complex co-folding engine for cross-validating protein-protein binding interfaces.
+Resource: NVIDIA GPU (>= 24 GB VRAM).
+Associated Skills:
+  - binder-gauntlet
+
+Model: ProteinMPNN / SolubleMPNN
+Category: Sequence Recovery & Decoy Generation
+Provider / Source: Baker Lab / IPD
+Framework: PyTorch
+Description: Inverse folding model used to compute sequence recovery rates across binding interfaces and generate control decoys.
+Resource: GPU or CPU.
+Associated Skills:
+  - binder-gauntlet
+
+Model: RFdiffusion
+Category: Negative Control & Scrambled Binder Generator
+Provider / Source: Baker Lab / IPD
+Framework: PyTorch
+Description: Generates structurally plausible non-binding decoy backbones to test false-positive rates of computational binding predictions.
+Resource: GPU (>= 16 GB VRAM).
+Associated Skills:
+  - binder-gauntlet
+
+
+# ==============================================================================
+# 2. Clinical Trial Probability of Success & Biostatistical Models
+# ==============================================================================
+
+Model: Monte Carlo Hazard & Event Simulation Model (clinical-trial-forecast)
+Category: Parametric Survival & Event-Driven Trial Forecasting
+Provider / Source: clinical-trial-forecast internal simulation engine
+Framework: Python / NumPy / SciPy
+Description: Parametric hazard rate model (Exponential, Weibull, Gompertz) simulating patient enrollment, dropout, event accumulation, and primary endpoint readout under realistic clinical hazard ratios.
+Resource: Multi-core CPU.
+Associated Skills:
+  - clinical-trial-forecast
+
+Model: Trial Probability of Success (POS) Multi-Factor Heuristic Model
+Category: Probabilistic Evidence Synthesis Engine
+Provider / Source: clinical-trial-forecast
+Framework: Python
+Description: Integrates historical phase transition benchmarks, biological mechanism validation, biomarker patient stratification, and statistical power to calculate posterior trial success probabilities.
+Resource: CPU.
+Associated Skills:
+  - clinical-trial-forecast
+
+Model: Biostatistical Sample Size Calculation Engine (clinical-trial-protocol-skill)
+Category: Hypothesis Testing & Power Estimation Models
+Provider / Source: clinical-trial-protocol-skill (`sample_size_calculator.py`)
+Framework: Python / SciPy / Statsmodels
+Description: Computes required sample sizes and statistical power for:
+  - Two-arm continuous superiority, non-inferiority, and equivalence trials (t-test / Z-test)
+  - Two-arm binary proportion superiority and non-inferiority trials (Farrington-Manning / Chi-squared)
+  - Time-to-event survival trials (Schoenfeld log-rank formula with accrual and dropout adjustments)
+Resource: CPU.
+Associated Skills:
+  - clinical-trial-protocol-skill

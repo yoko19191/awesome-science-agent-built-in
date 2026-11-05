@@ -1,0 +1,72 @@
+# ==============================================================================
+# Life Sciences Marketplace Plugins Databases Manifest (db.txt)
+# Inventory of Clinical Registries, Literature Sources, Regulatory Portals,
+# and Structural Databases accessed across life-science-plugins/skills
+# ==============================================================================
+
+# ==============================================================================
+# 1. Clinical Trial Registries & Regulatory Standards
+# ==============================================================================
+
+Database: ClinicalTrials.gov
+Provider / Host: U.S. National Library of Medicine (NLM / NIH)
+Access Protocol: Modern v2 REST API (https://clinicaltrials.gov/api/v2/studies)
+Data Types: Registered protocols, NCT IDs, primary/secondary completion dates, study phase, patient enrollment, outcome measures, sponsor history
+Associated Skills:
+  - clinical-trial-forecast
+  - clinical-trial-protocol-skill
+
+Database: FDA & ICH Regulatory Guidance Databases
+Provider / Host: US Food and Drug Administration / International Council for Harmonisation (ICH)
+Access Protocol: Public guidance documentation & regulatory schemas
+Data Types: Good Clinical Practice (ICH E6(R2)), General Considerations for Clinical Studies (ICH E8), Statistical Principles for Clinical Trials (ICH E9), FDA IDE and IND submission guidelines
+Associated Skills:
+  - clinical-trial-protocol-skill
+
+Database: SEC EDGAR Filings
+Provider / Host: U.S. Securities and Exchange Commission
+Access Protocol: SEC EDGAR API / Form 10-K, 10-Q, 8-K filings
+Data Types: Corporate disclosures, clinical pipeline timelines, interim phase readout data, corporate trial terminations
+Associated Skills:
+  - clinical-trial-forecast
+
+
+# ==============================================================================
+# 2. Biomedical Literature & Evidence Sources
+# ==============================================================================
+
+Database: PubMed & PubMed Central (PMC)
+Provider / Host: NCBI / NLM / NIH
+Access Protocol: Entrez E-utilities REST API & web queries
+Data Types: Peer-reviewed clinical trial results, Phase 1/2 safety precedents, target biological rationale, biomarker validation studies
+Associated Skills:
+  - clinical-trial-forecast
+  - clinical-trial-protocol-skill
+  - scientific-problem-selection
+
+Database: Europe PMC
+Provider / Host: EMBL-EBI
+Access Protocol: REST API (https://europepmc.org/RestWebService)
+Data Types: Open-access full text, clinical evidence citations, systematic reviews
+Associated Skills:
+  - clinical-trial-forecast
+  - scientific-problem-selection
+
+
+# ==============================================================================
+# 3. Protein Structure & Target Repositories
+# ==============================================================================
+
+Database: RCSB PDB (Protein Data Bank)
+Provider / Host: Research Collaboratory for Structural Bioinformatics
+Access Protocol: Data API (https://data.rcsb.org), mmCIF/PDB downloads
+Data Types: High-resolution experimental target structures for de novo binder docking, epitope coordinates, native partner interfaces
+Associated Skills:
+  - binder-gauntlet
+
+Database: AlphaFold Protein Structure Database
+Provider / Host: EMBL-EBI / DeepMind
+Access Protocol: REST API (https://alphafold.ebi.ac.uk/api)
+Data Types: Predicted 3D target coordinates and per-residue pLDDT metrics for protein targets without experimental crystallographic structures
+Associated Skills:
+  - binder-gauntlet

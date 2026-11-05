@@ -1,0 +1,26 @@
+# ==============================================================================
+# Life Sciences Marketplace Plugins Dependencies (requirements.txt)
+# Complete environment specification for running all skills in
+# anthropic/life-science-plugins/skills
+# Recommended Python version: >= 3.10, < 3.13 (Python 3.11/3.12 recommended)
+# ==============================================================================
+
+# --- Numerical, Scientific & Biostatistical Modeling ---
+numpy>=1.24.0,<2.3.0
+scipy>=1.11.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+statsmodels>=0.14.0
+
+# --- Biopython & Protein Sequence Profiling (binder-gauntlet) ---
+biopython>=1.83
+
+# --- Visualization & Report Generation (clinical-trial-forecast) ---
+matplotlib>=3.8.0
+seaborn>=0.13.0
+markdown>=3.5.0
+pyarrow>=14.0.0
+
+# --- Web & Literature Retrieval ---
+requests>=2.31.0
+pypdf>=4.2.0
+pypdfium2>=4.30.0
