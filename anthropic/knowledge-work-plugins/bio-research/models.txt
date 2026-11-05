@@ -1,0 +1,124 @@
+# ==============================================================================
+# Bio-Research Plugin Models Manifest (models.txt)
+# Inventory of Deep Learning Models, Probabilistic Omics Architectures, and
+# Pipeline Models utilized in knowledge-work-plugins/bio-research
+# ==============================================================================
+
+# ==============================================================================
+# 1. scvi-tools Probabilistic Deep Generative Models
+# ==============================================================================
+
+Model: scVI (single-cell Variational Inference)
+Category: Deep Generative Variational Autoencoder
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Hierarchical Bayesian deep variational autoencoder modeling raw single-cell RNA count distributions (zero-inflated negative binomial / negative binomial) for batch correction, latent space discovery, and differential expression.
+Weights: Dynamically initialized and trained on user AnnData objects.
+Resource: GPU recommended (NVIDIA >= 8 GB VRAM) or multi-core CPU.
+Associated Skills:
+  - scvi-tools
+
+Model: scANVI (single-cell Automated Novelty and Verification Inference)
+Category: Semi-Supervised Variational Autoencoder
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Semi-supervised deep generative model leveraging existing cell type annotations to transfer labels onto unannotated target datasets while mitigating technical batch variation.
+Weights: Initialized from pre-trained scVI latent spaces or trained de novo.
+Resource: GPU (>= 8 GB VRAM) or CPU.
+Associated Skills:
+  - scvi-tools
+
+Model: totalVI
+Category: Joint Multimodal Deep Generative Model (CITE-seq)
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Variational autoencoder modeling paired single-cell RNA and surface protein (ADT) counts, decomposing protein signals into background non-specific binding and true biological expression.
+Weights: Trained on joint RNA + ADT datasets.
+Resource: GPU (>= 12 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+Model: PeakVI
+Category: Chromatin Accessibility Latent Factor Model
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Deep generative model for single-cell ATAC-seq data capturing binary or count accessibility profiles across genomic peaks.
+Weights: Trained on scATAC peak matrices.
+Resource: GPU (>= 8 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+Model: MultiVI
+Category: Multimodal Paired and Unpaired Single-Cell Integration
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Probabilistic model integrating single-cell RNA, single-cell ATAC, and paired Multiome experiments into a shared latent space.
+Weights: Trained on multi-omics AnnData.
+Resource: GPU (>= 16 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+Model: DestVI
+Category: Multi-Resolution Spatial Transcriptomics Deconvolution
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Multi-resolution deconvolution model that infers cell type proportions and continuous cell-state variations inside spatial transcriptomics spots using scRNA-seq references.
+Weights: Reference scRNA model + spatial dataset.
+Resource: GPU (>= 8 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+Model: veloVI
+Category: Deep Generative Dynamical RNA Velocity Model
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Deep neural network for estimating transcriptional dynamics and RNA velocity vectors from spliced and unspliced mRNA reads.
+Weights: Trained on spliced/unspliced matrices.
+Resource: GPU (>= 8 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+Model: sysVI
+Category: Cross-System and Perturbation Response Alignment
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch
+Description: Deep learning framework for harmonizing single-cell perturbation responses across biological systems (e.g., in vitro cell lines vs. in vivo patient cohorts).
+Weights: Trained on multi-condition perturbation datasets.
+Resource: GPU (>= 8 GB VRAM).
+Associated Skills:
+  - scvi-tools
+
+
+# ==============================================================================
+# 2. Bioinformatics Pipeline Execution Models (nf-core)
+# ==============================================================================
+
+Model: STAR / Salmon (in nf-core/rnaseq)
+Category: Spliced Read Aligner & Pseudo-Quantification Model
+Provider / Source: Dobin Lab / Patro Lab
+Framework: C++ / Nextflow container
+Description: High-performance RNA-seq spliced alignment (STAR) and dual-phase quasi-mapping probabilistic quantification (Salmon) for transcript-level expression profiling.
+Weights: Genome indices built from reference FASTA and GTF.
+Resource: Multi-core CPU (>= 32 GB RAM).
+Associated Skills:
+  - nextflow-development
+
+Model: GATK4 / DeepVariant (in nf-core/sarek)
+Category: Germline and Somatic Genomic Variant Calling
+Provider / Source: Broad Institute (GATK) / Google Health (DeepVariant)
+Framework: Java / TensorFlow / Nextflow container
+Description: Haplotype-aware Bayesian assembly variant calling (GATK HaplotypeCaller) and convolutional neural network pileup image classification (DeepVariant).
+Weights: DeepVariant WGS/WES pre-trained CNN weights.
+Resource: Multi-core CPU or GPU.
+Associated Skills:
+  - nextflow-development
+
+Model: MACS2 / MACS3 (in nf-core/atacseq)
+Category: Chromatin Accessibility Peak Calling Model
+Provider / Source: Liu Lab
+Framework: Python / Cython / Nextflow container
+Description: Dynamic Poisson background coverage model for identifying statistically enriched chromatin accessibility regions and transcription factor binding sites.
+Weights: Statistical parameter estimation from BAM sequencing files.
+Resource: Multi-core CPU.
+Associated Skills:
+  - nextflow-development

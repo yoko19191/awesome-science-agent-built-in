@@ -1,0 +1,105 @@
+# ==============================================================================
+# Bio-Research Plugin Databases Manifest (db.txt)
+# Inventory of Scientific Databases, Preclinical Repositories, Literature Ports,
+# and Cloud Connectors integrated into knowledge-work-plugins/bio-research
+# ==============================================================================
+
+# ==============================================================================
+# 1. Biomedical Literature, Preprints & Journal Repositories
+# ==============================================================================
+
+Database: PubMed
+Provider / Host: National Center for Biotechnology Information (NCBI / NLM / NIH)
+Connector / Protocol: HTTP MCP Server (`https://pubmed.mcp.claude.com/mcp`)
+Data Types: Over 36 million biomedical citations, full abstracts, MeSH indexing, author affiliations
+Associated Skills:
+  - scientific-problem-selection
+  - nextflow-development
+
+Database: bioRxiv & medRxiv
+Provider / Host: Cold Spring Harbor Laboratory / deepsense.ai connector
+Connector / Protocol: HTTP MCP Server (`https://hcls.mcp.claude.com/biorxiv/mcp`)
+Data Types: Preprints in biology and medicine, unreviewed manuscripts, cutting-edge methods
+Associated Skills:
+  - scientific-problem-selection
+
+Database: Consensus
+Provider / Host: Consensus App AI Academic Search
+Connector / Protocol: HTTP MCP Server (`https://mcp.consensus.app/mcp`)
+Data Types: AI-powered synthesis of peer-reviewed consensus, effect sizes, study designs
+Associated Skills:
+  - scientific-problem-selection
+
+Database: Wiley Online Library
+Provider / Host: John Wiley & Sons / Wiley Scholar Gateway
+Connector / Protocol: HTTP MCP Server (`https://connector.scholargateway.ai/mcp`)
+Data Types: Full-text peer-reviewed academic journals, figures, supplementary tables
+Associated Skills:
+  - scientific-problem-selection
+
+
+# ==============================================================================
+# 2. Chemical Biology, Targets & Preclinical Pharmacology
+# ==============================================================================
+
+Database: ChEMBL
+Provider / Host: EMBL-EBI / deepsense.ai connector
+Connector / Protocol: HTTP MCP Server (`https://hcls.mcp.claude.com/chembl/mcp`)
+Data Types: Bioactive molecules, binding affinities (IC50, Ki, Kd, EC50), ADMET, clinical progression
+Associated Skills:
+  - scientific-problem-selection
+
+Database: Open Targets Platform
+Provider / Host: Open Targets (EMBL-EBI / Sanger / Industry Consortium)
+Connector / Protocol: HTTP MCP Server (`https://mcp.platform.opentargets.org/mcp`)
+Data Types: Evidence-backed target-disease associations, tractability, genetic validation, safety panels
+Associated Skills:
+  - scientific-problem-selection
+  - scvi-tools
+
+
+# ==============================================================================
+# 3. Clinical Trials, Regulatory & Collaborative Data
+# ==============================================================================
+
+Database: ClinicalTrials.gov
+Provider / Host: U.S. National Library of Medicine / deepsense.ai connector
+Connector / Protocol: HTTP MCP Server (`https://hcls.mcp.claude.com/clinical_trials/mcp`)
+Data Types: Global clinical trial registrations, study protocols, endpoints, participant recruitment
+Associated Skills:
+  - scientific-problem-selection
+
+Database: Synapse
+Provider / Host: Sage Bionetworks
+Connector / Protocol: HTTP MCP Server (`https://mcp.synapse.org/mcp`)
+Data Types: Collaborative biomedical repositories, DREAM challenges, consortia datasets (AMP-AD, TCGA)
+Associated Skills:
+  - scvi-tools
+  - nextflow-development
+
+Database: Benchling
+Provider / Host: Benchling Life Sciences Cloud
+Connector / Protocol: HTTP MCP Server (Configurable lab endpoint)
+Data Types: Electronic lab notebook entries, plasmid sequences, sample registries, assay runs
+Associated Skills:
+  - instrument-data-to-allotrope
+
+
+# ==============================================================================
+# 4. Public Sequencing Archives & Reference Genomes
+# ==============================================================================
+
+Database: NCBI SRA (Sequence Read Archive) & GEO (Gene Expression Omnibus)
+Provider / Host: NCBI / NIH
+Connector / Protocol: HTTPS / Entrez API / E-utilities via `sra_geo_fetch.py`
+Data Types: Public raw FASTQ sequencing runs, bulk RNA-seq, scRNA-seq, and ChIP-seq experiments
+Associated Skills:
+  - nextflow-development
+  - single-cell-rna-qc
+
+Database: AWS iGenomes
+Provider / Host: Illumina / Amazon Web Services / nf-core
+Connector / Protocol: S3 direct download (`s3://ngi-igenomes/igenomes/`)
+Data Types: Pre-indexed reference genomes (GRCh38, GRCh37, GRCm39) for STAR, BWA, Bowtie2
+Associated Skills:
+  - nextflow-development
