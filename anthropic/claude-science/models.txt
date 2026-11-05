@@ -1,0 +1,169 @@
+# ==============================================================================
+# Claude Science Models Manifest (models.txt)
+# Complete inventory of Foundation Models, AI Structure Predictors, Sequence
+# Foundation Models, and Deep Generative Models utilized in claude-science
+# ==============================================================================
+
+# ==============================================================================
+# 1. Biomolecular Structure Prediction & Macromolecular Co-Folding Models
+# ==============================================================================
+
+Model: AlphaFold2 / ColabFold
+Category: Protein Monomer & Multimer 3D Structure Prediction
+Provider / Source: DeepMind / Söding & Steinegger Labs (ColabFold)
+Framework: JAX / Haiku / OpenFold (proteomics-jax-gpu container)
+Description: Deep learning architecture utilizing evoformer attention blocks and structural modules to predict 3D coordinates from multiple sequence alignments (MSAs) generated via MMseqs2.
+Required Weights: AlphaFold2 model parameters (params_model_1..5.npz, multimer params_model_1..5_multimer_v3.npz) (~4.9 GB)
+Hardware / Resource: NVIDIA GPU (>= 16 GB VRAM) (e.g., A10G, A100, H100 with sm_90 PTX)
+Associated Skills:
+  - alphafold2
+
+Model: Boltz-1 / Boltz-2
+Category: All-Atom Biomolecular Complex Prediction
+Provider / Source: MIT CSAIL / Valence Labs (Passaro & Wohlwend et al.)
+Framework: PyTorch (boltz)
+Description: Next-generation all-atom co-folding foundation model predicting joint structures of proteins, RNA, DNA, small-molecule ligands, and covalent modifications directly with high geometric fidelity.
+Required Weights: boltz2_conf.ckpt, aff.ckpt, and small-molecule conformer tables (~7.5 GB)
+Hardware / Resource: NVIDIA GPU (>= 16 GB VRAM) (A100 / H100 recommended)
+Associated Skills:
+  - boltz
+
+Model: Chai-1
+Category: Multi-Modal Biomolecular Foundation Model
+Provider / Source: Chai Discovery (chai-lab)
+Framework: PyTorch (chai_lab)
+Description: Foundation model for molecular structure prediction that predicts co-folded structures of proteins, nucleic acids, small molecules, and covalent modifications directly from sequence and SMILES without obligate MSA.
+Required Weights: Chai-1 models_v2, conformer priors, and traced ESM2-3B trunk (~5.3 GB)
+Hardware / Resource: NVIDIA GPU (>= 24 GB VRAM) (A100 / H100 recommended)
+Associated Skills:
+  - chai1
+
+Model: OpenFold3
+Category: Open-Weights Biomolecular Complex Structure Prediction
+Provider / Source: Mohammed AlQuraishi Lab / Columbia University
+Framework: PyTorch / cuEquivariance (openfold3)
+Description: Open-source, open-weights PyTorch reproduction of AlphaFold3 for co-folding proteins, DNA, RNA, ligands, and chemical modifications using flow matching and triangle attention kernels.
+Required Weights: of3-p2-155k.pt checkpoint (~2.29 GB)
+Hardware / Resource: NVIDIA GPU (>= 24 GB VRAM) with cuEquivariance ops
+Associated Skills:
+  - openfold3
+
+Model: ESMFold2 / ESMFold2-Fast
+Category: Single-Sequence Fast Protein Folding
+Provider / Source: Chan Zuckerberg Biohub / EvolutionaryScale (Candido et al.)
+Framework: PyTorch (esm)
+Description: Ultra-fast end-to-end atomic structure prediction directly from single protein sequence without requiring multiple sequence alignments (MSAs).
+Required Weights: esmfold_v1 model weights (~4.5 GB)
+Hardware / Resource: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - esmfold2
+
+
+# ==============================================================================
+# 2. Protein Language Models & Sequence Inverse Folding
+# ==============================================================================
+
+Model: Meta ESM-2 (fair-esm)
+Category: Evolutionary Protein Language Model
+Provider / Source: Meta AI Fundamental AI Research (FAIR)
+Framework: PyTorch (fair-esm)
+Description: Large-scale evolutionary protein language models (8M, 35M, 150M, 650M, 3B parameters) producing residue-level embeddings, attention contact maps, and zero-shot variant effect scores.
+Required Weights: esm2_t33_650M_UR50D.pt (2.6 GB) or esm2_t36_3B_UR50D.pt (11.5 GB)
+Hardware / Resource: NVIDIA GPU (>= 8 GB VRAM) or CPU
+Associated Skills:
+  - fair-esm2
+
+Model: ProteinMPNN
+Category: De Novo Sequence Design & Inverse Folding
+Provider / Source: Baker Lab / Institute for Protein Design (IPD)
+Framework: PyTorch
+Description: Deep message-passing neural network designed to generate amino-acid sequences that fold stably into targeted 3D backbone structures.
+Required Weights: proteinmpnn_v_48_020.pt (~38 MB)
+Hardware / Resource: NVIDIA GPU (>= 4 GB VRAM) or CPU
+Associated Skills:
+  - proteinmpnn
+
+Model: SolubleMPNN
+Category: Soluble Protein Sequence Design
+Provider / Source: Baker Lab / IPD
+Framework: PyTorch
+Description: ProteinMPNN retrained specifically on soluble protein structures to minimize hydrophobic surface patches, improve recombinant expression, and prevent aggregation.
+Required Weights: solublempnn_v_48_020.pt (~38 MB)
+Hardware / Resource: NVIDIA GPU (>= 4 GB VRAM) or CPU
+Associated Skills:
+  - solublempnn
+
+Model: LigandMPNN
+Category: Context-Aware Protein Sequence Design
+Provider / Source: Baker Lab / IPD (Dauparas et al.)
+Framework: PyTorch
+Description: Sequence inverse-folding model that incorporates atomic coordinates of bound small-molecule ligands, metal ions, and nucleic acids into the graph neighborhood during sequence generation.
+Required Weights: ligandmpnn_v_48_020.pt (~400 MB parameter suite)
+Hardware / Resource: NVIDIA GPU (>= 8 GB VRAM) or CPU
+Associated Skills:
+  - ligandmpnn
+
+
+# ==============================================================================
+# 3. Genomic Sequence & Epigenomic Foundation Models
+# ==============================================================================
+
+Model: Borzoi
+Category: Genome-Wide Sequence-to-Expression Deep Learning Model
+Provider / Source: Calico Life Sciences / L2S2 (Peshket et al.)
+Framework: PyTorch / TensorFlow (genomics-gpu container)
+Description: Deep residual convolutional neural network predicting >7,000 human and mouse RNA-seq, CAGE, DNase-seq, and ChIP-seq tracks at 524kb receptive field window sizes directly from raw DNA sequences.
+Required Weights: 4 ensemble fold checkpoints (~17 GB total)
+Hardware / Resource: NVIDIA GPU (>= 32 GB VRAM) (A100 / H100 recommended)
+Associated Skills:
+  - borzoi
+
+Model: Evo 2
+Category: Long-Context Genomic Foundation Model
+Provider / Source: Arc Institute / Stanford University / Together AI (Brixi et al.)
+Framework: PyTorch / StripedHyena / FlashAttention-2
+Description: Long-context genomic language model pre-trained on prokaryotic, eukaryotic, and viral genomes (up to 1,000,000 bp context length) for sequence generation, scoring, and zero-shot variant effect prediction.
+Required Weights: Evo 2 7B / 40B StripedHyena model weights (~14 GB - 66 GB)
+Hardware / Resource: NVIDIA GPU (>= 40 GB - 80 GB VRAM) (A100 / H100)
+Associated Skills:
+  - evo2
+
+
+# ==============================================================================
+# 4. Chemoinformatics & Molecular Docking Models
+# ==============================================================================
+
+Model: DiffDock-L
+Category: Equivariant Generative Diffusion Molecular Docking
+Provider / Source: MIT CSAIL / J-Cave (Corso et al.)
+Framework: PyTorch / PyTorch Geometric (diffdock-gpu container)
+Description: Equivariant diffusion probabilistic model treating molecular docking as a generative reverse diffusion process over the SE(3) ligand pose manifold, followed by confidence ranking.
+Required Weights: DiffDock-L score model checkpoint and confidence model (~1.6 GB)
+Hardware / Resource: NVIDIA GPU (>= 16 GB VRAM)
+Associated Skills:
+  - diffdock
+
+
+# ==============================================================================
+# 5. Single-Cell Transcriptomic Foundation Models
+# ==============================================================================
+
+Model: scGPT
+Category: Single-Cell Generative Pretrained Transformer
+Provider / Source: Bo Wang Lab / University of Toronto
+Framework: PyTorch / FlashAttention-2 (scgpt)
+Description: Generative Transformer foundation model pre-trained on >33 million human single-cell transcriptomes for zero-shot cell type annotation, batch correction, and gene perturbation forecasting.
+Required Weights: Whole-human scGPT model weights (scGPT_human.pt, vocab.json) (~182 MB)
+Hardware / Resource: NVIDIA GPU (>= 24 GB VRAM) (A10G, A100)
+Associated Skills:
+  - scgpt
+
+Model: scvi-tools (scVI & scANVI)
+Category: Deep Generative Variational Autoencoders
+Provider / Source: Yosef Lab / scverse (scvi-tools)
+Framework: PyTorch (scvi-tools)
+Description: Hierarchical Bayesian deep variational autoencoders modeling zero-inflated negative binomial (ZINB) single-cell RNA count distributions, enabling batch integration, semi-supervised cell annotation (scANVI), and differential expression.
+Required Weights: Dynamically trained on target dataset within Python kernel
+Hardware / Resource: NVIDIA GPU (>= 8 GB VRAM) or multi-core CPU
+Associated Skills:
+  - scvi-tools

@@ -1,0 +1,454 @@
+# ==============================================================================
+# Claude Science Databases Manifest (db.txt)
+# Complete inventory of Biological, Chemical, Clinical, Pharmacological,
+# and Genomic Databases integrated into claude-science via skills and the
+# vendored bio-tools MCP server fleet (25 MCP servers, 62 domain clients)
+# ==============================================================================
+
+# ==============================================================================
+# 1. Scientific Literature, Citations & Preprint Repositories
+# ==============================================================================
+
+Database: PubMed / Entrez
+Full Name / Host: PubMed (NCBI / NLM / NIH)
+Access Interface: Entrez E-utilities REST API, ESearch / EFetch XML
+MCP Client / Server: `pubmed_search`, `pubmed_fetch` / `mcp_pubmed`
+Data Types: Biomedical citations (>36M records), abstracts, MeSH headings, author affiliations, PMIDs
+Associated Skills:
+  - literature-review
+  - indication-dossier
+  - pdf-explore
+
+Database: Europe PMC
+Full Name / Host: Europe PubMed Central (EMBL-EBI)
+Access Interface: REST API (https://europepmc.org/RestWebService)
+MCP Client / Server: `europepmc_fulltext` / `mcp_literature`
+Data Types: Open-access full text articles (JATS XML / text), biological entity annotations, grant links
+Associated Skills:
+  - literature-review
+  - indication-dossier
+
+Database: bioRxiv & medRxiv
+Full Name / Host: Cold Spring Harbor Laboratory Preprints
+Access Interface: REST API (https://api.biorxiv.org)
+MCP Client / Server: `biorxiv_fetch` / `mcp_biorxiv`
+Data Types: Life sciences and clinical medicine preprints, DOIs, abstracts, version histories
+Associated Skills:
+  - literature-review
+
+Database: arXiv
+Full Name / Host: arXiv Repository (Cornell University)
+Access Interface: arXiv API / OAI-PMH (http://export.arxiv.org/api/query)
+MCP Client / Server: `arxiv_fetch` / `mcp_literature`
+Data Types: Quantitative biology, machine learning, biophysics preprints and full PDFs
+Associated Skills:
+  - literature-review
+
+Database: OpenAlex
+Full Name / Host: OpenAlex Scholarly Knowledge Graph (OurResearch)
+Access Interface: REST API (https://api.openalex.org)
+MCP Client / Server: `openalex_works` / `mcp_literature`
+Data Types: Universal citation graph connecting papers, concepts, institutions, venues, and authors
+Associated Skills:
+  - literature-review
+  - paper-narrative
+
+
+# ==============================================================================
+# 2. Chemical Biology, Small Molecules & Bioactivity Databases
+# ==============================================================================
+
+Database: ChEMBL
+Full Name / Host: ChEMBL Database (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/chembl/api/data)
+MCP Client / Server: `chembl_bioactivity`, `chembl_drug_search`, `chembl_targets` / `mcp_chembl`
+Data Types: Small-molecule structures, bioactivity endpoints (IC50, Ki, Kd, EC50), assay protocols, drug indications
+Associated Skills:
+  - indication-dossier
+  - diffdock
+  - ketcher-chemistry
+
+Database: PubChem
+Full Name / Host: PubChem (NCBI / NLM)
+Access Interface: PUG-REST API (https://pubchem.ncbi.nlm.nih.gov/rest/pug)
+MCP Client / Server: `pubchem_compounds` / `mcp_chemistry`
+Data Types: Chemical compound structures, 2D/3D SDF conformers, IUPAC names, bioassays, safety data
+Associated Skills:
+  - diffdock
+  - ketcher-chemistry
+
+Database: BindingDB
+Full Name / Host: BindingDB (UCSD)
+Access Interface: REST API (https://www.bindingdb.org)
+MCP Client / Server: `bindingdb_affinities` / `mcp_chemistry`
+Data Types: Experimental binding affinities for drug targets and candidate compounds
+Associated Skills:
+  - diffdock
+
+Database: ZINC
+Full Name / Host: ZINC Database (UCSF Irwin & Shoichet Laboratories)
+Access Interface: REST API (https://zinc20.docking.org)
+MCP Client / Server: `mcp_zinc`
+Data Types: Commercially available screening compounds, 3D conformers, docking library tranches
+Associated Skills:
+  - diffdock
+
+Database: ChEBI
+Full Name / Host: Chemical Entities of Biological Interest (EMBL-EBI)
+Access Interface: Web Services API / OBO ontology
+MCP Client / Server: `chebi_ontology` / `mcp_chemistry`
+Data Types: Small molecular entities, chemical ontology classes, biological roles
+Associated Skills:
+  - indication-dossier
+
+Database: Rhea
+Full Name / Host: Rhea Reaction Database (SIB Swiss Institute of Bioinformatics)
+Access Interface: REST API / SPARQL (https://www.rhea-db.org)
+MCP Client / Server: `rhea_reactions` / `mcp_chemistry`
+Data Types: Manually annotated biochemical reactions, stoichiometric equations, enzyme participants
+Associated Skills:
+  - indication-dossier
+
+Database: openFDA (Drugs@FDA & Labels)
+Full Name / Host: US Food and Drug Administration / openFDA API
+Access Interface: REST API (https://api.fda.gov/drug/)
+MCP Client / Server: `openfda_drugsfda`, `openfda_labels` / `mcp_drug_regulatory`
+Data Types: FDA-approved drug labels, indications, boxed warnings, adverse reactions, approval histories
+Associated Skills:
+  - indication-dossier
+
+Database: KEGG
+Full Name / Host: Kyoto Encyclopedia of Genes and Genomes (Kanehisa Laboratories)
+Access Interface: REST API (https://rest.kegg.jp)
+MCP Client / Server: `kegg_fetch`, `kegg_link` / `mcp_genes_ontologies`
+Data Types: Metabolic pathways, biological reaction diagrams, disease and drug entries
+Associated Skills:
+  - indication-dossier
+
+
+# ==============================================================================
+# 3. Macromolecular Structure, Proteomics & Biophysics Databases
+# ==============================================================================
+
+Database: RCSB PDB (Protein Data Bank)
+Full Name / Host: Research Collaboratory for Structural Bioinformatics PDB
+Access Interface: Search API (https://search.rcsb.org), Data API (https://data.rcsb.org), mmCIF/PDB downloads
+MCP Client / Server: `pdb_structures` / `mcp_structures_interactions`
+Data Types: Experimental 3D coordinates (X-ray, Cryo-EM, NMR) of proteins, nucleic acids, and ligand complexes
+Associated Skills:
+  - alphafold2
+  - boltz
+  - chai1
+  - openfold3
+  - proteinmpnn
+  - solublempnn
+  - ligandmpnn
+  - diffdock
+
+Database: AlphaFold Protein Structure Database
+Full Name / Host: AlphaFold DB (EMBL-EBI / DeepMind)
+Access Interface: REST API (https://alphafold.ebi.ac.uk/api)
+MCP Client / Server: `alphafold_structures` / `mcp_structures_interactions`
+Data Types: Deep-learning predicted 3D proteomes (>200M entries), pLDDT per-residue confidence, PAE matrices
+Associated Skills:
+  - alphafold2
+  - boltz
+  - chai1
+  - diffdock
+
+Database: EMDB
+Full Name / Host: Electron Microscopy Data Bank (EMBL-EBI / RCSB / PDBj)
+Access Interface: REST API (https://www.ebi.ac.uk/emdb/api)
+MCP Client / Server: `emdb_meta` / `mcp_structures_interactions`
+Data Types: 3D reconstruction volumes, density maps, tomograms from cryo-EM
+Associated Skills:
+  - openfold3
+
+Database: Complex Portal
+Full Name / Host: Complex Portal (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/complexportal/api)
+MCP Client / Server: `complexportal_fetch` / `mcp_structures_interactions`
+Data Types: Curated macromolecular complexes, subunit stoichiometry, topology
+Associated Skills:
+  - boltz
+  - chai1
+
+Database: InterPro
+Full Name / Host: InterPro Classification of Protein Families (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/interpro/api)
+MCP Client / Server: `interpro_domains`, `interpro_entry_search` / `mcp_protein_annotation`
+Data Types: Protein domains, structural motifs, functional site predictions (Pfam, SMART, CDD)
+Associated Skills:
+  - fair-esm2
+  - indication-dossier
+
+Database: UniProt
+Full Name / Host: Universal Protein Resource (UniProt Consortium)
+Access Interface: REST API (https://rest.uniprot.org)
+MCP Client / Server: `uniprot_fetch` / `mcp_protein_annotation`
+Data Types: Curated protein sequences (Swiss-Prot/TrEMBL), post-translational modifications, active sites
+Associated Skills:
+  - fair-esm2
+  - alphafold2
+  - proteinmpnn
+
+
+# ==============================================================================
+# 4. Genetics, Genomics, Chromatin & Variation Databases
+# ==============================================================================
+
+Database: Ensembl
+Full Name / Host: Ensembl Genome Browser (EMBL-EBI / Wellcome Sanger Institute)
+Access Interface: REST API (https://rest.ensembl.org)
+MCP Client / Server: `ensembl_rest` / `mcp_genomes`
+Data Types: Gene models, transcripts, exons, regulatory features, orthologs across reference genomes
+Associated Skills:
+  - borzoi
+  - evo2
+  - indication-dossier
+
+Database: UCSC Genome Browser
+Full Name / Host: UCSC Genomics Institute
+Access Interface: REST API (https://api.genome.ucsc.edu), GoldenPath BigWig/BigBed
+MCP Client / Server: `ucsc_tracks` / `mcp_genomes`
+Data Types: Genome tracks, conservation scores (PhyloP, PhastCons), repeat elements
+Associated Skills:
+  - borzoi
+  - evo2
+
+Database: gnomAD
+Full Name / Host: Genome Aggregation Database (Broad Institute)
+Access Interface: GraphQL API (https://gnomad.broadinstitute.org/api)
+MCP Client / Server: `gnomad_variants` / `mcp_variants`
+Data Types: Population allele frequencies, loss-of-function constraint (pLI, LOEUF), structural variations
+Associated Skills:
+  - indication-dossier
+  - evo2
+
+Database: ClinVar
+Full Name / Host: ClinVar (NCBI / NLM / NIH)
+Access Interface: Entrez API / VCF queries
+MCP Client / Server: `clinvar_records` / `mcp_clinical_genomics`
+Data Types: Human genetic variations with asserted clinical significance (Pathogenic, Benign, VUS)
+Associated Skills:
+  - indication-dossier
+  - evo2
+
+Database: dbSNP
+Full Name / Host: Single Nucleotide Polymorphism Database (NCBI / NIH)
+Access Interface: Entrez API / SPDI service
+MCP Client / Server: `dbsnp_records` / `mcp_variants`
+Data Types: Unique rsID variant identifiers, alleles, genomic positions
+Associated Skills:
+  - evo2
+
+Database: CADD
+Full Name / Host: Combined Annotation Dependent Depletion (UW / BIH)
+Access Interface: Tabix queries / Web API
+MCP Client / Server: `cadd_scores` / `mcp_variants`
+Data Types: Precomputed deleterious scores for SNVs and indels across the human genome
+Associated Skills:
+  - evo2
+
+Database: ClinGen
+Full Name / Host: Clinical Genome Resource (NIH)
+Access Interface: REST API / Curated tables
+MCP Client / Server: `clingen_curations` / `mcp_clinical_genomics`
+Data Types: Curated gene-disease validity, variant pathogenicity, dosage sensitivity
+Associated Skills:
+  - indication-dossier
+
+Database: CIViC
+Full Name / Host: Clinical Interpretation of Variants in Cancer
+Access Interface: GraphQL API (https://civicdb.org/api)
+MCP Client / Server: `civic_evidence` / `mcp_cancer_models`
+Data Types: Peer-reviewed clinical evidence for cancer variant diagnostics, prognostics, and drug response
+Associated Skills:
+  - indication-dossier
+
+Database: cBioPortal
+Full Name / Host: cBioPortal for Cancer Genomics (MSKCC)
+Access Interface: REST API (https://www.cbioportal.org/api)
+MCP Client / Server: `cbioportal_studies` / `mcp_cancer_models`
+Data Types: Cancer multi-omics cohorts, clinical patient outcomes, somatic mutations, copy number
+Associated Skills:
+  - indication-dossier
+
+Database: DepMap
+Full Name / Host: Cancer Dependency Map (Broad Institute)
+Access Interface: REST API (https://depmap.org/portal)
+MCP Client / Server: `depmap_models` / `mcp_cancer_models`
+Data Types: CRISPR-Cas9 essentiality scores, PRISM drug screening profiles across cancer lines
+Associated Skills:
+  - indication-dossier
+
+Database: JASPAR & UniBind
+Full Name / Host: JASPAR (Open-access TF database) & UniBind (TFBS direct evidence)
+Access Interface: REST API (https://jaspar.genereg.net/api/v1), UniBind endpoints
+MCP Client / Server: `jaspar_matrices`, `unibind_tfbs` / `mcp_regulation`
+Data Types: Transcription factor binding site (TFBS) position weight matrices, ChIP-seq binding sites
+Associated Skills:
+  - borzoi
+
+Database: Rfam
+Full Name / Host: RNA Families Database (EMBL-EBI)
+Access Interface: REST API (https://rfam.org/api)
+MCP Client / Server: `rfam_families` / `mcp_rna`
+Data Types: Non-coding RNA families, structured RNA models, covariance models
+Associated Skills:
+  - evo2
+  - chai1
+
+
+# ==============================================================================
+# 5. Phenotypes, GWAS & Functional Genomics Archives
+# ==============================================================================
+
+Database: GWAS Catalog
+Full Name / Host: NHGRI-EBI GWAS Catalog
+Access Interface: REST API (https://www.ebi.ac.uk/gwas/rest/api)
+MCP Client / Server: `gwas_catalog` / `mcp_human_genetics`
+Data Types: Trait-associated variant summary statistics, sample sizes, publication provenance
+Associated Skills:
+  - indication-dossier
+
+Database: eQTL Catalogue
+Full Name / Host: European eQTL Catalogue (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/eqtl/api)
+MCP Client / Server: `eqtl_catalogue` / `mcp_human_genetics`
+Data Types: Uniformly quantified expression QTLs, splicing QTLs across immune and bulk cell types
+Associated Skills:
+  - indication-dossier
+  - borzoi
+
+Database: GTEx Portal
+Full Name / Host: Genotype-Tissue Expression Project (Broad Institute / NIH)
+Access Interface: REST API (https://gtexportal.org/api/v2)
+MCP Client / Server: `gtex_expression` / `mcp_expression`
+Data Types: Tissue-specific gene expression, eQTLs, sQTLs across 54 human tissues
+Associated Skills:
+  - indication-dossier
+  - borzoi
+
+Database: NCBI GEO (Gene Expression Omnibus)
+Full Name / Host: Gene Expression Omnibus (NCBI / NLM / NIH)
+Access Interface: Entrez E-utilities / FTP matrix downloads
+MCP Client / Server: `geo_meta` / `mcp_omics_archives`
+Data Types: Microarray, bulk RNA-seq, and single-cell gene expression datasets
+Associated Skills:
+  - scvi-tools
+  - scgpt
+
+Database: ArrayExpress & PRIDE
+Full Name / Host: ArrayExpress & PRIDE Proteomics (EMBL-EBI)
+Access Interface: REST APIs
+MCP Client / Server: `arrayexpress_experiments`, `pride_projects` / `mcp_omics_archives`
+Data Types: Functional genomics and mass spectrometry proteomics experiments
+Associated Skills:
+  - indication-dossier
+
+Database: ENCODE
+Full Name / Host: Encyclopedia of DNA Elements (ENCODE Consortium / Stanford)
+Access Interface: Search REST API (https://www.encodeproject.org)
+MCP Client / Server: `encode_search` / `mcp_regulation`
+Data Types: Candidate cis-Regulatory Elements (cCREs), chromatin accessibility, histone marks
+Associated Skills:
+  - borzoi
+
+
+# ==============================================================================
+# 6. Biological Pathways, Molecular Networks & Ontologies
+# ==============================================================================
+
+Database: QuickGO & Gene Ontology
+Full Name / Host: QuickGO Browser / Gene Ontology Consortium (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/QuickGO/api)
+MCP Client / Server: `quickgo_annotations` / `mcp_genes_ontologies`
+Data Types: Biological Process (BP), Molecular Function (MF), Cellular Component (CC) annotations
+Associated Skills:
+  - indication-dossier
+
+Database: Reactome
+Full Name / Host: Reactome Pathway Knowledgebase (OICR / NYU / EBI)
+Access Interface: Content Service REST API (https://reactome.org/ContentService)
+MCP Client / Server: `reactome_map` / `mcp_genes_ontologies`
+Data Types: Biological pathway diagrams, reaction steps, protein-protein pathway complexes
+Associated Skills:
+  - indication-dossier
+
+Database: STRING
+Full Name / Host: STRING Protein-Protein Interaction Networks (SIB / EMBL)
+Access Interface: REST API (https://string-db.org/api)
+MCP Client / Server: `string_network` / `mcp_structures_interactions`
+Data Types: Protein-protein physical and functional interaction networks with confidence scores
+Associated Skills:
+  - indication-dossier
+
+Database: IntAct
+Full Name / Host: IntAct Molecular Interaction Database (EMBL-EBI)
+Access Interface: REST API / PSI-MI
+MCP Client / Server: `intact_interactions` / `mcp_structures_interactions`
+Data Types: Curated binary and complex protein-protein physical interactions
+Associated Skills:
+  - indication-dossier
+
+Database: OLS (Ontology Lookup Service)
+Full Name / Host: EBI Ontology Lookup Service (EMBL-EBI)
+Access Interface: REST API (https://www.ebi.ac.uk/ols4/api)
+MCP Client / Server: `ols_ontologies`, `ols_terms` / `mcp_genes_ontologies`
+Data Types: Cross-ontology search across Disease Ontology (DOID), HPO, Uberon, EFO, MONDO
+Associated Skills:
+  - indication-dossier
+
+
+# ==============================================================================
+# 7. Cell Biology, Single-Cell Atlases & Immunology
+# ==============================================================================
+
+Database: CZ CELLxGENE Discover
+Full Name / Host: Chan Zuckerberg Initiative CELLxGENE
+Access Interface: Python SDK (`cellxgene-census`), S3 TileDB buckets
+MCP Client / Server: Directly accessed via `singlecell-cpu` and `singlecell-gpu`
+Data Types: Standardized single-cell RNA-seq and spatial transcriptomics datasets (>50M cells)
+Associated Skills:
+  - scvi-tools
+  - scgpt
+
+Database: PanglaoDB & CellGuide
+Full Name / Host: PanglaoDB (Karolinska Institutet) & CellGuide (CZI)
+Access Interface: Web TSV / REST API
+MCP Client / Server: `panglaodb_markers`, `mcp_cellguide` / `mcp_cellguide`
+Data Types: Cell-type marker genes, tissue lineages, cell ontology cross-references
+Associated Skills:
+  - scvi-tools
+  - scgpt
+
+Database: Human Protein Atlas (HPA)
+Full Name / Host: Human Protein Atlas (SciLifeLab / KTH / Uppsala University)
+Access Interface: REST API (https://www.proteinatlas.org)
+MCP Client / Server: `protein_atlas` / `mcp_expression`
+Data Types: Immunohistochemistry protein tissue profiles, single-cell RNA profiles, subcellular localization
+Associated Skills:
+  - indication-dossier
+
+
+# ==============================================================================
+# 8. Clinical Trials & Regulatory Registries
+# ==============================================================================
+
+Database: ClinicalTrials.gov
+Full Name / Host: ClinicalTrials.gov (US NLM / NIH)
+Access Interface: Essie search service & v2 REST API (https://clinicaltrials.gov/api/v2/studies)
+MCP Client / Server: `clinicaltrials_essie`, `clinicaltrials_fetch` / `mcp_clinical_trials`
+Data Types: Clinical trial study records, protocols, eligibility criteria, study phases, outcome measures
+Associated Skills:
+  - indication-dossier
+  - clinical-trial-forecast
+
+Database: Grants.gov
+Full Name / Host: Grants.gov (US Department of Health and Human Services)
+Access Interface: REST API
+MCP Client / Server: `grants_gov_search` / `mcp_research_resources`
+Data Types: Federal grant funding opportunities, research award abstracts
+Associated Skills:
+  - literature-review
