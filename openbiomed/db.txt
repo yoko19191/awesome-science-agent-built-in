@@ -1,0 +1,95 @@
+# OpenBioMed 接入与调用的数据库清单
+
+为了支撑小分子药物发现、蛋白质设计优化、单细胞组学建模及临床药物情报分析，`openbiomed/skills` 深度集成了以下核心数据库、生化知识图谱与大规模单细胞数据仓库：
+
+================================================================================
+1. 化学小分子、生物活性与代谢通路数据库 (Cheminformatics & Pathways)
+================================================================================
+- **ChEMBL Database**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 240万+ 具有药用活性的化合物分子、1.5万+ 药物靶标、2000万+ 篇实验测定的生物活性数据（IC50, Ki, EC50）、药物靶标机制与批准上市药物临床阶段。
+  - 访问协议: REST API (https://www.ebi.ac.uk/chembl/api/data/)
+  - 涉及技能: `chembl-query`, `disease-drug-intelligence`, `drug-candidate-discovery`, `target-drug-report`
+
+- **PubChem Database**:
+  - 数据提供方: NCBI / NIH
+  - 数据内容: 全球权威小分子化学信息库（1.1亿+ 种纯化化合物 CID、SMILES、InChI 结构、分子理化常数、2D/3D 结构相似性检索及生物活性测试 BioAssays）。
+  - 访问协议: PUG-REST API (https://pubchem.ncbi.nlm.nih.gov/rest/pug/)
+  - 涉及技能: `pubchem-query`, `drug-lead-analysis`, `retrosynthesis-planning`
+
+- **KEGG (Kyoto Encyclopedia of Genes and Genomes)**:
+  - 数据提供方: Kyoto University / Kanehisa Laboratories
+  - 数据内容: 细胞代谢与信号转导通路图谱、药物与疾病靶点映射、药物-药物相互作用 (DDI) 数据库及严重程度机制分类。
+  - 访问协议: REST API (https://rest.kegg.jp/)
+  - 涉及技能: `kegg-query`, `drug-drug-interaction-analysis`
+
+================================================================================
+2. 蛋白质组学、空间结构与相互作用图谱 (Proteomics & Structural Biology)
+================================================================================
+- **UniProt (Universal Protein Resource)**:
+  - 数据提供方: UniProt Consortium (EMBL-EBI, SIB, PIR)
+  - 数据内容: UniProtKB/Swiss-Prot 精选蛋白质序列、功能结构域、酶催化活性位点、点突变疾病关联、翻译后修饰与跨物种分类。
+  - 访问协议: REST API (https://rest.uniprot.org/)
+  - 涉及技能: `uniprot-query`, `protein-mutation-analysis`, `similar-protein-retrieval`
+
+- **RCSB PDB (Protein Data Bank)**:
+  - 数据提供方: wwPDB (Worldwide Protein Data Bank)
+  - 数据内容: 实验解析（X-射线单晶衍射、冷冻电镜 Cryo-EM、NMR）的生物大分子与小分子配体复合物的三维立体坐标。
+  - 访问协议: RCSB REST Data API & Search API (https://data.rcsb.org/)
+  - 涉及技能: `protein-ligand-binding-analysis-plip`, `binding-affinity-prediction-prodigy`, `target-based-lead-design`
+
+- **STRING Database**:
+  - 数据提供方: STRING Consortium
+  - 数据内容: 涵盖 14,000+ 个物种的已知和预测蛋白质-蛋白质相互作用 (PPI) 网络，提供物理结合证据与功能关联置信度得分。
+  - 访问协议: REST API (https://string-db.org/api/)
+  - 涉及技能: `ppi-string-query`
+
+- **AlphaFold Database (AFDB)**:
+  - 数据提供方: EMBL-EBI & Google DeepMind
+  - 数据内容: 覆盖全球数亿个预测蛋白质三维结构坐标与残基置信度 (pLDDT)。
+  - 访问协议: REST API (https://alphafold.ebi.ac.uk/api/)
+  - 涉及技能: `similar-protein-retrieval`
+
+================================================================================
+3. 单细胞组学与空间转录组数据集 (Single-Cell & Spatial Transcriptomics)
+================================================================================
+- **CZ CELLxGENE Census**:
+  - 数据提供方: Chan Zuckerberg Initiative (CZI)
+  - 数据内容: 全球最大规模的高质量标准化单细胞 RNA-seq 数据仓库（涵盖 6100万+ 个人类与小鼠细胞），按组织、疾病、供体与细胞类型统一分类。
+  - 访问协议: TileDB-SOMA API
+  - 涉及技能: `cellxgene-census-query`
+
+- **多平台空间转录组数据源 (Spatial Transcriptomics Platforms)**:
+  - 数据提供方: 10x Genomics (Visium, Xenium), NanoString (CosMx), Vizgen (MERSCOPE), Slide-seq
+  - 数据内容: 细胞空间几何物理坐标、组织高分辨率显微图像切片与空间原位基因表达矩阵。
+  - 涉及技能: `spatial-transcriptomics-spatial-data-io`, `spatial-transcriptomics-foundation-model-stofm`
+
+================================================================================
+4. 临床试验、科学文献与网络情报数据库 (Clinical Trials & Scholarly Literature)
+================================================================================
+- **ClinicalTrials.gov**:
+  - 数据提供方: US National Library of Medicine (NLM)
+  - 数据内容: 全球临床试验方案 (API v2)，包含 NCT 编号、招募阶段 (Phase I-IV)、入选与排除标准、药物干预措施及申办方管线。
+  - 访问协议: REST API v2 (https://clinicaltrials.gov/api/v2/)
+  - 涉及技能: `disease-drug-intelligence`, `target-drug-report`
+
+- **PubMed & bioRxiv / medRxiv**:
+  - 数据提供方: NCBI / Cold Spring Harbor Laboratory
+  - 数据内容: 生物医学经同行评审的权威学术期刊摘要、全文直链及生命科学/医学最新预印本文档。
+  - 访问协议: NCBI E-utilities API & bioRxiv API
+  - 涉及技能: `biomedical-literature-search`
+
+- **Tavily Biomedical Search Engine**:
+  - 数据提供方: Tavily
+  - 数据内容: 实时聚合医学前沿资讯、在研管线进展、药企专利申报与行业新闻。
+  - 访问协议: REST API (https://api.tavily.com/)
+  - 涉及技能: `disease-drug-intelligence`
+
+================================================================================
+5. 逆合成化学反应规则与商业分子库 (Synthetic Rules & Building Blocks)
+================================================================================
+- **AiZynthFinder Reaction Rules & Stock Library**:
+  - 数据提供方: AstraZeneca / Open Source Community
+  - 数据内容: 基于 USPTO 专利数据库提炼的数十万条双向逆合成化学反应模板规则，以及 ZINC / Enamine 商业可采购起始原料化合物分子库。
+  - 访问协议: 本地 Parquet / HDF5 / SQLite 数据检索
+  - 涉及技能: `retrosynthesis-planning`

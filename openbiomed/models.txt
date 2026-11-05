@@ -1,0 +1,117 @@
+# OpenBioMed 依赖与调用的核心模型清单
+
+为了驱动 `openbiomed/skills` 中覆盖药物发现、蛋白质设计、单细胞组学与空间生物学的 45 个智能体技能，涉及以下核心深度学习模型与算法引擎：
+
+================================================================================
+1. 小分子药物发现与化学多模态模型 (Small Molecule & Cheminformatics Models)
+================================================================================
+- **GraphMVP (Graph Multi-View Pre-training)**:
+  - 类型: 2D 图与 3D 空间构象双视角自监督分子表示模型
+  - 用途: 预测小分子药物的综合 ADMET 特征（血脑屏障透过率 BBB、Caco-2 细胞渗透率、半衰期、LD50 急性毒性等）。
+  - 涉及技能: `admet-prediction`, `drug-lead-analysis`
+
+- **BioT5 / BioT5+ (Biomedical Multi-Modal Language Model)**:
+  - 类型: 跨模态生物医药统一预训练模型 (分子 SMILES + 蛋白质序列 + 自然语言文献)
+  - 用途: 小分子 IUPAC 命名问答、分子生物化学作用与靶标机制推理、蛋白质功能与亚细胞定位预测。
+  - 涉及技能: `iupac-name-identification-biot5`, `molecule-biochemical-significance-query-biot5`, `protein-function-prediction`, `protein-subcellular-localization-prediction-biot5`
+
+- **MolT5 (Molecule Translation Model)**:
+  - 类型: 分子-文本双向翻译与性质编辑序列生成模型
+  - 用途: 根据自然语言指令（如“提高水溶性并降低毒性”）定向修改小分子结构。
+  - 涉及技能: `text-based-molecule-editing`
+
+- **MolCraft (Structure-Based De Novo Generative Model)**:
+  - 类型: 基于靶标结合口袋 3D 结构的等变生成扩散模型
+  - 用途: 靶标特异性先导化合物分子生成、结合构象优化与分子对接打分。
+  - 涉及技能: `target-based-lead-design`, `drug-candidate-discovery`
+
+- **AiZynthFinder Neural Policy & Filter Network**:
+  - 类型: 逆合成反应模板展开策略模型与快速反应可行性过滤分类器
+  - 用途: 结合蒙特卡洛树搜索 (MCTS) 将目标复杂分子拆解为可采购商业原料。
+  - 涉及技能: `retrosynthesis-planning`
+
+================================================================================
+2. 蛋白质工程与抗体结构设计模型 (Protein & Antibody Engineering Models)
+================================================================================
+- **Boltz-2**:
+  - 类型: 全生物分子复合物（蛋白质、核酸、配体小分子、修饰）高精度三维结构预测大模型
+  - 输出: 复合物 3D 原子坐标、界面预测置信度及配体结合亲和力 (IC50) 预测。
+  - 涉及技能: `structure-prediction-boltz-2`
+
+- **BoltzGen**:
+  - 类型: 全原子扩散生成模型 (All-Atom Protein Design Diffusion Model)
+  - 用途: 结合位点驱动的从头结合肽设计、小分子配体结合蛋白设计及纳米抗体 CDR 环设计。
+  - 涉及技能: `protein-structure-design-boltzgen`
+
+- **tFold (Tencent Quantum Lab)**:
+  - 类型: 抗体/纳米抗体及抗原-抗体复合物结构预测深度模型
+  - 用途: 超长 CDR-H3 环结构精准预测与抗原结合表位-互补位构象模拟。
+  - 涉及技能: `antibody-structure-prediction-tfold`
+
+- **IgGM (Immunoglobulin Generative Model)**:
+  - 类型: 表位导向的抗体从头生成与亲和力成熟模型
+  - 用途: 针对指定靶标抗原表位生成高亲和力抗体序列及定向突变优化。
+  - 涉及技能: `antibody-design-iggm`
+
+- **ESMFold (Meta AI ESM-2)**:
+  - 类型: 基于单序列蛋白质语言模型的高速端到端三维折叠模型
+  - 用途: 突变体蛋白质结构快速生成与构象扰动评估。
+  - 涉及技能: `protein-mutation-analysis`
+
+- **MutaPLM**:
+  - 类型: 突变效应预测专用蛋白质语言模型
+  - 用途: 评估点突变与多点突变对蛋白质稳定性、催化活性与适应度景观的影响。
+  - 涉及技能: `protein-mutation-analysis`, `mutation-design-aav`, `mutation-design-gfp`
+
+- **CodeFP (Functional Protein Generation)**:
+  - 类型: 基因本体论 (GO Tag) 条件引导的从头蛋白质序列设计模型
+  - 用途: 定向合成具备特定催化功能或结合特性的全新蛋白质序列。
+  - 涉及技能: `functional-protein-design`
+
+- **Prodigy (Protein Binding Energy Predictor)**:
+  - 类型: 结构接触距离网络结合自由能经验预测模型
+  - 用途: 预测蛋白质-蛋白质复合物的解离常数 (Kd) 与结合亲和力分数。
+  - 涉及技能: `binding-affinity-prediction-prodigy`
+
+- **Foldseek 3Di Geometric Model**:
+  - 类型: 蛋白质空间骨架离散几何构象编码模型
+  - 用途: 结构层面的高速全库同源检索。
+  - 涉及技能: `similar-protein-retrieval`
+
+================================================================================
+3. 单细胞组学与空间转录组基础大模型 (Single-Cell & Spatial Foundation Models)
+================================================================================
+- **Geneformer (Broad Institute)**:
+  - 类型: 基于 3000万+ 细胞转录组预训练的大规模单细胞 Transformer 模型
+  - 用途: 单细胞等级秩排序标记化 (Rank-value Tokenization)、细胞/基因表型分类、计算模拟扰动 (In Silico Perturbation)。
+  - 涉及技能: `single-cell-foundation-model-scrna-seq-geneformer`
+
+- **scGPT (Generative Pretrained Transformer for Single-Cell)**:
+  - 类型: 面向单细胞多组学的多任务生成式预训练 Transformer
+  - 用途: 基因表达量分箱编码、参考数据集投影映射、基因调控网络 (GRN) 推断与细胞嵌入提取。
+  - 涉及技能: `single-cell-foundation-model-scrna-seq-scgpt`
+
+- **LangCell (Multimodal Language-Cell Foundation Model)**:
+  - 类型: 单细胞转录组表达与生物医学自然语言对齐的多模态模型
+  - 用途: 跨模态文本-细胞匹配、零样本 (Zero-shot) 细胞类型注释与小样本 (Few-shot) 微调。
+  - 涉及技能: `single-cell-foundation-model-scrna-seq-langcell`
+
+- **SToFM (Spatial Transcriptomics Foundation Model)**:
+  - 类型: 结合细胞特征编码器与 SE(2) 等变空间几何图 Transformer 的双阶段基础模型
+  - 用途: 整合空间组织切片坐标与转录组，生成空间感知细胞表征，用于组织微环境分割与空间细胞类型标注。
+  - 涉及技能: `spatial-transcriptomics-foundation-model-stofm`
+
+- **scVI (Single-Cell Variational Inference)**:
+  - 类型: 面向单细胞多组学数据的变分自编码器 (VAE) 概率深度学习框架
+  - 用途: 去噪、批次效应矫正、单细胞 ATAC-seq 染色质可及性建模与多组学潜空间联合表征。
+  - 涉及技能: `single-cell-multi-omics-analysis-scvi`
+
+================================================================================
+4. 核心 Agent 路由与协调模型 (Host Agent Reasoning LLM)
+================================================================================
+- **通用长上下文推理大模型**:
+  - 推荐: Claude 3.5 Sonnet / GPT-4o / Gemini 1.5 Pro
+  - 用途:
+    1. 驱动 `biomed-skill-router` 智能分流生物医学研究意向至最匹配技能；
+    2. 协调复杂级联管线（如：疾病靶标检索 -> 候选分子生成 -> 结合构象模拟 -> ADMET 预测 -> 逆合成规划）；
+    3. 自主解析并整合多源报告与结构可视化图表。
