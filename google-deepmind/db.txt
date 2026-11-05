@@ -1,0 +1,213 @@
+# Google DeepMind Science Skills 接入与调用的数据库清单
+
+为了实现全面的基因组学、结构生物学、化学信息学、临床研究、文献计量及历史铭文分析，`google-deepmind/science-skills` 深度集成了以下权威专业数据库与知识图谱服务：
+
+================================================================================
+1. 基因组学、转录组学与表观遗传数据库 (Genomics & Epigenomics)
+================================================================================
+- **AlphaGenome Atlas**:
+  - 数据提供方: Google DeepMind
+  - 数据内容: 人类全基因组功能影响评分 (AVI)、多组织多细胞系基因表达 (RNA-seq)、染色质可及性 (DNASE)、组蛋白修饰 (ChIP-seq) 预测轨道数据。
+  - 访问协议: HTTPS REST API (https://deepmind.google.com/science/alphagenome)
+  - 涉及技能: alphagenome_atlas_website_links, alphagenome_single_variant_analysis, alphagenome_variant_impact_score
+
+- **Ensembl Database**:
+  - 数据提供方: EMBL-EBI & Wellcome Sanger Institute
+  - 数据内容: 基因、转录本、外显子结构、物种参考基因组序列 (GRCh38 / GRCh37)、突变后果预测 (VEP - Variant Effect Predictor)。
+  - 访问协议: REST API (https://rest.ensembl.org, https://grch37.rest.ensembl.org)
+  - 涉及技能: ensembl_database
+
+- **NCBI dbSNP**:
+  - 数据提供方: NCBI (National Center for Biotechnology Information)
+  - 数据内容: 单核苷酸多态性 (SNPs)、小片段插入/缺失 (indels)、rsID 映射、HGVS 命名规则规范与等位基因频率。
+  - 访问协议: E-utilities API (https://eutils.ncbi.nlm.nih.gov)
+  - 涉及技能: dbsnp_database
+
+- **NCBI ClinVar**:
+  - 数据提供方: NCBI
+  - 数据内容: 人类遗传变异与表型/疾病关联性、临床致病性分类证据 (Pathogenic, Benign, VUS)。
+  - 访问协议: E-utilities REST API (https://eutils.ncbi.nlm.nih.gov/entrez/eutils/)
+  - 涉及技能: clinvar_database
+
+- **gnomAD (Genome Aggregation Database)**:
+  - 数据提供方: Broad Institute
+  - 数据内容: 全球多族群全外显子组 (exome) 与全基因组 (genome) 测序突变频率、罕见突变流行率与变异稀有度评估。
+  - 访问协议: GraphQL API (https://gnomad.broadinstitute.org/api)
+  - 涉及技能: gnomad_database
+
+- **GTEx (Genotype-Tissue Expression)**:
+  - 数据提供方: Broad Institute / NIH
+  - 数据内容: 54 个健康人类组织特异性基因表达水平、表达数量性状位点 (eQTL) 关联数据。
+  - 访问协议: GTEx Portal API (https://gtexportal.org/api/v2)
+  - 涉及技能: gtex_database
+
+- **ENCODE (SCREEN / cCREs Registry)**:
+  - 数据提供方: ENCODE Consortium / Weng Lab
+  - 数据内容: 候选顺式调控元件 (cCREs: 启动子-dELS、增强子-pELS、CTCF结合位点) 及原始 ChIP-seq / DNase-seq 实验峰值数据。
+  - 访问协议: SCREEN GraphQL API (https://screen-v2.wenglab.org/graphql) & ENCODE REST API (https://www.encodeproject.org/)
+  - 涉及技能: encode_ccres_database
+
+- **JASPAR Database**:
+  - 数据提供方: ELIXIR / JASPAR Consortium
+  - 数据内容: 转录因子结合基序 (TF binding profiles)、位置频率矩阵 (PFM) 与位置权重矩阵 (PWM)。
+  - 访问协议: REST API (https://jaspar.elixir.no/api/v1/)
+  - 涉及技能: jaspar_database
+
+- **UniBind Database**:
+  - 数据提供方: University of Oslo / Mathelier Lab
+  - 数据内容: 经实验严格验证的直接转录因子-DNA结合位点 (Direct TFBS)、BED 与 FASTA 格式下载。
+  - 访问协议: REST API (https://unibind.uio.no/api/v1/)
+  - 涉及技能: unibind_database
+
+- **UCSC Genome Browser**:
+  - 数据提供方: UC Santa Cruz Genomics Institute
+  - 数据内容: 跨物种进化保守性打分 (phyloP, phastCons 100-way) 及综合调控轨道。
+  - 访问协议: REST API (https://api.genome.ucsc.edu/)
+  - 涉及技能: ucsc_conservation_and_tfbs
+
+================================================================================
+2. 蛋白质组学与结构生物学数据库 (Proteomics & Structural Biology)
+================================================================================
+- **AlphaFold Database (AFDB)**:
+  - 数据提供方: EMBL-EBI & Google DeepMind
+  - 数据内容: 超过 2 亿个高精度预测蛋白质 3D 结构坐标 (CIF/PDB)、残基置信度 (pLDDT) 与 PAE 矩阵。
+  - 访问协议: REST API (https://alphafold.ebi.ac.uk/api/)
+  - 涉及技能: alphafold_database_fetch_and_analyze
+
+- **RCSB PDB (Protein Data Bank)**:
+  - 数据提供方: Worldwide Protein Data Bank (wwPDB)
+  - 数据内容: 实验解析 (X 射线晶体学、冷冻电镜 Cryo-EM、核磁共振 NMR) 的生物大分子三维结构与配体复合体。
+  - 访问协议: RCSB Data API (https://data.rcsb.org/) & Search API (https://search.rcsb.org/)
+  - 涉及技能: pdb_database
+
+- **UniProt (UniProtKB / UniParc / UniRef / UniSave)**:
+  - 数据提供方: UniProt Consortium (EMBL-EBI, SIB, PIR)
+  - 数据内容: 全球蛋白质序列、功能注释、催化活性位点、翻译后修饰、亚细胞定位与分类学。
+  - 访问协议: REST API (https://rest.uniprot.org/) & SPARQL Endpoint (https://sparql.uniprot.org/sparql)
+  - 涉及技能: uniprot_database
+
+- **InterPro**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 蛋白质家族、功能结构域、保守位点多数据库集成分类 (整合 Pfam, SMART, CDD, PRINTS, PROSITE 等)。
+  - 访问协议: REST API (https://www.ebi.ac.uk/interpro/api/)
+  - 涉及技能: interpro_database
+
+- **Foldseek Search Database**:
+  - 数据提供方: Steinegger Lab / Söding Lab
+  - 数据内容: 集成 PDB100、AlphaFold/Proteome、AlphaFold/Swiss-Prot、CATH50 等海量结构数据库索引。
+  - 访问协议: REST API (https://search.foldseek.com/api/)
+  - 涉及技能: foldseek_structural_search
+
+- **Human Protein Atlas (HPA)**:
+  - 数据提供方: SciLifeLab / KTH Royal Institute of Technology
+  - 数据内容: 人类组织与细胞系免疫组化抗体染色表达、亚细胞细胞器定位与病理图谱。
+  - 访问协议: REST API (https://www.proteinatlas.org/api/)
+  - 涉及技能: human_protein_atlas_database
+
+- **QuickGO & ECO**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 基因本体论 (Gene Ontology: 生物过程 BP、分子功能 MF、细胞组分 CC) 及证据与结论本体 (ECO)。
+  - 访问协议: REST API (https://www.ebi.ac.uk/QuickGO/api/)
+  - 涉及技能: quickgo_database
+
+- **Reactome Pathway Database**:
+  - 数据提供方: Reactome Consortium
+  - 数据内容: 人类生物学通路、生化反应级联网络、疾病途径与基因集富集分析 (GSEA) 服务。
+  - 访问协议: Analysis Service & Content Service API (https://reactome.org/AnalysisService/)
+  - 涉及技能: reactome_database
+
+- **STRING Database**:
+  - 数据提供方: STRING Consortium
+  - 数据内容: 蛋白质-蛋白质相互作用 (PPI) 网络、物理结合与功能关联置信度得分及富集分析。
+  - 访问协议: REST API (https://string-db.org/api/)
+  - 涉及技能: string_database
+
+- **NCBI Nucleotide & Protein**:
+  - 数据提供方: NCBI Entrez
+  - 数据内容: GenBank 核酸序列及 RefSeq / GenPept 蛋白质序列 FASTA。
+  - 访问协议: E-utilities API (https://eutils.ncbi.nlm.nih.gov/entrez/eutils/)
+  - 涉及技能: ncbi_sequence_fetch
+
+================================================================================
+3. 化学信息学与药物发现数据库 (Cheminformatics & Therapeutics)
+================================================================================
+- **PubChem**:
+  - 数据提供方: NCBI / NIH
+  - 数据内容: 小分子化合物结构 (CID, SMILES, InChI)、物理化学性质、生物活性测试 (BioAssays)。
+  - 访问协议: PUG-REST API (https://pubchem.ncbi.nlm.nih.gov/rest/pug/)
+  - 涉及技能: pubchem_database
+
+- **ChEMBL**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 具有药用活性的类药分子、药物靶标、生物活性测定数值 (IC50, Ki, EC50)、靶标机制与审批上市药物。
+  - 访问协议: REST API (https://www.ebi.ac.uk/chembl/api/data/)
+  - 涉及技能: chembl_database
+
+- **Open Targets Platform**:
+  - 数据提供方: Open Targets Consortium (EMBL-EBI, Sanger, GSK, etc.)
+  - 数据内容: 药物靶点与疾病的遗传学关联、靶点成药性 (Tractability/Druggability)、临床试验进展。
+  - 访问协议: GraphQL API (https://api.platform.opentargets.org/api/v4/graphql)
+  - 涉及技能: opentargets_database
+
+- **openFDA**:
+  - 数据提供方: US Food and Drug Administration (FDA)
+  - 数据内容: 药品不良反应事件报告 (FAERS)、药品标签说明书、产品召回与医疗器械报告。
+  - 访问协议: REST API (https://api.fda.gov/)
+  - 涉及技能: openfda_database
+
+- **ClinicalTrials.gov**:
+  - 数据提供方: US National Library of Medicine (NLM)
+  - 数据内容: 全球临床研究方案、试验阶段 (Phase I-IV)、招募状态、入排标准与申办方信息。
+  - 访问协议: API v2 (https://clinicaltrials.gov/api/v2/)
+  - 涉及技能: clinical_trials_database
+
+================================================================================
+4. 科学文献、预印本与生物本体库 (Scientific Literature & Ontologies)
+================================================================================
+- **PubMed & PubMed Central (PMC)**:
+  - 数据提供方: NLM / NCBI
+  - 数据内容: 3600万+ 篇生物医学文献摘要、PMC 开放获取全文 XML/JSON。
+  - 访问协议: E-utilities API & BioC API (https://eutils.ncbi.nlm.nih.gov/entrez/eutils/)
+  - 涉及技能: pubmed_database
+
+- **Europe PMC**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 跨库开放获取生物医学文献、全文检索、专利与预印本引用。
+  - 访问协议: REST API (https://europepmc.org/RestAPI)
+  - 涉及技能: literature_search_europepmc
+
+- **arXiv**:
+  - 数据提供方: Cornell University
+  - 数据内容: 物理学、数学、计算机科学、定量生物学 (q-bio) 开放获取预印本文档。
+  - 访问协议: arXiv API (https://export.arxiv.org/api/query)
+  - 涉及技能: literature_search_arxiv
+
+- **bioRxiv & medRxiv**:
+  - 数据提供方: Cold Spring Harbor Laboratory (CSHL)
+  - 数据内容: 生命科学与健康科学预印本文档元数据。
+  - 访问协议: REST API (https://api.biorxiv.org/)
+  - 涉及技能: literature_search_biorxiv
+
+- **OpenAlex**:
+  - 数据提供方: OurResearch
+  - 数据内容: 2.5 亿+ 篇全球学术论文、作者消歧网络、机构图谱、期刊源与开放存取全文直链。
+  - 访问协议: REST API (https://api.openalex.org/)
+  - 涉及技能: literature_search_openalex
+
+- **EMBL-EBI OLS (Ontology Lookup Service)**:
+  - 数据提供方: EMBL-EBI
+  - 数据内容: 250+ 个标准化生物医学本体库 (GO, DOID, HP, MONDO, UBERON, CL, ChEBI, SO)。
+  - 访问协议: OLS4 REST API (https://www.ebi.ac.uk/ols4/api/)
+  - 涉及技能: embl_ebi_ols
+
+================================================================================
+5. 古代碑铭与历史文献语料库 (Epigraphy & Historical Corpora)
+================================================================================
+- **Predicting The Past (Aeneas & Ithaca Corpora)**:
+  - 数据提供方: Google DeepMind, Packard Humanities Institute (PHI), Heidelberg Academy of Sciences, Sapienza University
+  - 数据内容: 
+    - Packhum (PHI) Greek Epigraphy (https://inscriptions.packhum.org)
+    - Epigraphik-Datenbank Clauss-Slaby (EDCS) (https://www.manfredclauss.de)
+    - Epigraphic Database Heidelberg (EDH) (https://edh.ub.uni-heidelberg.de)
+    - Epigraphic Database Roma (EDR) (https://edr-edr.it)
+  - 涉及技能: predictingthepast

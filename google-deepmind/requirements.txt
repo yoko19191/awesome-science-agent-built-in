@@ -1,0 +1,31 @@
+# Google DeepMind Science Skills Python Dependencies
+
+# Core DeepMind Scientific SDKs
+alphagenome>=0.9.0
+predictingthepast
+
+# High-Performance Data Processing & Analysis
+numpy>=2.0.0
+pandas<3.0
+polars>=1.0.0
+pyarrow>=14.0.0
+scipy>=1.13.0
+seaborn>=0.13.0
+matplotlib>=3.9.0
+anndata>=0.10.0
+tabulate>=0.9.0
+
+# Genomics & Sequence Analysis
+pysam>=0.22.0; sys_platform != 'win32'
+biopython>=1.83
+
+# Structural Biology & Molecular Graphics
+pymol-open-source-whl>=3.0.0
+
+# HTTP & Web Services
+requests>=2.32.0
+urllib3>=2.2.0
+python-dotenv>=1.0.0
+absl-py>=2.1.0
+jmespath>=1.0.1
+pydantic>=2.10.0

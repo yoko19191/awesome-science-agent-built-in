@@ -1,0 +1,63 @@
+# Google DeepMind Science Skills 依赖与调用的核心模型清单
+
+为了让 `google-deepmind/science-skills` 中的所有技能全面跑通，涉及以下科学专用 AI 模型、结构生物学深度模型、生物信息学搜索模型以及通用 Agent 协调推理模型：
+
+================================================================================
+1. Google DeepMind 原生前沿科学大模型 (Native Scientific AI Models)
+================================================================================
+- **AlphaGenome Variant Effect Predictor (AlphaGenome-VEP)**:
+  - 类型: 全基因组序列至表观遗传与功能效应预测基础模型
+  - 架构: 基于高通量 DNA 序列 Transformer 架构
+  - 用途: 评估非编码区与编码区基因突变对基因表达 (RNA-seq)、染色质可及性 (DNASE)、组蛋白修饰标记 (ChIP-seq: H3K4me3, H3K27ac 等) 以及转录因子结合的多组学影响。
+  - 涉及技能: `alphagenome_single_variant_analysis`, `alphagenome_atlas_website_links`
+
+- **AlphaGenome Variant Impact (AVI) Scorer**:
+  - 类型: 基因组突变致病性与功能影响评分模型
+  - 用途: 提供 1-based 突变影响量化得分、VCF/Tabular 突变位点全景注释、窗口饱和突变扫描 (Saturation Mutagenesis Scan)。
+  - 涉及技能: `alphagenome_variant_impact_score`
+
+- **Predicting The Past - Ithaca**:
+  - 类型: 深度神经网络古希腊碑铭恢复与归因模型 (Deep Neural Network for Ancient Greek Epigraphy)
+  - 用途: 古希腊残损文本填充/修复 (Text Restoration)、地理起源归因 (Geographical Attribution)、年代测定 (Chronological Dating)、相似铭文上下文检索 (Parallel Inscription Retrieval) 以及稠密文本嵌入向量生成。
+  - 涉及技能: `predictingthepast`
+
+- **Predicting The Past - Aeneas**:
+  - 类型: 基于 Transformer 的拉丁语古文铭文恢复与归因模型 (Transformer for Latin Epigraphy)
+  - 用途: 拉丁古代文献与铭文的文本残缺修复、书写地域推断、年代测定及跨文本平行检索。
+  - 涉及技能: `predictingthepast`
+
+================================================================================
+2. 结构生物学与蛋白质预测模型 (Structural Biology Models)
+================================================================================
+- **AlphaFold 2 / AlphaFold 3 (EBI AlphaFold DB)**:
+  - 类型: 蛋白质三维立体结构预测模型
+  - 输出与指标: 全长原子三维坐标 (PDB / mmCIF)、残基级预测置信度分数 (pLDDT, 0-100)、预测对齐误差矩阵 (PAE - Predicted Aligned Error)。
+  - 涉及技能: `alphafold_database_fetch_and_analyze`
+
+- **Foldseek 3Di Structural Alphabet Representation**:
+  - 类型: 蛋白质空间结构离散几何编码与三维比对模型
+  - 用途: 将三维空间骨架坐标映射为 3Di 字母序列，实现与 PDB、AlphaFold DB、CATH 等大库的高速三维结构同源检索。
+  - 涉及技能: `foldseek_structural_search`
+
+================================================================================
+3. 序列比对与生物信息学模型 (Sequence Alignment & Search Models)
+================================================================================
+- **Clustal Omega (HMM Profile Alignment Model)**:
+  - 类型: 隐马尔可夫模型 (Hidden Markov Model) 驱动的多序列比对引擎
+  - 用途: 最高支持 4,000 条蛋白质序列的多序列比对 (MSA)，用于保守基序 (Motif)、活性催化位点与结构域保守性分析。
+  - 涉及技能: `protein_sequence_msa`
+
+- **MMseqs2 & NCBI BLAST+ (Sequence Homology Search Models)**:
+  - 类型: 超高速同源序列聚类与局部相似性对齐模型
+  - 用途: 快速推断未注释蛋白质序列的同源基因家族及生物学功能。
+  - 涉及技能: `protein_sequence_similarity_search`, `uniprot_database`
+
+================================================================================
+4. 核心 Agent 编排推理大模型 (Host Reasoning LLM)
+================================================================================
+- **通用多模态高推理 LLM**:
+  - 推荐模型: Gemini 1.5 Pro / Claude 3.5 Sonnet / GPT-4o
+  - 用途:
+    1. 理解科学家的复杂研究意图，拆解跨学科任务流；
+    2. 协调调用 40 个科学技能（如从基因变异 -> AlphaGenome 预测 -> AlphaFold 结构提取 -> PyMOL 渲染 -> PubMed 文献交叉验证）；
+    3. 自主解析结构化数据 (JSON/TSV/Parquet) 并提炼科研发现与假设。
