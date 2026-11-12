@@ -1,0 +1,249 @@
+# Google Antigravity Science Plugin 接入的数据库清单
+
+范围是 `google-antigravity/science` 1.4.0。地址来自各技能脚本里的常量，不来自 DeepMind 规格的转写。一个技能若只引用另一个技能去查库，数据库记在真正发请求的技能上。
+
+================================================================================
+1. 基因组、变异与调控
+================================================================================
+- **AlphaGenome Atlas**：
+  - 提供方: Google DeepMind
+  - 内容: 功能基因组预测轨道、变异影响页和 GENCODE 参考注释。
+  - 协议: https://deepmind.google.com/science/alphagenome/ 与 https://storage.googleapis.com/alphagenome/reference/gencode/
+  - 技能: `alphagenome_atlas_website_links`、`alphagenome_single_variant_analysis`、`alphagenome_variant_impact_score`
+
+- **Ensembl**：
+  - 提供方: EMBL-EBI / Wellcome Sanger
+  - 内容: 基因、转录本、序列和 VEP。GRCh37 走独立主机。
+  - 协议: https://rest.ensembl.org 与 https://grch37.rest.ensembl.org
+  - 技能: `ensembl_database`
+
+- **NCBI dbSNP、ClinVar、Nucleotide/Protein、PubMed/PMC**：
+  - 提供方: NCBI
+  - 内容: rsID 与等位基因频率；临床意义；GenBank/RefSeq 序列；PubMed 摘要和 PMC BioC JSON 全文。
+  - 协议: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/ ；dbSNP 也使用 https://api.ncbi.nlm.nih.gov ；PMC 全文 https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json
+  - 技能: `dbsnp_database`、`clinvar_database`、`ncbi_sequence_fetch`、`pubmed_database`
+
+- **gnomAD**：
+  - 提供方: Broad Institute
+  - 内容: 外显子组和基因组等位基因频率、基因约束。
+  - 协议: GraphQL https://gnomad.broadinstitute.org/api
+  - 技能: `gnomad_database`
+
+- **GTEx**：
+  - 提供方: Broad Institute / NIH
+  - 内容: 组织表达和 eQTL。
+  - 协议: https://gtexportal.org/api/v2
+  - 技能: `gtex_database`
+
+- **ENCODE、SCREEN cCREs、Factorbook**：
+  - 提供方: ENCODE Consortium / Weng Lab
+  - 内容: 实验档案、候选顺式调控元件、转录因子富集。
+  - 协议: https://www.encodeproject.org 、https://screen-v2.wenglab.org 、https://factorbook.api.wenglab.org/graphql
+  - 技能: `encode_ccres_database`
+
+- **JASPAR**：
+  - 提供方: ELIXIR / JASPAR Consortium
+  - 内容: 转录因子 PFM/PWM。
+  - 协议: https://jaspar.elixir.no/api/v1/
+  - 技能: `jaspar_database`
+
+- **UniBind**：
+  - 提供方: University of Oslo / Mathelier Lab
+  - 内容: 有实验支持的直接转录因子结合位点。
+  - 协议: https://unibind.uio.no/api/v1/
+  - 技能: `unibind_database`
+
+- **UCSC Genome Browser**：
+  - 提供方: UC Santa Cruz
+  - 内容: phyloP、phastCons 和转录因子轨道。
+  - 协议: https://api.genome.ucsc.edu/
+  - 技能: `ucsc_conservation_and_tfbs`
+
+================================================================================
+2. 蛋白质、结构与相互作用
+================================================================================
+- **AlphaFold Database**：
+  - 提供方: EMBL-EBI 与 Google DeepMind
+  - 内容: 预测结构、pLDDT、PAE。
+  - 协议: https://alphafold.ebi.ac.uk/api/prediction/
+  - 技能: `alphafold_database_fetch_and_analyze`
+
+- **RCSB PDB**：
+  - 提供方: wwPDB
+  - 内容: 实验结构元数据、化学组分和坐标文件。
+  - 协议: https://data.rcsb.org 、https://search.rcsb.org 、https://files.rcsb.org/download/
+  - 技能: `pdb_database`。`cheminformatics_physics` 在受体是 4 字母 PDB ID 时也下载坐标。
+
+- **UniProt**：
+  - 提供方: EMBL-EBI、SIB、PIR
+  - 内容: 蛋白序列、功能、位点、定位；SPARQL 查询。
+  - 协议: https://rest.uniprot.org 与 https://sparql.uniprot.org/sparql
+  - 技能: `uniprot_database`
+
+- **InterPro**：
+  - 提供方: EMBL-EBI
+  - 内容: 家族和结构域集成（Pfam、SMART、CDD、PROSITE 等成员库）。
+  - 协议: https://www.ebi.ac.uk/interpro/api/
+  - 技能: `interpro_database`
+
+- **Foldseek 检索库**：
+  - 提供方: Steinegger Lab
+  - 内容: PDB、AlphaFold、CATH 等结构索引上的三维相似命中。
+  - 协议: https://search.foldseek.com/api/ticket 与 `/api/result/`
+  - 技能: `foldseek_structural_search`
+
+- **Human Protein Atlas**：
+  - 提供方: SciLifeLab / KTH
+  - 内容: 组织与细胞表达、亚细胞定位。
+  - 协议: https://www.proteinatlas.org/ （`api/search_download.php` 和按 Ensembl ID 的 XML）
+  - 技能: `human_protein_atlas_database`
+
+- **QuickGO**：
+  - 提供方: EMBL-EBI
+  - 内容: GO 注释和证据。
+  - 协议: https://www.ebi.ac.uk/QuickGO/services
+  - 技能: `quickgo_database`
+
+- **Reactome**：
+  - 提供方: Reactome Consortium
+  - 内容: 通路、反应和富集分析。
+  - 协议: https://reactome.org/AnalysisService 与 https://reactome.org/ContentService
+  - 技能: `reactome_database`
+
+- **STRING**：
+  - 提供方: STRING Consortium
+  - 内容: 蛋白相互作用网络和富集。
+  - 协议: `https://version-{api_version}-0.string-db.org/api/`
+  - 技能: `string_database`
+
+- **ColabFold MMseqs2 与 EBI NCBI BLAST 序列库**：
+  - 提供方: ColabFold；EMBL-EBI Job Dispatcher
+  - 内容: UniProtKB、Swiss-Prot、TrEMBL、UniRef50/90/100、PDB 序列、分类子集；可选 MGnify 环境序列。
+  - 协议: https://api.colabfold.com 与 https://www.ebi.ac.uk/Tools/services/rest/ncbiblast
+  - 技能: `protein_sequence_similarity_search`
+
+- **Clustal Omega 服务**：
+  - 提供方: EMBL-EBI
+  - 内容: 多序列比对作业，不是本地序列库。
+  - 协议: https://www.ebi.ac.uk/Tools/services/rest/clustalo/
+  - 技能: `protein_sequence_msa`
+
+================================================================================
+3. 化学、药物与供应商
+================================================================================
+- **PubChem**：
+  - 提供方: NCBI
+  - 内容: 化合物、性质、同义词、生物测定、专利交叉引用、相似性和子结构。
+  - 协议: https://pubchem.ncbi.nlm.nih.gov/rest/pug
+  - 技能: `pubchem_database`，以及 `cheminformatics_core`、`cheminformatics_doc2mol`、`rdkit_general`
+
+- **ChEMBL**：
+  - 提供方: EMBL-EBI
+  - 内容: 生物活性、靶标、批准药物、文献和专利中的化合物记录。
+  - 协议: https://www.ebi.ac.uk/chembl/api/data
+  - 技能: `chembl_database`，以及 `cheminformatics_core`、`cheminformatics_doc2mol`
+
+- **Open Targets Platform**：
+  - 提供方: Open Targets
+  - 内容: 靶点-疾病证据、成药性和临床阶段。
+  - 协议: GraphQL https://api.platform.opentargets.org/api/v4/graphql
+  - 技能: `opentargets_database`
+
+- **openFDA**：
+  - 提供方: FDA
+  - 内容: 不良事件、标签、召回和器械报告。
+  - 协议: https://api.fda.gov
+  - 技能: `openfda_database`
+
+- **ClinicalTrials.gov API v2**：
+  - 提供方: NLM
+  - 内容: 试验设计、阶段、招募和入排标准。
+  - 协议: https://clinicaltrials.gov/api/v2
+  - 技能: `clinical_trials_database`
+
+- **NIST Chemistry WebBook**：
+  - 提供方: NIST
+  - 内容: 实验热化学、沸点、熔点和 Antoine 常数。
+  - 协议: https://webbook.nist.gov/cgi/cbook.cgi
+  - 技能: `cheminformatics_core`（`nist_webbook_fetcher.py`）
+
+- **OPSIN**：
+  - 提供方: University of Cambridge
+  - 内容: IUPAC 名称到结构。
+  - 协议: https://opsin.ch.cam.ac.uk/opsin/
+  - 技能: `rdkit_general`、`cheminformatics_doc2mol`
+
+- **NCI CACTUS**：
+  - 提供方: NIH/NCI
+  - 内容: 化学名称解析的下一级回退。
+  - 协议: https://cactus.nci.nih.gov/chemical/structure/
+  - 技能: `cheminformatics_doc2mol`
+
+- **Google Patents**：
+  - 提供方: Google
+  - 内容: 专利全文 HTML、实施例表格和专利族页面。脚本直接解析页面，不走单独的官方专利 API。
+  - 协议: https://patents.google.com/patent/
+  - 技能: `cheminformatics_doc2mol`
+
+- **Open Reaction Database**：
+  - 提供方: ORD
+  - 内容: 反应记录、条件、产率，以及经 ORD 索引的 USPTO 反应先例。检索用 `/api/search` 和 `/api/reactions`，相似度再用 DRFP。
+  - 协议: https://open-reaction-database.org
+  - 技能: `cheminformatics_doc2mol`（`precedent_lookup.py`）。`cheminformatics_reactions` 在提出路线前调用它。
+
+- **MolPort 与 Chemspace**：
+  - 提供方: MolPort；Chemspace
+  - 内容: 有密钥时的实时报价和包装规格。没有密钥时不访问这两处 API，改为本地 CSV 报价。
+  - 协议: https://api.molport.com/ 与 https://api.chem-space.com/
+  - 技能: `cheminformatics_core`（`screen_compound_pricer.py`）
+
+- **Enamine、MolPort、Chemspace 公开检索页**：
+  - 内容: `chemical_vendor_resolver.py` 生成的供应商搜索链接，不是报价 API。
+  - 协议: https://enamine.net/hit-locator 、https://www.molport.com/shop/find-compounds 、https://chem-space.com/search
+  - 技能: `cheminformatics_core`
+
+技能说明里还提到 Mcule 和 Sigma-Aldrich。当前报价脚本没有对应的实时 API，只能通过本地 `--catalog-csv` 吃入这些供应商的报价表。
+
+================================================================================
+4. 文献与本体
+================================================================================
+- **Europe PMC**：
+  - 提供方: EMBL-EBI
+  - 协议: https://www.ebi.ac.uk/europepmc/webservices/rest/
+  - 技能: `literature_search_europepmc`
+
+- **arXiv**：
+  - 提供方: Cornell
+  - 协议: https://export.arxiv.org/api/query
+  - 技能: `literature_search_arxiv`
+
+- **bioRxiv 与 medRxiv**：
+  - 提供方: CSHL
+  - 协议: https://api.biorxiv.org/details/
+  - 技能: `literature_search_biorxiv`
+
+- **OpenAlex**：
+  - 提供方: OurResearch
+  - 协议: https://api.openalex.org ；全文主机 https://content.openalex.org 需要 `OPENALEX_API_KEY`
+  - 技能: `literature_search_openalex`
+
+- **EMBL-EBI OLS4**：
+  - 提供方: EMBL-EBI
+  - 内容: GO、MONDO、HP、UBERON、ChEBI 等本体。
+  - 协议: https://www.ebi.ac.uk/ols4/api
+  - 技能: `embl_ebi_ols`
+
+================================================================================
+5. 铭文语料
+================================================================================
+- **Predicting The Past 语料**：
+  - 提供方: Google DeepMind，以及 Packard Humanities Institute、Heidelberg、Clauss-Slaby、Epigraphic Database Roma
+  - 内容: 希腊语和拉丁语铭文，用于 Ithaca 与 Aeneas。
+  - 协议: https://inscriptions.packhum.org 、https://www.manfredclauss.de/ 、https://edh.ub.uni-heidelberg.de/ 、http://edr-edr.it 、https://predictingthepast.com
+  - 技能: `predictingthepast`
+
+================================================================================
+6. 不单独算作外部数据库的本地资源
+================================================================================
+- `cheminformatics_reactions` 的 100 个命名反应模板在 `scripts/reactions_data.py` 和 `scripts/reaction_specs_100.py`，随插件分发。
+- AlphaFold 3 的遗传数据库目录由用户通过容器参数 `db_dir` 挂载，插件不内置这份数据。

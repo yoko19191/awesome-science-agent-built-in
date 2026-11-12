@@ -1,0 +1,74 @@
+# Google Antigravity Science Plugin Python Dependencies
+# Source: google-antigravity/science (plugin science 1.4.0, 48 skills)
+#
+# 这是各技能 PEP 723 / pyproject.toml 声明依赖的并集，不是单一可安装环境。
+# 官方执行方式是 `uv run <script.py>`，由 uv 按脚本元数据隔离安装。
+# Python 版本不能收成一个解释器：
+#   多数脚本 requires-python >=3.10
+#   cheminformatics_{core,doc2mol,reactions} 的部分脚本 >=3.11
+#   本地 Boltz-2 通过 `uvx --python 3.11 --from boltz` 启动
+#   alphagenome_atlas_website_links 与 alphagenome_variant_impact_score >=3.14
+#   PyMOL 示例脚本 >=3.10,<3.13
+# 版本下界只保留源码里写明的约束；未写版本的包保持不钉死。
+
+# DeepMind / 结构与序列模型 SDK
+alphagenome>=0.9.0
+predictingthepast
+boltz-api
+openprotein-python
+# 本地 Boltz-2 引擎不在 cofolding 脚本的 inline dependencies 里，由 PATH 上的
+# `boltz` 或 `uvx --from boltz` 提供。
+boltz
+
+# 表格、数组与作图
+numpy>=2.0
+pandas>=2.2.0,<3.0
+polars
+pyarrow>=14.0.0
+scipy>=1.10.0
+matplotlib>=3.8.0
+seaborn>=0.12.0
+scikit-learn>=1.2.0
+joblib
+anndata
+tabulate>=0.9.0
+pillow>=10.0.0
+
+# 基因组
+pysam; sys_platform != 'win32'
+
+# 化学信息学、对接与分子动力学
+rdkit>=2024.3.1
+gemmi
+meeko
+openbabel-wheel
+openmm
+pdbfixer
+openff-toolkit
+openff-interchange
+openff-units
+openmmforcefields
+pymol-open-source-whl
+
+# 反应先例与指纹
+drfp>=0.3.7
+ord-schema>=0.3.8
+networkx>=3.0
+pyyaml>=6.0
+
+# HTTP、配置与解析
+polite-http
+python-dotenv
+absl-py
+beautifulsoup4>=4.12.0
+lxml
+xmltodict
+pydantic
+cachetools
+packaging
+python-constraint
+jax
+
+# 可选：cheminformatics_ml 的 `--include_tabfm`。脚本用 importlib 探测，
+# PEP 723 未声明。权重入口是 tabfm.tabfm_v1_0_0.load。
+# tabfm

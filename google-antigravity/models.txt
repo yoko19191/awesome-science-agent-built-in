@@ -1,0 +1,120 @@
+# Google Antigravity Science Plugin 依赖与调用的模型清单
+
+范围是 `google-antigravity/science` 1.4.0 的 48 个技能。下面只记录技能实际调用或明确要求用户选择的模型，不把通用宿主对话模型算进科学模型。
+
+================================================================================
+1. Google DeepMind 科学模型
+================================================================================
+- **AlphaGenome**：
+  - 类型: DNA 序列到功能基因组轨道的预测模型。
+  - 用途: 变异对 RNA-seq、DNase、组蛋白修饰和转录因子结合的影响；in silico saturation mutagenesis；剪接解释。
+  - 接入: Python 包 `alphagenome`。单变异分析的 pyproject 写 `alphagenome>=0.6.1`，atlas 与 AVI 写 `alphagenome>=0.9.0`。
+  - 技能: `alphagenome_single_variant_analysis`、`alphagenome_atlas_website_links`、`alphagenome_variant_impact_score`
+
+- **AlphaGenome Variant Impact (AVI)**：
+  - 类型: 同一 AlphaGenome 服务上的变异影响评分。
+  - 用途: 1-based 变异评分、VCF/表格注释、窗口饱和突变。
+  - 技能: `alphagenome_variant_impact_score`
+
+- **AlphaFold DB 模型（EBI 已发布结构，不是本地推理）**：
+  - 输出: mmCIF/PDB、pLDDT、PAE。
+  - 技能: `alphafold_database_fetch_and_analyze`。查看器按文件里的 pLDDT 着色，不按文件名猜测。
+
+- **AlphaFold 3**：
+  - 类型: 蛋白、核酸、配体和共价复合物的共折叠权重 `af3.bin.zst`。
+  - 接入: Docker/Podman 镜像 `alphafold3`，`--engine af3`。非商业条款，不能在用户未确认时悄悄改成 Boltz。
+  - 技能: `cheminformatics_cofolding`
+
+- **Ithaca 与 Aeneas（Predicting The Past）**：
+  - 类型: 古希腊碑铭与拉丁铭文的修复、地理归因、断代和平行铭文检索。权重来自 `storage.googleapis.com/ithaca-resources/models` 与 Zenodo。
+  - 接入: 包 `predictingthepast`，推理脚本依赖 `jax`。
+  - 技能: `predictingthepast`
+
+================================================================================
+2. 共折叠与蛋白结构模型
+================================================================================
+- **Boltz-2**：
+  - 类型: MIT 许可的蛋白-配体联合扩散模型。
+  - 接入: 本地命令 `boltz predict`，或 `uvx --python 3.11 --from boltz`。CPU、CUDA、Apple MPS 都有分支。
+  - 技能: `cheminformatics_cofolding`（`--engine boltz2`）
+
+- **Boltz API `boltz-2.1`**：
+  - 类型: 托管推理，基址默认 `https://api.boltz.bio`。
+  - 接入: Python 包 `boltz-api` 加 `BOLTZ_API_KEY`。
+  - 技能: `cheminformatics_cofolding`（`--engine boltz-api`）
+
+- **OpenProtein ESMFold2 / ESMFold2-fast**：
+  - 类型: 托管蛋白折叠。技能把它当作共折叠引擎之一；配体复合物仍以 AF3 或 Boltz 为主。
+  - 接入: `openprotein-python` 的 `session.fold.esmfold2` 与 `esmfold2_fast`。
+  - 技能: `cheminformatics_cofolding`（`--engine esmfold2`）
+
+- **Foldseek 3Di**：
+  - 类型: 结构字母表上的三维相似检索，库包括 PDB、AlphaFold DB、CATH。
+  - 接入: `https://search.foldseek.com/api/`，不是本地 Foldseek 二进制。
+  - 技能: `foldseek_structural_search`
+
+================================================================================
+3. 序列搜索与经典分子模型
+================================================================================
+- **ColabFold MMseqs2**：
+  - 接入: `https://api.colabfold.com`。可选解析 MGnify/环境序列 a3m。
+  - 技能: `protein_sequence_similarity_search`（默认快速路径）
+
+- **NCBI BLAST（EBI Job Dispatcher）**：
+  - 接入: `https://www.ebi.ac.uk/Tools/services/rest/ncbiblast`。MMseqs2 失败或用户点名数据库时使用。
+  - 技能: `protein_sequence_similarity_search`
+
+- **Clustal Omega**：
+  - 接入: `https://www.ebi.ac.uk/Tools/services/rest/clustalo/`。技能说明上限约 4000 条蛋白序列。
+  - 技能: `protein_sequence_msa`
+
+- **AutoDock Vina / smina**：
+  - 类型: 经验打分对接，不是学习型共折叠。输出对接亲和力，再和配体应变一起交给下游。
+  - 技能: `cheminformatics_physics`
+
+- **RDKit ETKDGv3、MMFF94s、UFF**：
+  - 用途: 三维构象、应变能、扭转指纹偏差。
+  - 技能: `cheminformatics_physics`、`cheminformatics_core`、`rdkit_general`
+
+- **OpenFF Sage `openff-2.2.0` + OpenMM**：
+  - 用途: 小分子参数化和分子动力学。AM1-BCC 依赖 AmberTools `sqm`，否则退回 MMFF94。
+  - 技能: `cheminformatics_physics`
+
+- **Open Babel pH 模型**：
+  - 用途: 配体在目标 pH（默认 7.4）的质子化与微观状态枚举。
+  - 技能: `cheminformatics_physics`
+
+- **Ertl SA_Score、PAINS/Brenk/NIH/ZINC 警示、Pfizer CNS MPO**：
+  - 类型: 规则和经验打分，不是训练出的神经网络。
+  - 技能: `cheminformatics_core`
+
+- **DRFP**：
+  - 类型: 反应差分指纹，用来在 ORD 先例里做相似度排序。
+  - 技能: `cheminformatics_doc2mol`（`precedent_lookup.py`）
+
+================================================================================
+4. 化学机器学习
+================================================================================
+- **scikit-learn 小样本 QSAR**：
+  - 模型: RidgeCV、ElasticNetCV、SVR、随机森林、梯度提升。嵌套交叉验证，再用 Tukey HSD 分档。
+  - 技能: `cheminformatics_ml`（`congeneric_series_ml.py`）
+
+- **TabFM v1.0.0**：
+  - 类型: Google Research 的表格基础模型，零样本 in-context 回归和分类。
+  - 接入: 可选包 `tabfm`，`tabfm.tabfm_v1_0_0.load(model_type="regression"|"classification")`。只在 `--include_tabfm` 时加载；未安装则跳过。
+  - 技能: `cheminformatics_ml`
+
+- **物理量校准的 Δ-ML**：
+  - 形式: 把 QSAR 预测、对接 ΔG 和构象应变做线性校准。本身不引入新的预训练权重。
+  - 技能: `cheminformatics_ml`（`physics_ml_comparator.py`）
+
+================================================================================
+5. 查看与渲染
+================================================================================
+- **Mol\***：
+  - 类型: 交互式大分子查看器，不是预测模型。可显示预测结构自带的 pLDDT。
+  - 技能: `biomolecular_structure_viewer`
+
+- **PyMOL Open Source**：
+  - 类型: 无头结构渲染和测量。
+  - 技能: `pymol`
