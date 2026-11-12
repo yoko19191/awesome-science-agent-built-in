@@ -1,0 +1,339 @@
+/*
+ * Shared CSS shell for Antigravity sidecar UIs.
+ *
+ * Link from your sidecar's <head> to get the standard theme variables,
+ * dark mode, layout scaffolding, status badge, loading shimmer, idle
+ * screen, and error styling.
+ *
+ * Usage:
+ *   <link rel="stylesheet" href="/shell.css" />
+ */
+
+/*
+ * THEMING
+ * Sidecars run in an iframe, so host CSS custom properties do not reliably
+ * cascade in. Never reference host design-system variables directly (e.g.
+ * `var(--vscode-...)` or `var(--md-sys-color-...)`). Declare colours here as
+ * tokens and consume them through `var()`; components hold no literal colours.
+ *
+ * Two token sets are defined:
+ *  - `--canvas-*`: the shell chrome (idle screen, loading shimmer, errors).
+ *    Swaps with `@media (prefers-color-scheme: dark)`.
+ *  - `--agys-*`: AGYS, the design tokens shared by the science sidecar
+ *    viewers (see below).
+ *
+ * Tokens needed by a single sidecar belong in that sidecar, not here.
+ */
+
+:root {
+  /* Surface and text */
+  --canvas-bg: #fafafa;
+  --canvas-text: #333333;
+
+  /* Error state colors */
+  --canvas-error-bg: #ffebee;
+  --canvas-error-text: #b71c1c;
+  --canvas-error-border: #ef5350;
+
+  /* Brand accent and surfaces */
+  --canvas-brand-start: #4285f4;
+  --canvas-brand-end: #00bfa5;
+  --canvas-brand-glow: rgba(66, 133, 244, 0.15);
+  --canvas-surface: rgba(66, 133, 244, 0.08);
+  --canvas-border: rgba(0, 0, 0, 0.08);
+  --canvas-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Typography: same stack as --agys-font. */
+  --canvas-font: var(--agys-font);
+  --canvas-font-display: var(--canvas-font);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas-bg: #101010;
+    --canvas-text: #cccccc;
+
+    --canvas-error-bg: #4a1919;
+    --canvas-error-text: #ffb4b4;
+    --canvas-error-border: #ff4444;
+
+    --canvas-brand-glow: rgba(66, 133, 244, 0.25);
+    --canvas-surface: rgba(66, 133, 244, 0.15);
+    --canvas-border: rgba(255, 255, 255, 0.12);
+    --canvas-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/*
+ * AGYS design tokens. Light by default.
+ *
+ * A viewer opts in by calling applyHostTheme() (theme.ts) on its root
+ * element, which sets data-theme (light|dark) from the host --background
+ * luminance and data-follow-host. In follow-host mode ink, canvas, accent,
+ * card and the monospace font read the host theme variables first, and the
+ * fills and secondary text colours are mixed from them (see the
+ * [data-follow-host] blocks); status colours, lines and lifts stay literal.
+ */
+:root,
+[data-theme='light'] {
+  --agys-ink: #1f2124;
+  --agys-ink-soft: #5f6368;
+  --agys-ink-faint: #8f949c;
+  --agys-canvas: #fbfbfa;
+  /*
+   * Neutral fills: ink at a low opacity, layered over whatever is beneath.
+   * From weakest to strongest: sunken for a recessed area (an input, a
+   * segmented-control track, a code block), control for the resting fill of
+   * a flat control such as a pill, and hover and pressed for interaction
+   * states. They are backgrounds only, never text: text uses --agys-ink,
+   * --agys-ink-soft and --agys-ink-faint.
+   */
+  --agys-sunken: rgba(15, 18, 23, 0.05);
+  --agys-control: rgba(15, 18, 23, 0.055);
+  --agys-hover: rgba(15, 18, 23, 0.07);
+  --agys-pressed: rgba(15, 18, 23, 0.11);
+  --agys-card: #ffffff;
+  --agys-card-edge: rgba(15, 18, 23, 0.1);
+  --agys-card-edge-hover: rgba(15, 18, 23, 0.24);
+  --agys-paper: var(--agys-card);
+  /*
+   * Raised: the fill of a control drawn above its surface, such as the
+   * selected segment or tab, or a raised button or chip. It matches the card
+   * here; the follow-host block keeps it lighter than a host card that is
+   * close to the canvas, so the selected state stays visible.
+   */
+  --agys-raised: #ffffff;
+  --agys-accent: #3a6ff7;
+  --agys-accent-ink: #2b58cc;
+  --agys-accent-soft: rgba(58, 111, 247, 0.1);
+  --agys-bad: #d93838;
+  /*
+   * Status: the base colour is for dots, icons and borders, -soft for tinted
+   * backgrounds, and -ink for status text (the light base colours are below
+   * 4.5:1 as small text).
+   */
+  --agys-bad-soft: rgba(217, 56, 56, 0.13);
+  --agys-bad-ink: #8c1d18;
+  --agys-ok: #188038;
+  --agys-ok-soft: rgba(24, 128, 56, 0.14);
+  --agys-ok-ink: #064e26;
+  --agys-warn: #b06000;
+  --agys-warn-soft: rgba(223, 142, 29, 0.16);
+  --agys-warn-ink: #5c3c00;
+  --agys-lift-1: 0 1px 2px rgba(15, 18, 23, 0.08), 0 1px 1px rgba(15, 18, 23, 0.04);
+  --agys-lift-2: 0 8px 28px rgba(15, 18, 23, 0.11), 0 1px 3px rgba(15, 18, 23, 0.07);
+  /* The one neutral divider: a grey that reads in both modes. */
+  --agys-rule: rgba(128, 128, 128, 0.3);
+  --agys-control-h: 28px;
+  --agys-radius-sm: 6px;
+  --agys-radius-md: 8px;
+  --agys-radius-lg: 10px;
+  --agys-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --agys-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
+    Consolas, "Liberation Mono", monospace;
+}
+
+[data-theme='dark'] {
+  --agys-ink: #e6e8ec;
+  --agys-ink-soft: #9ba1a9;
+  --agys-ink-faint: #6d737b;
+  --agys-canvas: #101114;
+  --agys-sunken: rgba(255, 255, 255, 0.055);
+  --agys-control: rgba(255, 255, 255, 0.07);
+  --agys-hover: rgba(255, 255, 255, 0.09);
+  --agys-pressed: rgba(255, 255, 255, 0.14);
+  --agys-card: color-mix(in srgb, var(--agys-canvas) 88%, #ffffff);
+  --agys-card-edge: rgba(255, 255, 255, 0.08);
+  --agys-card-edge-hover: rgba(255, 255, 255, 0.2);
+  --agys-paper: var(--agys-card);
+  --agys-raised: var(--agys-card);
+  --agys-accent: #7aa2ff;
+  --agys-accent-ink: #a9c4ff;
+  --agys-accent-soft: rgba(122, 162, 255, 0.16);
+  --agys-bad: #ff6b6b;
+  --agys-bad-soft: rgba(255, 107, 107, 0.17);
+  --agys-bad-ink: #ffedea;
+  --agys-ok: #5bb974;
+  --agys-ok-soft: rgba(91, 185, 116, 0.18);
+  --agys-ok-ink: #e4fadc;
+  --agys-warn: #fdd663;
+  --agys-warn-soft: rgba(253, 214, 99, 0.16);
+  --agys-warn-ink: #fff4d1;
+  --agys-lift-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --agys-lift-2: 0 8px 28px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-follow-host][data-theme='light'] {
+  /* The host's three base colours: the only host values with a fixed role. */
+  --agys-ink: var(--foreground, #1f2124);
+  --agys-canvas: var(--background, #fbfbfa);
+  --agys-accent: var(--primary, #3a6ff7);
+  /* Host roles whose names describe what they are. */
+  --agys-card: var(--card, #ffffff);
+  --agys-font-mono: var(--editor-font-family, ui-monospace, SFMono-Regular,
+    "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace);
+  /*
+   * Host --card on the light presets is within a few levels of the canvas, so
+   * raised controls drawn with it barely separate from their surface. Keep
+   * them close to white, with a hint of the host card.
+   */
+  --agys-raised: color-mix(in srgb, var(--agys-card) 25%, #ffffff);
+  /*
+   * The remaining tokens are mixed from ink, canvas and accent (the host's
+   * three base colours) instead of reading the host's derived variables
+   * (--muted-foreground, --secondary, --muted, ...). The host computes those
+   * with internal formulas that change with the user's Contrast setting and
+   * can change in any release while their names stay the same.
+   *
+   * Text tokens use mixes that stay readable against the canvas on all 14
+   * Appearance presets: soft ink (88%) is at least 4.6:1 and accent ink (60%)
+   * at least 4.5:1. We don't read host --muted-foreground for soft ink: it is
+   * the foreground at 50% over the background, below 4.5:1 on 11 of them.
+   * See DESIGN.md > Host theme tokens.
+   */
+  --agys-ink-soft: color-mix(in srgb, var(--agys-ink) 88%, var(--agys-canvas));
+  --agys-accent-ink: color-mix(in srgb, var(--agys-accent) 60%, var(--agys-ink));
+  --agys-accent-soft: color-mix(in srgb, var(--agys-accent) 10%, transparent);
+  /* Neutral fills: backgrounds only, never text (see the light defaults). */
+  --agys-sunken: color-mix(in srgb, var(--agys-ink) 5%, transparent);
+  --agys-control: color-mix(in srgb, var(--agys-ink) 5.5%, transparent);
+  --agys-hover: color-mix(in srgb, var(--agys-ink) 7%, transparent);
+  --agys-pressed: color-mix(in srgb, var(--agys-ink) 11%, transparent);
+}
+
+[data-follow-host][data-theme='dark'] {
+  --agys-ink: var(--foreground, #e6e8ec);
+  --agys-canvas: var(--background, #101114);
+  --agys-accent: var(--primary, #7aa2ff);
+  --agys-card: var(--card, color-mix(in srgb, var(--agys-canvas) 88%, #ffffff));
+  --agys-font-mono: var(--editor-font-family, ui-monospace, SFMono-Regular,
+    "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace);
+  --agys-ink-soft: color-mix(in srgb, var(--agys-ink) 88%, var(--agys-canvas));
+  --agys-accent-ink: color-mix(in srgb, var(--agys-accent) 60%, var(--agys-ink));
+  --agys-accent-soft: color-mix(in srgb, var(--agys-accent) 16%, transparent);
+  --agys-sunken: color-mix(in srgb, var(--agys-ink) 5.5%, transparent);
+  --agys-control: color-mix(in srgb, var(--agys-ink) 7%, transparent);
+  --agys-hover: color-mix(in srgb, var(--agys-ink) 9%, transparent);
+  --agys-pressed: color-mix(in srgb, var(--agys-ink) 14%, transparent);
+}
+
+/* Base layout reset */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+  overflow: hidden;
+}
+
+.canvas-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0; /* Important for flex child with overflow */
+}
+
+.idle-host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewer-host {
+  flex: 1;
+  min-height: 0; /* Prevents 3D libs from getting 0×0 canvas */
+  position: relative;
+}
+
+#ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Flexbox placeholder container used for the loading shimmer. */
+.canvas-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  user-select: none;
+}
+
+.canvas-wordmark {
+  font-family: var(--canvas-font-display);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--canvas-brand-start), var(--canvas-brand-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 16px var(--canvas-brand-glow));
+}
+
+.canvas-wordmark.error {
+  background: none;
+  -webkit-text-fill-color: var(--canvas-text);
+  font-size: 14px;
+  max-width: 280px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.loading-bar {
+  width: 120px;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--canvas-brand-start),
+    var(--canvas-brand-end),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+/* Idle screen — default view shown when no viewer is active. */
+.idle-prompt {
+  font-family: var(--canvas-font);
+  font-size: 13px;
+  color: var(--canvas-text);
+  opacity: 0.7;
+  text-align: center;
+  max-width: 240px;
+  line-height: 1.4;
+}
+
