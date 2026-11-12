@@ -1,0 +1,7 @@
+{
+  "description": "Curated collection of agent skills for science tasks.",
+  "displayName": "Science",
+  "logo": "https://www.gstatic.com/antigravity/buildWithGoogle/science/logo.svg",
+  "name": "science",
+  "version": "1.4.0"
+}
